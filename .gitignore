@@ -1,0 +1,12 @@
+bin/**
+build/**
+changelog.txt
+CREDITS.txt
+run/**
+.gradle/**
+.settings/**
+**/.DS_Store
+.classpath
+.project
+.classpath
+.DS_Store
