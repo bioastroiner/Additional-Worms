@@ -1,5 +1,6 @@
 package com.bioast.addworms;
 
+import com.bioast.addworms.client.WormRenderer;
 import com.bioast.addworms.init.InitRegister;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.block.Block;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -18,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import static com.bioast.addworms.AddWorms.*;
+import static com.bioast.addworms.init.ModEntityTypes.WORM_ENTITY;
 
 @Mod(MODID)
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -31,8 +34,10 @@ public class AddWorms
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::doClientStuff);
+        InitRegister.ENTITY_TYPES.register(bus);
         InitRegister.ITEMS.register(bus);
         InitRegister.BLOCKS.register(bus);
+
         instance = this;
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -41,6 +46,7 @@ public class AddWorms
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(), WormRenderer::new);
     }
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {

@@ -1,5 +1,7 @@
 package com.bioast.addworms.init;
 
+import com.bioast.addworms.items.BasicWormItem;
+import com.bioast.addworms.items.WormItemBase;
 import com.bioast.addworms.utils.groups.WormsGroup;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -17,7 +19,7 @@ public class ModItems {
 
     private static final Item.Properties baseProperty = new Item.Properties().group(WormsGroup.getInstance());
     public static final RegistryObject<Item> DEBUG = ITEMS.register("debug_item",()-> new Item(baseProperty));
-    public static final RegistryObject<Item> WORM = ITEMS.register("item_worm",()-> new Item(baseProperty.maxStackSize(16)));
+    public static final RegistryObject<Item> WORM = ITEMS.register("item_worm",()-> new WormItemBase(baseProperty.maxStackSize(16),ModEntityTypes.WORM_ENTITY.get()));
     public static final RegistryObject<Item> WORM_RED = ITEMS.register("item_worm_red",()-> new Item(baseProperty.maxStackSize(16)));
 
     @SubscribeEvent
