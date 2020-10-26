@@ -1,7 +1,10 @@
 package com.bioast.addworms;
 
 import com.bioast.addworms.init.InitRegister;
+import com.bioast.addworms.init.ModItems;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,10 +28,9 @@ public class AddWorms
     public static AddWorms instance;
 
     public AddWorms() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::doClientStuff);
-        InitRegister.ITEMS.register(bus);
         InitRegister.BLOCKS.register(bus);
         instance = this;
         MinecraftForge.EVENT_BUS.register(this);
