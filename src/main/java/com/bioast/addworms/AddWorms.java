@@ -14,7 +14,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(AddWorms.MODID)
+import static com.bioast.addworms.AddWorms.*;
+
+@Mod(MODID)
+@Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AddWorms
 {
     private static final Logger LOGGER = LogManager.getLogger();

@@ -1,14 +1,13 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="runClient" type="Application" factoryName="Application" singleton="false">
-    <option name="ALTERNATIVE_JRE_PATH" value="14" />
     <envs>
-      <env name="MOD_CLASSES" value="examplemod%%$PROJECT_DIR$/../forge-1.15.2-31.2.0-mdk\build\resources\main;examplemod%%$PROJECT_DIR$/../forge-1.15.2-31.2.0-mdk\build\classes\java\main" />
-      <env name="MCP_MAPPINGS" value="snapshot_20200514-1.15.1" />
+      <env name="MOD_CLASSES" value="addworms%%$PROJECT_DIR$/../Additional Worms\build\resources\main;addworms%%$PROJECT_DIR$/../Additional Worms\build\classes\java\main" />
+      <env name="MCP_MAPPINGS" value="snapshot_20201024-1.15.1" />
       <env name="MCP_VERSION" value="20200515.085601" />
       <env name="FORGE_VERSION" value="31.2.0" />
       <env name="assetIndex" value="1.15" />
       <env name="assetDirectory" value="C:\Users\Naderi\.gradle\caches\forge_gradle\assets" />
-      <env name="nativesDirectory" value="$PROJECT_DIR$/../forge-1.15.2-31.2.0-mdk\build\natives" />
+      <env name="nativesDirectory" value="$PROJECT_DIR$/../Additional Worms\build\natives" />
       <env name="FORGE_GROUP" value="net.minecraftforge" />
       <env name="target" value="fmluserdevclient" />
       <env name="MC_VERSION" value="1.15.2" />
@@ -19,6 +18,7 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks=":prepareRunClient" externalProjectPath="$PROJECT_DIR$" />
     </method>
   </configuration>
 </component>
