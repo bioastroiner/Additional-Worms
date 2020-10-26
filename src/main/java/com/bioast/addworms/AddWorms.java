@@ -31,6 +31,7 @@ public class AddWorms
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::doClientStuff);
+        InitRegister.ITEMS.register(bus);
         InitRegister.BLOCKS.register(bus);
         instance = this;
         MinecraftForge.EVENT_BUS.register(this);
