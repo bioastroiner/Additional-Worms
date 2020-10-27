@@ -18,16 +18,16 @@ import java.util.List;
 
 public class BasicWormItem extends WormItemBase {
     public BasicWormItem(Properties properties) {
-        super(properties,ModEntityTypes.WORM_ENTITY.get());
+        super(properties);
     }
 
     @Override
     protected boolean placeWorm(PlayerEntity player, BlockPos pos, World world, ItemStack stack) {
         // Prevents worms from being placed next to each other
-        List<? extends WormEntityBase> worms = world.getEntitiesWithinAABB(WormEntityBase.class, new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 1, pos.getZ() + 2));
+        List<BasicWormEntity> worms = world.getEntitiesWithinAABB(BasicWormEntity.class, new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 1, pos.getZ() + 2));
         if (worms == null || worms.isEmpty()) {
             if (!world.isRemote) {
-                BasicWormEntity worm = new BasicWormEntity(entityType,world);
+                BasicWormEntity worm = new BasicWormEntity(ModEntityTypes.WORM_ENTITY.get(),world);
                 worm.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                 worm.setCustomName(stack.getDisplayName());
                 //LOGGER.log(Level.DEBUG,"i used It");
@@ -45,10 +45,5 @@ public class BasicWormItem extends WormItemBase {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         tooltip.add(new StringTextComponent("_||Classic||_"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public void setEntityType(EntityType entityType) {
-        super.setEntityType(entityType);
     }
 }

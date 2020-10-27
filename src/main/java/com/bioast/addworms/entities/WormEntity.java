@@ -2,6 +2,7 @@
 //
 //import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 //import com.bioast.addworms.utils.helpers.ParticleHelper;
+//import com.bioast.addworms.utils.intefaces.IWorm;
 //import net.minecraft.block.*;
 //import net.minecraft.client.Minecraft;
 //import net.minecraft.entity.Entity;
@@ -95,6 +96,7 @@
 //
 //                                if ((plantBlock instanceof IGrowable || plantBlock instanceof IPlantable) && !(plantBlock instanceof GrassBlock || plantBlock == Blocks.DIRT)) {
 //                                    plantBlock.tick(plantState, (ServerWorld) this.world, plant, this.world.rand);
+//                                    DefaultFarmerBehavior.useBonemeal(world,plant);
 //                                    BlockState newState = this.world.getBlockState(plant);
 //                                    if (newState != plantState) {
 //                                        this.world.playEvent(2005, plant, 0);
@@ -110,7 +112,7 @@
 //        }
 //
 //// todo: set the configs later
-
+//
 //        //int dieTime = ConfigIntValues.WORMS_DIE_TIME.getValue();
 //            boolean noDieTime = true;
 //            int dieTime = (!noDieTime)?1000:0;
@@ -144,7 +146,6 @@
 //    @Override
 //    protected void writeAdditional(CompoundNBT compound) {
 //        compound.putInt("Timer", this.timer);
-//
 //    }
 //
 //

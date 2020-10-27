@@ -18,7 +18,6 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks=":prepareRunClient" externalProjectPath="$PROJECT_DIR$" />
     </method>
   </configuration>
 </component>
