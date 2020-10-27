@@ -45,10 +45,9 @@ public class WormRenderer extends EntityRenderer<WormEntityBase> {
 
 
 
-        matrixStackIn.translate(0.3D, 1.0D, 0.3D);
+        matrixStackIn.translate(0, 1.0D, 0);
         float currentTime = entityIn.getEntityWorld().getGameTime() + partialTicks;
-        matrixStackIn.translate(0D,  0.1D, 0D);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 2));
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 10));
         renderItem(stack, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 
         super.render(entityIn,entityYaw, partialTicks,matrixStackIn,bufferIn,packedLightIn);
