@@ -1,5 +1,6 @@
 package com.bioast.addworms.client;
 
+import com.bioast.addworms.AddWorms;
 import com.bioast.addworms.entities.WormEntityBase;
 import com.bioast.addworms.init.ModItems;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -14,15 +15,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.logging.log4j.Level;
 
 @OnlyIn(Dist.CLIENT)
 public class WormRenderer extends EntityRenderer<WormEntityBase> {
 
     private float degrees;
-    private static ItemStack stack = new ItemStack(ModItems.WORM.get());
+    private static ItemStack stack = ItemStack.EMPTY;
 
-    public static void fixItemStack() {
-        stack = new ItemStack(ModItems.WORM.get());
+    public void fixItemStack(ItemStack itemStack) {
+        AddWorms.LOGGER.log(Level.DEBUG,"stack is fixed: "+ itemStack.toString());
+        stack = itemStack;
     }
 
     public WormRenderer(EntityRendererManager renderManager) {
@@ -42,9 +45,6 @@ public class WormRenderer extends EntityRenderer<WormEntityBase> {
     @Override
     public void render(WormEntityBase entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         matrixStackIn.push();
-
-
-
         matrixStackIn.translate(0, 1.0D, 0);
         float currentTime = entityIn.getEntityWorld().getGameTime() + partialTicks;
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 10));
@@ -63,7 +63,7 @@ public class WormRenderer extends EntityRenderer<WormEntityBase> {
     }
 
 
-    private void renderItem(ItemStack stack, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn) {
+    protected void renderItem(ItemStack stack, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn) {
         Minecraft.getInstance().getItemRenderer().renderItem(stack, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
     }
 }

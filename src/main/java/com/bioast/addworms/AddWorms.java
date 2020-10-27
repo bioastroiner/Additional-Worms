@@ -1,5 +1,7 @@
 package com.bioast.addworms;
 
+import com.bioast.addworms.client.WormBasicRenderer;
+import com.bioast.addworms.client.WormRedRenderer;
 import com.bioast.addworms.client.WormRenderer;
 import com.bioast.addworms.init.InitRegister;
 import com.bioast.addworms.init.ModItems;
@@ -21,12 +23,13 @@ import org.apache.logging.log4j.Logger;
 
 import static com.bioast.addworms.AddWorms.*;
 import static com.bioast.addworms.init.ModEntityTypes.WORM_ENTITY;
+import static com.bioast.addworms.init.ModEntityTypes.WORM_ENTITY_RED;
 
 @Mod(MODID)
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
 public class AddWorms
 {
-    private static final Logger LOGGER = LogManager.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "addworms";
     public static AddWorms instance;
 
@@ -46,7 +49,8 @@ public class AddWorms
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(), WormRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(), WormBasicRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_RED.get(), WormRedRenderer::new);
     }
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {

@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BasicWormItem extends WormItemBase {
-    public BasicWormItem(Properties properties) {
+public class WormItemBasic extends WormItemBase {
+    public WormItemBasic(Properties properties) {
         super(properties);
     }
 
@@ -43,7 +43,7 @@ public class BasicWormItem extends WormItemBase {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("_||Classic||_"));
+        tooltip.add(new StringTextComponent("Classic worm nothing Special -- Tills , makes wet , Bonemill effect somewhat"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }
