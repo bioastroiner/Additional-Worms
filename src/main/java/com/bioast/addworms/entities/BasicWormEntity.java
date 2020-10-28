@@ -89,7 +89,6 @@ public class BasicWormEntity extends WormEntityBase implements IWorm {
         super.setDead();
     }
 
-    @Override
     public ItemStack getItemDrop() {
         return new ItemStack(ModItems.WORM.get(),1);
     }

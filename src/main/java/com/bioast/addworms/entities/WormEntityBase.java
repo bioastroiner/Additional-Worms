@@ -1,5 +1,6 @@
 package com.bioast.addworms.entities;
 
+import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import com.bioast.addworms.utils.helpers.ParticleHelper;
 import com.bioast.addworms.utils.intefaces.IWorm;
@@ -64,9 +65,10 @@ public abstract class WormEntityBase extends Entity implements IWorm {
     }
     public void setDead(){
         BlockPos pos = getPosition();
-        Minecraft.getInstance().player.sendMessage(new StringTextComponent("a worm has died at: "+pos.toString()));
+        Minecraft.getInstance().player.sendMessage(new StringTextComponent("worm died at: "+pos.toString()));
         this.remove();
     }
+
     @Override
     protected void registerData() {
 

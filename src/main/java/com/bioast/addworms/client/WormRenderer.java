@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.Level;
@@ -20,7 +21,7 @@ import org.apache.logging.log4j.Level;
 @OnlyIn(Dist.CLIENT)
 public class WormRenderer extends EntityRenderer<WormEntityBase> {
 
-    private float degrees;
+    protected float degrees;
     private static ItemStack stack = ItemStack.EMPTY;
 
     public void fixItemStack(ItemStack itemStack) {
@@ -45,15 +46,30 @@ public class WormRenderer extends EntityRenderer<WormEntityBase> {
     @Override
     public void render(WormEntityBase entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         matrixStackIn.push();
-        matrixStackIn.translate(0, 1.0D, 0);
+        matrixStackIn.translate(0, 0.8D, 0);
         float currentTime = entityIn.getEntityWorld().getGameTime() + partialTicks;
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 10));
+        overrideRender(entityIn,entityYaw,partialTicks,matrixStackIn,bufferIn,packedLightIn);
         renderItem(stack, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 
         super.render(entityIn,entityYaw, partialTicks,matrixStackIn,bufferIn,packedLightIn);
         matrixStackIn.pop();
+        
+        matrixStackIn.push();
+        matrixStackIn.translate(0,1.5D, 0);
+        renderName(entityIn, entityIn.getDisplayName().getFormattedText(),matrixStackIn,bufferIn,packedLightIn);
+        matrixStackIn.pop();
         super.shadowOpaque = 0f;
         super.shadowSize = 0f;
+
+    }
+
+    @Override
+    protected boolean canRenderName(WormEntityBase entity) {
+        return true;
+    }
+
+    protected void overrideRender(WormEntityBase entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn){
 
     }
 

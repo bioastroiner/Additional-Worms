@@ -17,10 +17,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import org.apache.logging.log4j.Level;
 
-public class WormEntityRed extends WormEntityBase implements IWorm {
-    public WormEntityRed(EntityType<?> entityTypeIn, World worldIn) {
+public class WormEntityFast extends WormEntityBase implements IWorm {
+    public WormEntityFast(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
+
+    ItemStack dropStack = new ItemStack(ModItems.WORM_FAST.get(),1);
 
     @Override
     public void tick() {
@@ -36,7 +38,7 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
 
                         if (canWormify(this.world, pos, state)) {
                             boolean isFarmland = block instanceof FarmlandBlock;
-                            if (!isFarmland || state.get(BlockStateProperties.MOISTURE_0_7).intValue() < 7 || state.getBlock() instanceof GrassBlock) {
+                            if (!isFarmland || state.get(BlockStateProperties.MOISTURE_0_7).intValue() < 7 || state.getBlock() instanceof GrassBlock || state.getBlock() == Blocks.GRASS_BLOCK) {
                                 if (isMiddlePose || this.world.rand.nextFloat() >= 0.45F) {
                                     if (!isFarmland) DefaultFarmerBehavior.useHoeAt(this.world, pos);
                                     state = this.world.getBlockState(pos);
@@ -86,14 +88,14 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
 
     @Override
     public void setDead() {
-        EntityHelper.dropItem(getPosition(),getItemDrop(),getEntityWorld());
+        EntityHelper.dropItem(getPosition(),new ItemStack(ModItems.WORM_FAST.get()),getEntityWorld());
         Minecraft.getInstance().player.sendMessage(new StringTextComponent(getItemDrop().toString()));
         super.setDead();
     }
 
 
     public ItemStack getItemDrop() {
-        return new ItemStack(ModItems.WORM_RED.get(),1);
+        return new ItemStack(ModItems.WORM_FAST.get(),1);
     }
 
     @Override

@@ -15,8 +15,16 @@ public class WormBasicRenderer extends WormRenderer {
         fixItemStack(new ItemStack(ModItems.WORM.get()));
     }
 
+    ItemStack itemStackRender;
+
+    @Override
+    public void fixItemStack(ItemStack itemStack) {
+        itemStackRender = itemStack;
+    }
+
+
     @Override
     protected void renderItem(ItemStack stack, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn) {
-        Minecraft.getInstance().getItemRenderer().renderItem(new ItemStack(ModItems.WORM.get()), ItemCameraTransforms.TransformType.FIXED, combinedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
+        Minecraft.getInstance().getItemRenderer().renderItem(itemStackRender, ItemCameraTransforms.TransformType.FIXED, combinedLightIn, OverlayTexture.NO_OVERLAY, matrixStackIn, bufferIn);
     }
 }

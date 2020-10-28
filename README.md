@@ -38,6 +38,5 @@ based on **ActuallyAddition**'s **Worms**
 - [ ] Dendritic Worm (tree worm basically)
 - [ ] LeatherWork Worm
 - [ ] Armorer Worm
-- [ ]
 
 
