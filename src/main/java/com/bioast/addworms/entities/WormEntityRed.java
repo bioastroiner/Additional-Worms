@@ -30,32 +30,21 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
     public void tick() {
         super.tick();
         if(!world.isRemote){
-//            if (this.timer % 50 == 0) {
-//                for (int x = -1; x <= 1; x++) {
-//                    for (int z = -1; z <= 1; z++) {
-//                        BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z);
-//                        BlockState state = this.world.getBlockState(pos);
-//                        Block block = state.getBlock();
-//                        boolean isMiddlePose = x == 0 && z == 0;
-//                        if (canWormify(this.world, pos, state,block == Blocks.STONE)) {
-//                            if(rand.nextFloat() > 0){
-//                                world.setBlockState(pos,Blocks.REDSTONE_ORE.getDefaultState());
-//                            }
-//                        }
-//                        Debug.log(Boolean.toString(isMiddlePose));
-//                    }
-//                }
-//            }
-            for (int x = -1; x <= 1; x++) { for (int z = -1; z <= 1; z++) { // Here we check for Blocks around ore Worm in a 3 by 3 area
-                BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z); // here we get the Block we are itirating through in a 3 x 3 area
-                boolean isMiddlePose = x==0 && z==0; // this is the center , usually were our worm is staying in
-                if(canWormify(world,pos,world.getBlockState(pos),world.getBlockState(pos).getBlock() == Blocks.STONE && !isMiddlePose)){ // here we check if our worm can preform action on one of the blocks around it // okay now we need to make sure we don't make underneath ourself redstone
-                    world.setBlockState(pos,Blocks.REDSTONE_ORE.getDefaultState());
-                    Debug.log("Block has been set at: "+pos.toString());
-                } else if(isMiddlePose) { // but it is the same {
-                    this.setDead();
-                }
-            }}
+            if(this.timer % 50 == 0){
+                for (int x = -1; x <= 1; x++) { for (int z = -1; z <= 1; z++) { // Here we check for Blocks around ore Worm in a 3 by 3 area
+                    BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z); // here we get the Block we are itirating through in a 3 x 3 area
+                    boolean isMiddlePose = x==0 && z==0; // this is the center , usually were our worm is staying in
+                    if(canWormify(world,pos, world.getBlockState(pos))){ // here we check if our worm can preform action on one of the blocks around it // okay now we need to make sure we don't make underneath ourself redstone
+                        if(!isMiddlePose)world.setBlockState(pos,Blocks.REDSTONE_ORE.getDefaultState());
+                        Debug.log("Block has been set at: "+pos.toString());
+                    }else if(isMiddlePose){
+                        this.setDead();
+                        break;
+                    }
+                }}
+            }
+
+
 
 // todo: set the configs later
 
