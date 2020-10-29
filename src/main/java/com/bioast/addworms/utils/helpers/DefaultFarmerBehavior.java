@@ -1,9 +1,6 @@
 package com.bioast.addworms.utils.helpers;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IGrowable;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
@@ -163,7 +160,8 @@ public class DefaultFarmerBehavior implements IFarmerBehavior {
             Block block = iblockstate.getBlock();
 
             if (world.isAirBlock(pos.up())) {
-                if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
+                if (block instanceof GrassBlock || block == Blocks.GRASS_PATH) {
+                    Debug.log("Hey I tilled Grass do you see something?");
                     world.setBlockState(pos, Blocks.FARMLAND.getDefaultState());
                     return ActionResultType.SUCCESS;
                 }

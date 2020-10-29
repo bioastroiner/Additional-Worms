@@ -1,6 +1,7 @@
 package com.bioast.addworms.entities;
 
 import com.bioast.addworms.init.ModItems;
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.intefaces.IWorm;
@@ -36,6 +37,9 @@ public class BasicWormEntity extends WormEntityBase implements IWorm {
                             boolean isFarmland = block instanceof FarmlandBlock;
                             if (!isFarmland || state.get(BlockStateProperties.MOISTURE_0_7).intValue() < 7 || state.getBlock() instanceof GrassBlock) {
                                 if (isMiddlePose || this.world.rand.nextFloat() >= 0.45F) {
+                                    if(state.getBlock() instanceof GrassBlock){
+                                        //Debug.log("let me know i saw Grass but didn't worked so problem is from usHoeAt dude");
+                                    }
                                     if (!isFarmland) DefaultFarmerBehavior.useHoeAt(this.world, pos);
                                     state = this.world.getBlockState(pos);
                                     isFarmland = state.getBlock() instanceof FarmlandBlock;

@@ -33,7 +33,7 @@ public class MudyDirt extends MudyDirtBase {
             if(f > 0.96f){
                 dropList.add(new ItemStack(ModItems.WORM.get(),1));
             }
-            dropList.add(new ItemStack(ModBlocks.MUDY_DIRT.get()));
+            dropList.add(new ItemStack(ModBlocks.MUDY_DIRT_DRIED.get()));
             for (ItemStack stack:dropList) {
                 ItemStack dropStack = stack;
                 worldIn.addEntity(new ItemEntity(worldIn,pos.getX() + 0.5,pos.getY()+0.5,pos.getZ()+0.5,dropStack));
