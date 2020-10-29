@@ -57,6 +57,16 @@ public abstract class WormEntityBase extends Entity implements IWorm {
             return false;
         }
     }
+    public static boolean canWormify(World world, BlockPos pos, BlockState state,boolean rightBlock) {
+        if (rightBlock) {
+            BlockPos posUp = pos.up();
+            BlockState stateUp = world.getBlockState(posUp);
+            Block blockUp = stateUp.getBlock();
+            return blockUp instanceof IPlantable || blockUp instanceof BushBlock || blockUp.canBeReplacedByLeaves(blockUp.getDefaultState(),world,posUp);
+        } else {
+            return false;
+        }
+    }
     @Override
     public void tick() {
         if(!this.world.isRemote){

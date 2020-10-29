@@ -1,9 +1,11 @@
 package com.bioast.addworms.entities;
 
 import com.bioast.addworms.init.ModItems;
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.intefaces.IWorm;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
@@ -17,6 +19,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import org.apache.logging.log4j.Level;
 
+import javax.swing.text.StyledEditorKit;
+
 public class WormEntityRed extends WormEntityBase implements IWorm {
     public WormEntityRed(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
@@ -26,52 +30,33 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
     public void tick() {
         super.tick();
         if(!world.isRemote){
-            if (this.timer % 50 == 0) {
-                for (int x = -1; x <= 1; x++) {
-                    for (int z = -1; z <= 1; z++) {
-                        BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z);
-                        BlockState state = this.world.getBlockState(pos);
-                        Block block = state.getBlock();
-                        boolean isMiddlePose = x == 0 && z == 0;
-
-                        if (canWormify(this.world, pos, state)) {
-                            boolean isFarmland = block instanceof FarmlandBlock;
-                            if (!isFarmland || state.get(BlockStateProperties.MOISTURE_0_7).intValue() < 7 || state.getBlock() instanceof GrassBlock) {
-                                if (isMiddlePose || this.world.rand.nextFloat() >= 0.45F) {
-                                    if (!isFarmland) DefaultFarmerBehavior.useHoeAt(this.world, pos);
-                                    state = this.world.getBlockState(pos);
-                                    isFarmland = state.getBlock() instanceof FarmlandBlock;
-
-                                    if (isFarmland) this.world.setBlockState(pos, state.with(BlockStateProperties.MOISTURE_0_7,7), 2);
-                                }
-                            }
-
-                            if (isFarmland && this.world.rand.nextFloat() >= 0.95F) {
-                                BlockPos plant = pos.up();
-                                if (!this.world.isAirBlock(plant)) {
-                                    // Here it dose the magic crop acceleratings
-                                    BlockState plantState = this.world.getBlockState(plant);
-                                    Block plantBlock = plantState.getBlock();
-                                    DefaultFarmerBehavior.useBonemeal(world,plant);
-                                    DefaultFarmerBehavior.useBonemeal(world,plant);
-                                    DefaultFarmerBehavior.useBonemeal(world,plant);
-
-                                    if ((plantBlock instanceof IGrowable || plantBlock instanceof IPlantable) && !(plantBlock instanceof GrassBlock || plantBlock == Blocks.DIRT)) {
-                                        plantBlock.tick(plantState, (ServerWorld) this.world, plant, this.world.rand);
-                                        DefaultFarmerBehavior.useBonemeal(world,plant);
-                                        BlockState newState = this.world.getBlockState(plant);
-                                        if (newState != plantState) {
-                                            this.world.playEvent(2005, plant, 0);
-                                        }
-                                    }
-                                }
-                            }
-                        } else if (isMiddlePose) {
-                            this.setDead();
-                        }
-                    }
+//            if (this.timer % 50 == 0) {
+//                for (int x = -1; x <= 1; x++) {
+//                    for (int z = -1; z <= 1; z++) {
+//                        BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z);
+//                        BlockState state = this.world.getBlockState(pos);
+//                        Block block = state.getBlock();
+//                        boolean isMiddlePose = x == 0 && z == 0;
+//                        if (canWormify(this.world, pos, state,block == Blocks.STONE)) {
+//                            if(rand.nextFloat() > 0){
+//                                world.setBlockState(pos,Blocks.REDSTONE_ORE.getDefaultState());
+//                            }
+//                        }
+//                        Debug.log(Boolean.toString(isMiddlePose));
+//                    }
+//                }
+//            }
+            for (int x = -1; x <= 1; x++) { for (int z = -1; z <= 1; z++) { // Here we check for Blocks around ore Worm in a 3 by 3 area
+                BlockPos pos = new BlockPos(this.getPosX() + x, this.getPosY(), this.getPosZ() + z); // here we get the Block we are itirating through in a 3 x 3 area
+                boolean isMiddlePose = x==0 && z==0; // this is the center , usually were our worm is staying in
+                if(canWormify(world,pos,world.getBlockState(pos),world.getBlockState(pos).getBlock() == Blocks.STONE && !isMiddlePose)){ // here we check if our worm can preform action on one of the blocks around it // okay now we need to make sure we don't make underneath ourself redstone
+                    world.setBlockState(pos,Blocks.REDSTONE_ORE.getDefaultState());
+                    Debug.log("Block has been set at: "+pos.toString());
+                } else if(isMiddlePose) { // but it is the same {
+                    this.setDead();
                 }
-            }
+            }}
+
 // todo: set the configs later
 
             //int dieTime = ConfigIntValues.WORMS_DIE_TIME.getValue();
@@ -84,10 +69,15 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
 
     }
 
+    public static boolean canWormify(World world, BlockPos pos, BlockState state) {
+        Block block = state.getBlock();
+        return block == Blocks.STONE;
+    }
+
     @Override
     public void setDead() {
         EntityHelper.dropItem(getPosition(),getItemDrop(),getEntityWorld());
-        Minecraft.getInstance().player.sendMessage(new StringTextComponent(getItemDrop().toString()));
+        Debug.log("",getItemDrop());
         super.setDead();
     }
 
