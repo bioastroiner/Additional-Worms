@@ -39,7 +39,7 @@ public class WormEntityFast extends WormEntityBase implements IWorm {
                         if (canWormify(this.world, pos, state)) {
                             boolean isFarmland = block instanceof FarmlandBlock;
                             if (!isFarmland || state.get(BlockStateProperties.MOISTURE_0_7).intValue() < 7 || state.getBlock() instanceof GrassBlock || state.getBlock() == Blocks.GRASS_BLOCK) {
-                                if (isMiddlePose || this.world.rand.nextFloat() >= 0.45F) {
+                                if (isMiddlePose || this.world.rand.nextFloat() >= 0.25F) {
                                     if (!isFarmland) DefaultFarmerBehavior.useHoeAt(this.world, pos);
                                     state = this.world.getBlockState(pos);
                                     isFarmland = state.getBlock() instanceof FarmlandBlock;
@@ -48,7 +48,7 @@ public class WormEntityFast extends WormEntityBase implements IWorm {
                                 }
                             }
 
-                            if (isFarmland && this.world.rand.nextFloat() >= 0.95F) {
+                            if (isFarmland && this.world.rand.nextFloat() >= 0.15F) {
                                 BlockPos plant = pos.up();
                                 if (!this.world.isAirBlock(plant)) {
                                     // Here it dose the magic crop acceleratings

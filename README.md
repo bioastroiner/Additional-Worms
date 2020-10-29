@@ -12,7 +12,7 @@ based on **ActuallyAddition**'s **Worms**
 
 ### Permission from AA's Devs
 
-* Not *yet*
+* Yes
 
 ## TODOs
 
@@ -22,12 +22,13 @@ based on **ActuallyAddition**'s **Worms**
 - [x] make a ground work for adding additional worms
 - [x] add red worm (test worm)
 - [ ] add Configs
-- [ ] get Permission from AA's Devs
+- [x] get Permission from AA's Devs
+- [ ] extract Digestive trend of worms and perDigest your food or fuels
 
 ### Worm list
 
 
-- [ ] Growth Accelator Worm
+- [x] Growth Accelator Worm
 - [ ] Flower Generator Worm (Botanic Worm)
 - [ ] -Worms that help in gathering of resources
 - [ ] Miner Worm (a worm that mines blocks)
