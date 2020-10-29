@@ -40,6 +40,7 @@ public class WormEntityRed extends WormEntityBase implements IWorm {
                     }else if(isMiddlePose){
                         this.setDead();
                         break;
+                        // yay it works now
                     }
                 }}
             }
