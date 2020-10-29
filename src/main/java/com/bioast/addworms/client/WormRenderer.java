@@ -46,19 +46,18 @@ public class WormRenderer extends EntityRenderer<WormEntityBase> {
     @Override
     public void render(WormEntityBase entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         matrixStackIn.push();
-        matrixStackIn.translate(0, 0.8D, 0);
+        matrixStackIn.translate(0, 0.7D, 0);
         float currentTime = entityIn.getEntityWorld().getGameTime() + partialTicks;
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 10));
         overrideRender(entityIn,entityYaw,partialTicks,matrixStackIn,bufferIn,packedLightIn);
         renderItem(stack, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-
-        super.render(entityIn,entityYaw, partialTicks,matrixStackIn,bufferIn,packedLightIn);
         matrixStackIn.pop();
         
         matrixStackIn.push();
         matrixStackIn.translate(0,1.5D, 0);
         renderName(entityIn, entityIn.getDisplayName().getFormattedText(),matrixStackIn,bufferIn,packedLightIn);
         matrixStackIn.pop();
+        super.render(entityIn,entityYaw, partialTicks,matrixStackIn,bufferIn,packedLightIn);
         super.shadowOpaque = 0f;
         super.shadowSize = 0f;
 

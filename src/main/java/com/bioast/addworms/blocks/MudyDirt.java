@@ -25,6 +25,7 @@ public class MudyDirt extends MudyDirtBase {
     List<ItemStack> dropList = new ArrayList<ItemStack>();
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        // loosers use loottables
         if(worldIn.isRemote()) return;
         if(!player.isCreative()){
             Random random = new Random();
