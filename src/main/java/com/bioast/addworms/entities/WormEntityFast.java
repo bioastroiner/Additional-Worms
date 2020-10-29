@@ -17,7 +17,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import org.apache.logging.log4j.Level;
 
-public class WormEntityFast extends WormEntityBase implements IWorm {
+public class WormEntityFast extends WormEntityBase {
     public WormEntityFast(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }

@@ -26,6 +26,8 @@ public class ModBlocks {
     public static final RegistryObject<Block> MUDY_DIRT = BLOCKS.register("mudy_dirt",()->new MudyDirt(Block.Properties.from(DIRT)));
     public static final RegistryObject<Block> MUDY_DIRT_DRIED = BLOCKS.register("mudy_dirt_dried",()->new MudyDirtDried(Block.Properties.from(MUDY_DIRT.get())));
 
+    static final Item.Properties properties = new Item.Properties().group(WormsBlockGroup.getInstance());
+
     @SubscribeEvent
     public static void onRegisterItems(final RegistryEvent.Register<Item> event){
         final IForgeRegistry<Item> registry = event.getRegistry();
@@ -33,8 +35,7 @@ public class ModBlocks {
         BLOCKS.getEntries().stream().filter(
                 block -> !(block.get() instanceof FlowingFluidBlock) )
                 .map(RegistryObject::get).forEach(block->{
-            final Item.Properties properties = new Item.Properties();
-            final BlockItem blockItem = new BlockItem(block,properties.group(WormsBlockGroup.getInstance()));
+            final BlockItem blockItem = new BlockItem(block,properties);
             blockItem.setRegistryName(block.getRegistryName());
             registry.register(blockItem);
         });

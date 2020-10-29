@@ -1,10 +1,13 @@
 package com.bioast.addworms.init;
 
+import com.bioast.addworms.entities.WormItemDigester;
+import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.items.WormItemBasic;
 import com.bioast.addworms.items.WormItemFast;
 import com.bioast.addworms.items.WormItemRed;
 import com.bioast.addworms.utils.groups.WormsGroup;
-import net.minecraft.item.Item;
+import net.minecraft.entity.passive.RabbitEntity;
+import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -23,6 +26,11 @@ public class ModItems {
     public static final RegistryObject<Item> WORM = ITEMS.register("item_worm",()-> new WormItemBasic(wormBaseProperty));
     public static final RegistryObject<Item> WORM_RED = ITEMS.register("item_worm_red",()-> new WormItemRed(wormBaseProperty));
     public static final RegistryObject<Item> WORM_FAST = ITEMS.register("item_worm_fast",()->new WormItemFast(wormBaseProperty));
+    public static final RegistryObject<Item> WORM_DIGESTER = ITEMS.register("item_worm_digester",()->new WormItemDigester(wormBaseProperty));
+
+    public static final Food DIGESTED_FOOD_FOOD = (new Food.Builder()).hunger(4).saturation(0.3F).build();
+    public static final RegistryObject<Item> DIGESTED_FOOD = ITEMS.register("digested",()->new DigestedFood(new Item.Properties().group(ItemGroup.FOOD).food(DIGESTED_FOOD_FOOD)));
+
 
     @SubscribeEvent
     public static void registerItems(final RegistryEvent.Register<Item> event){

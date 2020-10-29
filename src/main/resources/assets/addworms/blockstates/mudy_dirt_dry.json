@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "": [
+      { "model": "addworms:block/mudy_dirt_dry" },
+      { "model": "addworms:block/mudy_dirt_dry", "y": 90 },
+      { "model": "addworms:block/mudy_dirt_dry", "y": 180 },
+      { "model": "addworms:block/mudy_dirt_dry", "y": 270 }
+    ]
+  }
+}

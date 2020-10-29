@@ -81,8 +81,7 @@ public abstract class WormItemBase extends Item {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("place it on the ground"));
-
+        //tooltip.add(new StringTextComponent("place it on the ground"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }

@@ -13,9 +13,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+version = '1.15.2-1.0' // this the version that comes in jar forexample : AdditionalWorms-1.15.2-1.0.jar
 group = 'com.bioast.addworms' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'addworms'
+archivesBaseName = 'AdditionalWorms' // this is the name of our .Jar mod file
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -87,6 +87,29 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+
+    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}:api")
+    // At runtime, use the full Hwyla jar
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}")
+}
+repositories{
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+
+    maven { url "https://maven.tehnut.info" }
+
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
