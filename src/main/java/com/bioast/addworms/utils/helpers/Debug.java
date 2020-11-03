@@ -16,7 +16,7 @@ import java.util.List;
 public class Debug {
 
     public static List<ITextComponent> cachLog = new ArrayList<>();
-    private static boolean doCach = true;
+    private static int cachMax = 10;
     /**
      * @param text
      * prints a generic Debug log into minecraft chat for fast Debuggings
@@ -77,6 +77,9 @@ public class Debug {
             cachLog.clear();
         }
         Minecraft.getInstance().ingameGUI.getChatGUI().clearChatMessages(false);
+        if(cachLog.size() > cachMax){
+            cachLog.clear();
+        }
         if(!withCach){
             if(keepCachInChat){
                 cachLog();
@@ -91,5 +94,8 @@ public class Debug {
         for (ITextComponent text:cachLog) {
             log(text.getString());
         }
+    }
+    public void setCachMax(int cachMax){
+        this.cachMax = cachMax;
     }
 }

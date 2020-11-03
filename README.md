@@ -21,6 +21,7 @@ based on **ActuallyAddition**'s **Worms**
 - [x] bringing back old worms
 - [x] make a ground work for adding additional worms
 - [x] add red worm (test worm)
+- [ ] Digester Worm  (Digest Foods to better one more eadable foods)
 - [ ] add Configs
 - [x] get Permission from AA's Devs
 - [ ] extract Digestive trend of worms and perDigest your food or fuels

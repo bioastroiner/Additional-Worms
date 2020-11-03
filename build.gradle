@@ -95,6 +95,23 @@ dependencies {
     compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}:api")
     // At runtime, use the full Hwyla jar
     runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}")
+
+    compileOnly fg.deobf("curse.maven:appleskin:2987251")
+
+    runtimeOnly fg.deobf("curse.maven:appleskin:2987251")
+
+    //deobfCompile "curse.maven:appleskin:2987251"
+
+    //deobfCompile "curse.maven:ctm:2642375"
+
+    //implementation 'com.github.squeek502:appleskin:1.15-forge-SNAPSHOT'
+
+    //implementation fg.deobf('com.github.bernie-g:geckolib:forge-1.15.2-geckolib-2.0.0-beta.7')
+
+    // dependency on the latest commit in the master branch
+    //implementation 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
+
+    //implementation 'com.github.User:Repo:Tag'
 }
 repositories{
     maven {
@@ -109,6 +126,10 @@ repositories{
     }
 
     maven { url "https://maven.tehnut.info" }
+
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 
 }
 
