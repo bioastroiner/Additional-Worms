@@ -1,4 +1,4 @@
-package com.bioast.addworms.entities;
+package com.bioast.addworms.items;
 
 import com.bioast.addworms.items.WormItemBase;
 import net.minecraft.client.util.ITooltipFlag;
@@ -42,9 +42,11 @@ public class WormItemDigester extends WormItemBase {
         NonNullList<ItemStack> Inv = ((PlayerEntity)player).inventory.mainInventory;
         for (ItemStack itemStack : Inv){
             if(itemStack.getItem().isFood()){
+                // here we digest stuffs
                 DigestFood(itemStack);
             }
         }
+
     }
     ItemStack DigestFood(ItemStack foodIn){
         // do stuff with it here later

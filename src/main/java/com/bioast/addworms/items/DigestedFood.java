@@ -2,106 +2,77 @@ package com.bioast.addworms.items;
 
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.Debug;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Food;
-import net.minecraft.item.Foods;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class DigestedFood extends Item {
 
-    ItemStack memicStack;
-    public CompoundNBT nbt;
-
-    public DigestedFood(Properties properties,ItemStack itemStackIn) {
-        super(properties.food(itemStackIn.getItem().getFood()));
-    }
     public DigestedFood(Properties properties){
         super(properties.food(ModItems.DIGESTED_FOOD_FOOD));
-        memicStack = new ItemStack(null);
     }
 
-    public void init(ItemStack stack){
-        String name = stack.getDisplayName().getString();
-        Food food = stack.getItem().getFood();
-        nbt.putString("name",name);
-        nbt.put("food",(INBT)food);
-        String s = nbt.get("food").getType().toString();
-        Debug.log(s);
+    public void addFood(Food food){
+        this.food = food;
+    }
+
+    public void setName(ITextComponent text){
+        textComponent = text;
+    }
+    private ITextComponent textComponent;
+
+    public void makeItFood(ItemStack currentStack,ItemStack FoodStack){
+        if(currentStack.serializeNBT().contains("isdigested")){
+
+        }
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putString("name",FoodStack.getDisplayName().getString());
+        nbt.putInt("hunger",FoodStack.getItem().getFood().getHealing() * 2);
+        nbt.putFloat("saturation",FoodStack.getItem().getFood().getSaturation() * 2);
+        nbt.putBoolean("isdigested",true);
+        nbt = currentStack.serializeNBT().merge(nbt);
+        currentStack.deserializeNBT(nbt);
+        Debug.logNBT(nbt);
+        if(currentStack.serializeNBT().contains("isdigested")){
+            Debug.log("it has it",true);
+            if(FoodStack.isFood()){
+                CompoundNBT nbt1 = currentStack.serializeNBT();
+                Food copiedFood = new Food.Builder()
+                        .hunger(nbt.getInt("hunger"))
+                        .saturation(nbt.getFloat("saturation"))
+                        .setAlwaysEdible()
+                        .fastToEat()
+                        .effect(()->new EffectInstance(Effects.REGENERATION,500,1),0.5f)
+                        .build();
+                if(currentStack.getItem() instanceof DigestedFood){
+                    ((DigestedFood)currentStack.getItem()).addFood(copiedFood);
+                }
+                currentStack.setDisplayName(new StringTextComponent(currentStack.serializeNBT().getString("name")).applyTextStyle(TextFormatting.GREEN));
+            }
+        }
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack newMemicStack = memicStack.copy();
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        Food memicFood = newMemicStack.getItem().getFood();
-        Food tempMemicFood = newMemicStack.getItem().getFood();;
-        memicFood = new Food.Builder().hunger(tempMemicFood.getHealing() * 2).build();
-        newMemicStack.setCount(itemstack.getCount());
-
-        if (memicStack.isFood()) {
-            if (playerIn.canEat(memicStack.getItem().getFood().canEatWhenFull())) {
-                playerIn.setActiveHand(handIn);
-                playerIn.setHeldItem(handIn,newMemicStack);
-                return ActionResult.resultConsume(itemstack);
-            } else {
-                return ActionResult.resultFail(itemstack);
-            }
-        } else {
-            return ActionResult.resultPass(playerIn.getHeldItem(handIn));
-        }
-    }
-
-    /**
-     * Called when the player finishes using this Item (E.g. finishes eating.). Not called when the player stops using
-     * the Item before the action is complete.
-     */
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        return this.isFood() ? entityLiving.onFoodEaten(worldIn, stack) : stack;
-    }
-
-    public ItemStack initilizeMemicStack(ItemStack itemstack){
-        ItemStack newMemicStack = memicStack.copy();
-        Food memicFood = newMemicStack.getItem().getFood();
-        Food tempMemicFood = newMemicStack.getItem().getFood();;
-        memicFood = new Food.Builder().hunger(tempMemicFood.getHealing() * 2).build();
-        newMemicStack.setCount(itemstack.getCount());
-        //Item item = new Item();
-        return newMemicStack;
-    }
-
-    @Override
-    public int getBurnTime(ItemStack itemStack) {
-        return memicStack.getBurnTime();
-    }
-
-    @Override
-    public SoundEvent getEatSound() {
-        return memicStack.getEatSound();
-    }
-
-    @Override
-    public boolean isFood() {
-        // probably not needed
-        return memicStack.isFood();
-    }
-    @Override
-    public boolean hasCustomProperties() {
-        return true;
+        makeItFood(playerIn.getHeldItem(handIn).getStack(),new ItemStack(Items.APPLE));
+        return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
     @Override
@@ -110,11 +81,16 @@ public class DigestedFood extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(nbt.getString("name")));
-
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
+        //makeItFood(stack);
+        super.onCreated(stack, worldIn, playerIn);
     }
 
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+//        stack.setDisplayName(new StringTextComponent(stack.serializeNBT().getString("name")).applyTextStyle(TextFormatting.GREEN));
+//        tooltip.add(new StringTextComponent(Integer.toString(this.food.getHealing())));
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
 
 }
