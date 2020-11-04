@@ -154,6 +154,7 @@ public class DefaultFarmerBehavior implements IFarmerBehavior {
         } else {
             //int hook = onHoeUse(itemstack, player, world, pos);
             int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(Vec3d.ZERO, Direction.UP,pos,false)));
+
             if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
             BlockState iblockstate = world.getBlockState(pos);
