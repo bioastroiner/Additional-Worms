@@ -2,6 +2,7 @@ package com.bioast.addworms.items;
 
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.Debug;
+import com.bioast.addworms.utils.interfaces.IFoodable;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -23,10 +24,10 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class DigestedFood extends Item {
+public class DigestedFood extends Item implements IFoodable {
 
     public DigestedFood(Properties properties){
-        super(properties.food(ModItems.DIGESTED_FOOD_FOOD));
+        super(properties);
     }
 
     public void addFood(Food food){
@@ -71,7 +72,7 @@ public class DigestedFood extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        makeItFood(playerIn.getHeldItem(handIn).getStack(),new ItemStack(Items.APPLE));
+        //makeItFood(playerIn.getHeldItem(handIn).getStack(),new ItemStack(Items.APPLE));
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
 
@@ -89,7 +90,7 @@ public class DigestedFood extends Item {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 //        stack.setDisplayName(new StringTextComponent(stack.serializeNBT().getString("name")).applyTextStyle(TextFormatting.GREEN));
-//        tooltip.add(new StringTextComponent(Integer.toString(this.food.getHealing())));
+        tooltip.add(new StringTextComponent("do you wanna eat this?!").applyTextStyle(TextFormatting.BLUE));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
