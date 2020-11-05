@@ -20,9 +20,9 @@ public class DigestHelper {
      * @param FoodIn
      * @return
      */
-    public static ItemStack DigestFood(Food FoodIn){
+    public static ItemStack DigestFood(Food FoodIn,float multiplier){
         ItemStack stackDigested = new ItemStack(ModItems.DIGESTED_FOOD.get());
-        return FoodHelper.generateFood(stackDigested,FoodIn);
+        return FoodHelper.generateFood(stackDigested,FoodIn,true,multiplier);
     }
 //    public static ItemStack makeItFood(ItemStack currentStack, ItemStack FoodStack){
 //        if(currentStack.serializeNBT().contains("isdigested")){
