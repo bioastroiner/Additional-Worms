@@ -6,6 +6,8 @@ import com.bioast.addworms.utils.interfaces.IItemWorm;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -28,11 +30,11 @@ public class WormItemDigester extends WormItemBase implements IItemWorm {
         }
         return false;
     }
-//
-//    @Override
-//    public ActionResultType onItemUse(ItemUseContext context) {
-//        return super.onItemUse(context);
-//    }
+
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        return super.onItemUse(context);
+    }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
