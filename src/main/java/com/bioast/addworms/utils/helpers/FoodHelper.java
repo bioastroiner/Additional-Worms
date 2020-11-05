@@ -23,7 +23,7 @@ public class FoodHelper {
         return nbtIn;
     }
 
-    public static ItemStack generateFood(ItemStack itemStackIn,Food foodIn,Boolean isGodFood,float multiplier){
+    public static void generateFood(ItemStack itemStackIn,Food foodIn,Boolean isGodFood,float multiplier){
         itemStackIn.deserializeNBT(writeFoodData(foodIn,itemStackIn.serializeNBT(),multiplier));
         CompoundNBT nbt = (CompoundNBT) itemStackIn.serializeNBT().get("food");
         Food godFood = new Food.Builder()
@@ -39,6 +39,5 @@ public class FoodHelper {
                 .build();
         itemStackIn.setDisplayName(new StringTextComponent(nbt.getString("name")).applyTextStyle(TextFormatting.AQUA));
         ((IFoodable)(itemStackIn.getItem())).addFood((isGodFood)?godFood:food);
-        return itemStackIn;
     }
 }
