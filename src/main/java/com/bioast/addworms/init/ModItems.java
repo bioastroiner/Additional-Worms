@@ -1,12 +1,11 @@
 package com.bioast.addworms.init;
 
-import com.bioast.addworms.entities.WormItemDigester;
+import com.bioast.addworms.items.WormItemDigester;
 import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.items.WormItemBasic;
 import com.bioast.addworms.items.WormItemFast;
 import com.bioast.addworms.items.WormItemRed;
 import com.bioast.addworms.utils.groups.WormsGroup;
-import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

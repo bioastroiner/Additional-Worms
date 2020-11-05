@@ -90,7 +90,6 @@ public abstract class WormEntityBase extends Entity implements IWorm {
     @Override
     protected void writeAdditional(CompoundNBT compound) {
         compound.putInt("Timer", this.timer);
-
     }
     @Override
     public IPacket<?> createSpawnPacket() {
