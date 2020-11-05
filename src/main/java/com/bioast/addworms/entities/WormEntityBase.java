@@ -1,31 +1,18 @@
 package com.bioast.addworms.entities;
 
-import com.bioast.addworms.init.ModItems;
-import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
-import com.bioast.addworms.utils.helpers.ParticleHelper;
-import com.bioast.addworms.utils.intefaces.IWorm;
+import com.bioast.addworms.utils.interfaces.IWorm;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.extensions.IForgePacketBuffer;
 import net.minecraftforge.fml.network.NetworkHooks;
-import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 

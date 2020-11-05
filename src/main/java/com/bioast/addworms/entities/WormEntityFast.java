@@ -3,7 +3,6 @@ package com.bioast.addworms.entities;
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import com.bioast.addworms.utils.helpers.EntityHelper;
-import com.bioast.addworms.utils.intefaces.IWorm;
 import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
@@ -15,7 +14,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-import org.apache.logging.log4j.Level;
 
 public class WormEntityFast extends WormEntityBase {
     public WormEntityFast(EntityType<?> entityTypeIn, World worldIn) {

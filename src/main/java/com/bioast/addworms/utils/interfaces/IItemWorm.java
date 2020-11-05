@@ -1,4 +1,4 @@
-package com.bioast.addworms.utils.intefaces;
+package com.bioast.addworms.utils.interfaces;
 
 import com.bioast.addworms.entities.WormEntityBase;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,10 +1,9 @@
 package com.bioast.addworms.items;
 
-import com.bioast.addworms.entities.BasicWormEntity;
 import com.bioast.addworms.entities.WormEntityBase;
 import com.bioast.addworms.entities.WormEntityRed;
 import com.bioast.addworms.init.ModEntityTypes;
-import com.bioast.addworms.utils.intefaces.IItemWorm;
+import com.bioast.addworms.utils.interfaces.IItemWorm;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
@@ -13,12 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;

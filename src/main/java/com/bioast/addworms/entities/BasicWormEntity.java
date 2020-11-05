@@ -1,10 +1,9 @@
 package com.bioast.addworms.entities;
 
 import com.bioast.addworms.init.ModItems;
-import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import com.bioast.addworms.utils.helpers.EntityHelper;
-import com.bioast.addworms.utils.intefaces.IWorm;
+import com.bioast.addworms.utils.interfaces.IWorm;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
