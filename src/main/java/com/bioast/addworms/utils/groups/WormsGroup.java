@@ -1,5 +1,6 @@
 package com.bioast.addworms.utils.groups;
 
+import com.bioast.addworms.init.ModBlocks;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,6 @@ public class WormsGroup extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(ModItems.WORM.get());
+        return new ItemStack(ModBlocks.MUDY_DIRT.get());
     }
 }

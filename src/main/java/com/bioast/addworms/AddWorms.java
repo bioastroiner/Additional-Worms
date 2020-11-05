@@ -1,9 +1,6 @@
 package com.bioast.addworms;
 
-import com.bioast.addworms.client.WormBasicRenderer;
-import com.bioast.addworms.client.WormFastRenderer;
-import com.bioast.addworms.client.WormRedRenderer;
-import com.bioast.addworms.client.WormRenderer;
+import com.bioast.addworms.client.*;
 import com.bioast.addworms.init.InitRegister;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.block.Block;
@@ -52,6 +49,7 @@ public class AddWorms
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(), WormBasicRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_RED.get(), WormRedRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_FAST.get(), WormFastRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_DIGESTER.get(), WormDigesterRenderer::new);
     }
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
