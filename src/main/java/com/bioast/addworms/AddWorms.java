@@ -43,6 +43,7 @@ public class AddWorms
     }
 
     private void setup(final FMLCommonSetupEvent event) {
+
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {

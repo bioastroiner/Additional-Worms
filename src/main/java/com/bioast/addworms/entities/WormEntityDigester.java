@@ -4,11 +4,15 @@ import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.utils.helpers.*;
 import com.bioast.addworms.utils.interfaces.IFoodable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Food;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
@@ -16,6 +20,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
@@ -45,57 +50,35 @@ public class WormEntityDigester extends WormEntityBase {
         BlockPos particlePos = getPosition();
         ParticleHelper.spawnParticles(world,particlePos,10, ParticleTypes.EFFECT);
         if(world.isRemote()) return;
-//        Debug.log(Integer.toString(EntityHelper.getItemEntitiesInArea(
-//                new BlockPos(getPosX() - 1,getPosY() - 1,getPosZ() - 1),
-//                new BlockPos(getPosX() + 1,getPosY() + 1,getPosZ() + 1),world).size()));
+
         if(timer % 20 == 0){
             List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class,
                     new AxisAlignedBB(getPosX() - 1, getPosY(), getPosZ() - 1, getPosX() + 2,
                     getPosY() + 1, getPosZ() + 2));
+
             if(items.size() > 0){
                 for(ItemEntity item: items){
-//                Debug.log("",item.getItem());
                     if(item != null){
                         if(item.getItem().getItem().isFood()){
-                            // here do stuff related to Digesting my food :)
-                            //first check if the item isn't already digested
                             if(!(item.getItem().getItem() instanceof DigestedFood)){
-                                ItemStack drop = new ItemStack(ModItems.DIGESTED_FOOD.get(),
-                                        item.getItem().getCount());
-                                CompoundNBT nbt = drop.serializeNBT();
-                                Food food = item.getItem().getItem().getFood();
-                                FoodHelper.writeFoodData(food,nbt,2);
-                                drop.deserializeNBT(drop.serializeNBT().merge(nbt));
 
-                                ///temp
-                                Food godFood = new Food.Builder()
-                                        .hunger(food.getHealing())
-                                        .saturation(food.getSaturation())
-                                        .setAlwaysEdible()
-                                        .fastToEat()
-                                        .effect(()->new EffectInstance(Effects.REGENERATION,500,1),0.5f)
-                                        .build();
-                                ((IFoodable)(drop.getItem())).addFood(godFood);
+                                Item digestedFood = ModItems.DIGESTED_FOOD.get();
+                                Debug.log(String.format("Res Loc:&",ModItems.DIGESTED_FOOD.getId()));
 
+                                Food ItemOnGroundFood = item.getItem().getItem().getFood();
 
-                                ///temp
+                                ItemStack drop = new ItemStack(digestedFood);
+                                CompoundNBT tag = drop.serializeNBT();
+                                NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing()).saturation(ItemOnGroundFood.getSaturation()).build(),tag);
+                                drop.deserializeNBT(tag);
+                                EntityHelper.dropItem(item.getPosition(),drop, world);
 
-                                EntityHelper.dropItem(item.getPosition(),drop,
-                                        world);
                                 particlePos = item.getPosition();
                                 item.remove();
                             }
-
-
                         }
                     }
             }
-
-//            for(ItemEntity entity: EntityHelper.getItemEntitiesInArea(
-//                    new BlockPos(getPosX() - 1,getPosY() - 1,getPosZ() - 1),
-//                    new BlockPos(getPosX() + 1,getPosY() + 1,getPosZ() + 1),world)){
-//
-//                }
             }
         }
         if(world.isAirBlock(getPosition())){
