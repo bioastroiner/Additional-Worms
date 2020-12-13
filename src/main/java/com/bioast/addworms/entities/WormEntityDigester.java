@@ -4,6 +4,7 @@ import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.utils.helpers.*;
 import com.bioast.addworms.utils.interfaces.IFoodable;
+import net.minecraft.block.ChestBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.list.ExtendedList;
 import net.minecraft.entity.Entity;
@@ -17,9 +18,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
@@ -63,14 +66,15 @@ public class WormEntityDigester extends WormEntityBase {
                             if(!(item.getItem().getItem() instanceof DigestedFood)){
 
                                 Item digestedFood = ModItems.DIGESTED_FOOD.get();
-                                Debug.log(String.format("Res Loc:&",ModItems.DIGESTED_FOOD.getId()));
+                                Debug.log(String.format("Res Loc:%s",ModItems.DIGESTED_FOOD.getId()));
 
                                 Food ItemOnGroundFood = item.getItem().getItem().getFood();
 
-                                ItemStack drop = new ItemStack(digestedFood);
+                                ItemStack drop = new ItemStack(digestedFood,item.getItem().getCount());
                                 CompoundNBT tag = drop.serializeNBT();
-                                NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing()).saturation(ItemOnGroundFood.getSaturation()).build(),tag);
-                                drop.deserializeNBT(tag);
+                                //drop.deserializeNBT(tag);
+                                drop.setTagInfo(NBTHelper.Tags.TAG_FOOD_HEADER,
+                                        NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing()).saturation(ItemOnGroundFood.getSaturation()).build(),tag));
                                 EntityHelper.dropItem(item.getPosition(),drop, world);
 
                                 particlePos = item.getPosition();

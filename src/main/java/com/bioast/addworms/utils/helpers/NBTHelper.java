@@ -1,9 +1,12 @@
 package com.bioast.addworms.utils.helpers;
 
+import com.bioast.addworms.AddWorms;
 import net.minecraft.item.Food;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraftforge.common.util.Constants;
+import org.apache.logging.log4j.Level;
 
 public class NBTHelper {
 
@@ -25,11 +28,18 @@ public class NBTHelper {
         return foodTag;
     }
     public static Food readFoodFromNBT(CompoundNBT nbt){
-        if(nbt.hasUniqueId(Tags.TAG_FOOD_HEADER)){
-            Food food = new Food.Builder().hunger(nbt.getInt(Tags.TAG_HUNGER)).saturation(nbt.getFloat(Tags.TAG_SAT)).build();
-            return food;
+        try {
+            if(nbt.contains(Tags.TAG_FOOD_HEADER)){
+                Food food =
+                        new Food.Builder().hunger(nbt.getInt(Tags.TAG_HUNGER)).saturation(nbt.getFloat(Tags.TAG_SAT)).build();
+                return food;
+            }
         }
-        throw new IllegalArgumentException();
+        catch (Exception e){
+            AddWorms.LOGGER.log(Level.ERROR,String.format("ItemStack at & is not a custome food NBT : ERROR &",nbt, e));
+            return null;
+        }
+        return null;
     }
 
     public class Tags {
