@@ -4,6 +4,7 @@ import com.bioast.addworms.AddWorms;
 import com.bioast.addworms.utils.helpers.NBTHelper;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -77,8 +78,10 @@ public class DigestedFood extends Item {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Hunger: "+stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
-        tooltip.add(new StringTextComponent("From: " + getID(stack)));
+        if(stack.hasTag()){
+            tooltip.add(new StringTextComponent("Hunger: "+stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
+            tooltip.add(new StringTextComponent("From: " + getID(stack)));
+        }
     }
 
     public String getID(ItemStack stack) {
@@ -87,10 +90,15 @@ public class DigestedFood extends Item {
 
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
-        if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
-            stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
-            return new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")");
+        if(stack.hasTag()){
+            if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
+                stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
+                return new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")");
+            }
+            return super.getDisplayName(stack);
         }
-        return new TranslationTextComponent(super.getTranslationKey(stack));
+        else{
+            return super.getDisplayName(stack);
+        }
     }
 }
