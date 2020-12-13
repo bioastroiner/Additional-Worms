@@ -3,7 +3,10 @@ package com.bioast.addworms.items;
 import com.bioast.addworms.AddWorms;
 import com.bioast.addworms.utils.helpers.NBTHelper;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.Texture;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.*;
@@ -12,6 +15,8 @@ import net.minecraft.state.IProperty;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -40,17 +45,24 @@ public class DigestedFood extends Item {
             playerIn.setActiveHand(handIn);
 
             AddWorms.LOGGER.log(Level.DEBUG,itemstack.serializeNBT());
+            AddWorms.LOGGER.log(Level.DEBUG,food.getHealing());
 
-            playerIn.getFoodStats().addStats(2, food.getSaturation());
+            playerIn.getFoodStats().addStats(food.getHealing(), food.getSaturation());
             //playerIn.addStat(Stats.ITEM_USED.get(itemstack.getItem()));
 
             worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(),
                     SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 
+            itemstack.shrink(1);
             return ActionResult.resultConsume(itemstack);
         } else {
             return ActionResult.resultFail(itemstack);
         }
+    }
+
+    @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+        return entityLiving.onFoodEaten(worldIn, stack);
     }
 
     @Override
@@ -65,6 +77,20 @@ public class DigestedFood extends Item {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new StringTextComponent("Hunger: "+stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
+        tooltip.add(new StringTextComponent("From: " + getID(stack)));
+    }
 
+    public String getID(ItemStack stack) {
+        return stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
+    }
+
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
+            stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
+            return new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")");
+        }
+        return new TranslationTextComponent(super.getTranslationKey(stack));
     }
 }

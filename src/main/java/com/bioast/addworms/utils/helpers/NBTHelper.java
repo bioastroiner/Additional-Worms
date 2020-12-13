@@ -1,12 +1,15 @@
 package com.bioast.addworms.utils.helpers;
 
 import com.bioast.addworms.AddWorms;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Food;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraftforge.common.util.Constants;
 import org.apache.logging.log4j.Level;
+
+import javax.annotation.Nullable;
+import javax.swing.text.html.HTML;
 
 public class NBTHelper {
 
@@ -15,8 +18,17 @@ public class NBTHelper {
      * @param tagIn tag to write the food to
      * @return only return the food tag
      */
-    public static CompoundNBT writeFoodToNBT(Food foodIn,CompoundNBT tagIn){
+    public static CompoundNBT writeFoodToNBT(Food foodIn, CompoundNBT tagIn, @Nullable Item foodItem){
+
         CompoundNBT foodTag = new CompoundNBT();
+
+        if(foodItem != null)
+        {
+            if(!(foodItem.getFood() == foodIn)){
+                foodIn = foodItem.getFood();
+            }
+            foodTag.putString(Tags.TAG_FOOD_NAME,foodItem.getTranslationKey());
+        }
 
         foodTag.putInt(Tags.TAG_HUNGER,foodIn.getHealing());
         foodTag.putFloat(Tags.TAG_SAT,foodIn.getSaturation());
@@ -31,7 +43,7 @@ public class NBTHelper {
         try {
             if(nbt.contains(Tags.TAG_FOOD_HEADER)){
                 Food food =
-                        new Food.Builder().hunger(nbt.getInt(Tags.TAG_HUNGER)).saturation(nbt.getFloat(Tags.TAG_SAT)).build();
+                        new Food.Builder().hunger(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getInt(Tags.TAG_HUNGER)).saturation(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getFloat(Tags.TAG_SAT)).build();
                 return food;
             }
         }
@@ -45,6 +57,7 @@ public class NBTHelper {
     public class Tags {
         //Foods
         public static final String TAG_FOOD_HEADER = "Food";
+        public static final String TAG_FOOD_NAME = "Name";
         public static final String TAG_HUNGER = "Hunger";
         public static final String TAG_SAT = "Saturation";
         public static final String TAG_CAN_EAT_WHEN_FULL = "CanEatWhenFull";

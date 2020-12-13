@@ -74,7 +74,7 @@ public class WormEntityDigester extends WormEntityBase {
                                 CompoundNBT tag = drop.serializeNBT();
                                 //drop.deserializeNBT(tag);
                                 drop.setTagInfo(NBTHelper.Tags.TAG_FOOD_HEADER,
-                                        NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing()).saturation(ItemOnGroundFood.getSaturation()).build(),tag));
+                                        NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing() * 2).saturation(ItemOnGroundFood.getSaturation() * 1.5f).build(),tag,item.getItem().getItem()));
                                 EntityHelper.dropItem(item.getPosition(),drop, world);
 
                                 particlePos = item.getPosition();
