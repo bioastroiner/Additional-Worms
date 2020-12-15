@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
@@ -70,11 +71,21 @@ public class WormEntityDigester extends WormEntityBase {
 
                                 Food ItemOnGroundFood = item.getItem().getItem().getFood();
 
+                                ItemStack ItemOnGround = item.getItem();
+
                                 ItemStack drop = new ItemStack(digestedFood,item.getItem().getCount());
+
                                 CompoundNBT tag = drop.serializeNBT();
-                                //drop.deserializeNBT(tag);
+
                                 drop.setTagInfo(NBTHelper.Tags.TAG_FOOD_HEADER,
-                                        NBTHelper.writeFoodToNBT(new Food.Builder().hunger(ItemOnGroundFood.getHealing() * 2).saturation(ItemOnGroundFood.getSaturation() * 1.5f).build(),tag,item.getItem().getItem()));
+                                        NBTHelper.writeFoodToNBT(new Food.Builder()
+                                                .hunger(ItemOnGroundFood.getHealing() * 2)
+                                                .saturation(ItemOnGroundFood.getSaturation() * 1.5f)
+                                                .build(),
+                                                tag,
+                                                item.getItem().getItem()));
+
+
                                 EntityHelper.dropItem(item.getPosition(),drop, world);
 
                                 particlePos = item.getPosition();

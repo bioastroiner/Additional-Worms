@@ -39,7 +39,6 @@ public class AddWorms
     public AddWorms() {
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
-        bus.addListener(this::doClientStuff);
         InitRegister.ENTITY_TYPES.register(bus);
         InitRegister.ITEMS.register(bus);
         InitRegister.BLOCKS.register(bus);
@@ -50,20 +49,6 @@ public class AddWorms
 
     private void setup(final FMLCommonSetupEvent event) {
 
-    }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(), WormBasicRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_RED.get(), WormRedRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_FAST.get(), WormFastRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_DIGESTER.get(), WormDigesterRenderer::new);
-
-//        ModItems.DIGESTED_FOOD.get().addPropertyOverride(new ResourceLocation(MODID, "item"), new IItemPropertyGetter() {
-//            @Override
-//            public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-//                return 0;
-//            }
-//        });
     }
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {

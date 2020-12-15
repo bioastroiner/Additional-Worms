@@ -17,6 +17,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,8 +28,11 @@ import org.apache.logging.log4j.Level;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class DigestedFood extends Item {
+
 
     public DigestedFood(Properties properties){
         super(properties);
@@ -39,7 +43,6 @@ public class DigestedFood extends Item {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
 
         Food food = NBTHelper.readFoodFromNBT((CompoundNBT) itemstack.serializeNBT().get("tag"));
-
 
         if (playerIn.canEat(true)) {
 
@@ -81,24 +84,14 @@ public class DigestedFood extends Item {
         if(stack.hasTag()){
             tooltip.add(new StringTextComponent("Hunger: "+stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
             tooltip.add(new StringTextComponent("From: " + getID(stack)));
+
+            if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
+                stack.setDisplayName(new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")"));
+            }
         }
     }
 
     public String getID(ItemStack stack) {
         return stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
-    }
-
-    @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        if(stack.hasTag()){
-            if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
-                stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME);
-                return new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")");
-            }
-            return super.getDisplayName(stack);
-        }
-        else{
-            return super.getDisplayName(stack);
-        }
     }
 }

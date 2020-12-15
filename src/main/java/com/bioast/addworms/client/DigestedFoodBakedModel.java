@@ -1,80 +1,133 @@
 package com.bioast.addworms.client;
 
+import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.utils.helpers.NBTHelper;
+import com.google.common.collect.ImmutableMap;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
+import net.minecraftforge.client.model.data.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.IModelData;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-public class DigestedFoodBakedModel implements IBakedModel {
+public class DigestedFoodBakedModel extends DelegateBakedModel {
 
-    private final IBakedModel baseModel;
+    private final CustomOverrideList overrides;
 
-    private final CustomeOverrideList overrides;
-
-    DigestedFoodBakedModel( IBakedModel baseModel)
+    public DigestedFoodBakedModel(IBakedModel baseModel)
     {
-        this.baseModel = baseModel;
-        this.overrides = new CustomeOverrideList();
+        super(baseModel);
+        this.overrides = new CustomOverrideList();
     }
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, Random rand) {
-        return null;
-    }
-
-    @Override
-    public boolean isAmbientOcclusion() {
-        return false;
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return false;
-    }
-
-    @Override
-    public boolean func_230044_c_() {
-        return false;
-    }
-
-    @Override
-    public boolean isBuiltInRenderer() {
-        return false;
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return null;
-    }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return null;
+        return this.overrides;
     }
 
-    public class CustomeOverrideList extends ItemOverrideList{
-        CustomeOverrideList(){
-            super();
+    /**
+     * Since the ItemOverrideList handling comes before handling the perspective
+     * awareness (which is the first place where we know how we are being rendered)
+     * we need to remember the model of the crafting output, and make the decision
+     * on which to render later on. Sadly, Forge is pretty inconsistent when it will
+     * call the handlePerspective method, so some methods are called even on this
+     * interim-model. Usually those methods only matter for rendering on the ground
+     * and other cases, where we wouldn't render the crafting output model anyway,
+     * so in those cases we delegate to the model of the encoded pattern.
+     */
+    private static class ShiftHoldingModelWrapper extends DelegateBakedModel {
+
+        private final IBakedModel outputModel;
+
+        private ShiftHoldingModelWrapper(IBakedModel patternModel, IBakedModel outputModel) {
+            super(patternModel);
+            this.outputModel = outputModel;
         }
+
+        @Override
+        public boolean doesHandlePerspectives() {
+            return true;
+        }
+
+        @Override
+        public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+            // No need to re-check for shift being held since this model is only handed out
+            // in that case
+            if (cameraTransformType == ItemCameraTransforms.TransformType.GUI) {
+                ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> transforms = PerspectiveMapWrapper
+                        .getTransforms(outputModel.getItemCameraTransforms());
+                return PerspectiveMapWrapper.handlePerspective(this.outputModel, transforms, cameraTransformType, mat);
+            } else {
+                return getBaseModel().handlePerspective(cameraTransformType, mat);
+            }
+        }
+
+        // This determines diffuse lighting in the UI, and since we want to render
+        // the outputModel in the UI, we need to use it's setting here
+        @Override
+        public boolean func_230044_c_() {
+            return outputModel.func_230044_c_();
+        }
+
+    }
+
+    @Override
+    public boolean doesHandlePerspectives() {
+        return true;
+    }
+
+    @Override
+    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+        return getBaseModel().handlePerspective(cameraTransformType, mat);
+    }
+
+    /**
+     * Item Override Lists are the only point during item rendering where we can
+     * access the item stack that is being rendered. So this is the point where we
+     * actually check if shift is being held, and if so, determine the crafting
+     * output model.
+     */
+    private class CustomOverrideList extends ItemOverrideList {
 
         @Nullable
         @Override
-        public IBakedModel getModelWithOverrides(IBakedModel model, ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
-            return Minecraft.getInstance().getItemRenderer().getItemModelMesher().getItemModel(Items.APPLE );
-            //stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getString(NBTHelper.Tags.TAG_FOOD_NAME)
+        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, @Nullable World world,
+                                                 @Nullable LivingEntity entity) {
+            boolean shiftHeld = Screen.hasShiftDown();
+            if (shiftHeld) {
+                DigestedFood iep = (DigestedFood) stack.getItem();
+                //ItemStack output = iep.getOutput(stack);
+                ItemStack output = new ItemStack(Items.APPLE);
+                if (!output.isEmpty()) {
+                    IBakedModel realModel = Minecraft.getInstance().getItemRenderer().getItemModelMesher()
+                            .getItemModel(output);
+                    // Give the item model a chance to handle the overrides as well
+                    realModel = realModel.getOverrides().getModelWithOverrides(realModel, output, world, entity);
+                    return new ShiftHoldingModelWrapper(getBaseModel(), realModel);
+                }
+            }
+
+            return getBaseModel().getOverrides().getModelWithOverrides(originalModel, stack, world, entity);
         }
     }
 }

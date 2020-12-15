@@ -1,6 +1,4 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "addworms:items/digested_food"
-  }
+  "loader": "addworms:digested_food",
+  "baseModel": "addworms:item/digested_food_base"
 }
