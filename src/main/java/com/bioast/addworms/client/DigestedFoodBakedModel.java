@@ -16,9 +16,11 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.PerspectiveMapWrapper;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -114,13 +116,16 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
         public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, @Nullable World world,
                                                  @Nullable LivingEntity entity) {
             boolean shiftHeld = Screen.hasShiftDown();
-            if (shiftHeld) {
-                DigestedFood iep = (DigestedFood) stack.getItem();
-                //ItemStack output = iep.getOutput(stack);
-                ItemStack output = new ItemStack(Items.APPLE);
+            DigestedFood iep = (DigestedFood) stack.getItem();
+
+            if(shiftHeld && !iep.isSimple(stack)){
+                ResourceLocation itemID;
+                ItemStack output = new ItemStack(iep.getID(stack));
+
                 if (!output.isEmpty()) {
                     IBakedModel realModel = Minecraft.getInstance().getItemRenderer().getItemModelMesher()
                             .getItemModel(output);
+
                     // Give the item model a chance to handle the overrides as well
                     realModel = realModel.getOverrides().getModelWithOverrides(realModel, output, world, entity);
                     return new ShiftHoldingModelWrapper(getBaseModel(), realModel);

@@ -75,6 +75,8 @@ public class WormEntityDigester extends WormEntityBase {
 
                                 ItemStack drop = new ItemStack(digestedFood,item.getItem().getCount());
 
+                                //((DigestedFood)drop.getItem()).sendMemic(drop, ItemOnGround.copy().setCount(1));
+
                                 CompoundNBT tag = drop.serializeNBT();
 
                                 drop.setTagInfo(NBTHelper.Tags.TAG_FOOD_HEADER,
@@ -84,7 +86,6 @@ public class WormEntityDigester extends WormEntityBase {
                                                 .build(),
                                                 tag,
                                                 item.getItem().getItem()));
-
 
                                 EntityHelper.dropItem(item.getPosition(),drop, world);
 

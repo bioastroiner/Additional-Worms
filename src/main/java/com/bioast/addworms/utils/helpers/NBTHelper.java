@@ -27,7 +27,7 @@ public class NBTHelper {
             if(!(foodItem.getFood() == foodIn)){
                 foodIn = foodItem.getFood();
             }
-            foodTag.putString(Tags.TAG_FOOD_NAME,foodItem.getTranslationKey());
+            foodTag.putInt(Tags.TAG_FOOD_ID,Item.getIdFromItem(foodItem));
         }
 
         foodTag.putInt(Tags.TAG_HUNGER,foodIn.getHealing());
@@ -57,7 +57,7 @@ public class NBTHelper {
     public class Tags {
         //Foods
         public static final String TAG_FOOD_HEADER = "Food";
-        public static final String TAG_FOOD_NAME = "Name";
+        public static final String TAG_FOOD_ID = "FoodID";
         public static final String TAG_HUNGER = "Hunger";
         public static final String TAG_SAT = "Saturation";
         public static final String TAG_CAN_EAT_WHEN_FULL = "CanEatWhenFull";
