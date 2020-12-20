@@ -20,8 +20,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import org.apache.logging.log4j.Level;
 
-public class BasicWormEntity extends WormEntityBase implements IWorm {
-    public BasicWormEntity(EntityType<?> entityTypeIn, World worldIn) {
+public class WormEntityBasic extends WormEntityBase implements IWorm {
+    public WormEntityBasic(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);
     }
 
@@ -78,9 +78,6 @@ public class BasicWormEntity extends WormEntityBase implements IWorm {
                     }
                 }
             }
-// todo: set the configs later
-
-            //int dieTime = ConfigIntValues.WORMS_DIE_TIME.getValue();
             boolean noDieTime = true;
             int dieTime = (!noDieTime)?1000:0;
             if (dieTime > 0 && this.timer >= dieTime) {

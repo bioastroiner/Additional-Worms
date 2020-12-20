@@ -24,14 +24,6 @@ public abstract class WormEntityBase extends Entity implements IWorm {
         super(entityTypeIn, worldIn);
         this.setBoundingBox(null);
     }
-    @Override
-    public BlockPos getPosition() {
-        return super.getPosition();
-    }
-    @Override
-    public void setCustomName(@Nullable ITextComponent name) {
-        super.setCustomName(name);
-    }
     public static boolean canWormify(World world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
         boolean rightBlock = block instanceof FarmlandBlock || block instanceof GrassBlock || block == Blocks.GRASS_BLOCK || block == Blocks.DIRT;

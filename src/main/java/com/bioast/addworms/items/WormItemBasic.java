@@ -1,6 +1,6 @@
 package com.bioast.addworms.items;
 
-import com.bioast.addworms.entities.BasicWormEntity;
+import com.bioast.addworms.entities.WormEntityBasic;
 import com.bioast.addworms.init.ModEntityTypes;
 import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.interfaces.IItemWorm;
@@ -24,7 +24,7 @@ public class WormItemBasic extends WormItemBase implements IItemWorm {
     protected boolean placeWorm(PlayerEntity player, BlockPos pos, World world, ItemStack stack) {
         if (checkForWormsInArea(world,pos)) {
             Debug.log("",stack);
-            return addWormToWorld(world,pos,stack,player,new BasicWormEntity(ModEntityTypes.WORM_ENTITY.get(),world));
+            return addWormToWorld(world,pos,stack,player,new WormEntityBasic(ModEntityTypes.WORM_ENTITY.get(),world));
         }
         return false;
     }
