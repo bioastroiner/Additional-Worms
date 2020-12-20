@@ -1,6 +1,6 @@
 package com.bioast.addworms.client.models;
 
-import com.bioast.addworms.client.DigestedFoodBakedModel;
+import com.bioast.addworms.client.models.food.DigestedFoodBakedModel;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

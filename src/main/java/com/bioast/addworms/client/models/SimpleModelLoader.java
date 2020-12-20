@@ -1,4 +1,4 @@
-package com.bioast.addworms.client;
+package com.bioast.addworms.client.models;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;

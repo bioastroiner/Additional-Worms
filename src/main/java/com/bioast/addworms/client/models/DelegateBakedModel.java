@@ -1,4 +1,4 @@
-package com.bioast.addworms.client;
+package com.bioast.addworms.client.models;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.BlockState;

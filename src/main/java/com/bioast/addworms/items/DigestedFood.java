@@ -42,7 +42,7 @@ public class DigestedFood extends Item {
 
 
     public DigestedFood(Properties properties){
-        super(properties);
+        super(properties.group(null));
     }
 
     // rather simple client side caching.

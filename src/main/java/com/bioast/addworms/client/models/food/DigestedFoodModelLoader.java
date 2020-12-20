@@ -1,4 +1,4 @@
-package com.bioast.addworms.client;
+package com.bioast.addworms.client.models.food;
 
 import com.bioast.addworms.client.models.DigestedFoodModel;
 import com.google.gson.JsonDeserializationContext;
