@@ -5,6 +5,7 @@ import com.bioast.addworms.items.DigestedFood;
 import com.bioast.addworms.items.WormItemBasic;
 import com.bioast.addworms.items.WormItemFast;
 import com.bioast.addworms.items.WormItemRed;
+import com.bioast.addworms.items.misc.LauncherStick;
 import com.bioast.addworms.utils.groups.WormsGroup;
 import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
@@ -29,6 +30,7 @@ public class ModItems {
     public static final RegistryObject<Item> WORM_FAST = ITEMS.register("item_worm_fast",()->new WormItemFast(wormBaseProperty));
     public static final RegistryObject<Item> WORM_DIGESTER = ITEMS.register("item_worm_digester",()->new WormItemDigester(wormBaseProperty));
     public static final RegistryObject<Item> DIGESTED_FOOD = ITEMS.register("digested_food", ()->new DigestedFood(baseProperty));
+    public static final RegistryObject<Item> ITEM_LAUNCHER = ITEMS.register("launcher",()->new LauncherStick(baseProperty));
 
 
     @SubscribeEvent

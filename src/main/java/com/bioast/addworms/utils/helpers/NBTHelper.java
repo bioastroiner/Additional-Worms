@@ -6,12 +6,13 @@ import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import org.apache.logging.log4j.Level;
 
 import javax.annotation.Nullable;
 import javax.swing.text.html.HTML;
 
-public class NBTHelper {
+public final class NBTHelper {
 
     /**
      * @param foodIn the food that need to be writen
@@ -52,6 +53,12 @@ public class NBTHelper {
             return null;
         }
         return null;
+    }
+
+    public static void addDataToItemStack(ItemStack itemStack, String key, Boolean value){
+        CompoundNBT tag = new CompoundNBT();
+        tag.putBoolean(key,value);
+        itemStack.setTag(tag);
     }
 
     public class Tags {
