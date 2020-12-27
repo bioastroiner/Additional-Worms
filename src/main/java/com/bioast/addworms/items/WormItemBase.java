@@ -26,7 +26,7 @@ import java.util.List;
 
 import static com.bioast.addworms.AddWorms.MODID;
 
-public abstract class WormItemBase extends Item {
+public abstract class WormItemBase extends ModItem {
 
     boolean wormsEnabled = true;
 

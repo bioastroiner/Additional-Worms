@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.WeakHashMap;
 
-public class DigestedFood extends Item {
+public class DigestedFood extends ModItem {
 
 
     public DigestedFood(Properties properties){

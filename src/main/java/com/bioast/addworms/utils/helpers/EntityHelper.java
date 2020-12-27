@@ -2,6 +2,7 @@ package com.bioast.addworms.utils.helpers;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,5 +43,10 @@ public class EntityHelper {
             if(e instanceof ItemEntity) items.add((ItemEntity) e);
         }
         return items;
+    }
+
+    // TODO restrict damaging further more : like allowing not attacking bosses , some mobs etc...
+    public static boolean isEntityKillable(Entity e){
+        return e instanceof MobEntity && e.isNonBoss();
     }
 }

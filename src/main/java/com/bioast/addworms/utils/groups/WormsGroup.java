@@ -11,8 +11,10 @@ public class WormsGroup extends ItemGroup {
         super(index, label);
     }
 
+    public static final WormsGroup instance = new WormsGroup(ItemGroup.GROUPS.length,"WormsTab");
+
     public static final WormsGroup getInstance() {
-        return new WormsGroup(ItemGroup.GROUPS.length,"WormsTab");
+        return instance;
     }
 
     @Override
