@@ -1,5 +1,6 @@
 package com.bioast.addworms;
 
+import com.bioast.addworms.init.InitRegister;
 import com.bioast.addworms.init.ModBlocks;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.item.ItemGroup;
@@ -24,6 +25,7 @@ public class AddWorms
 
     public AddWorms() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        InitRegister.init();
         instance = this;
         MinecraftForge.EVENT_BUS.register(this);
     }
