@@ -1,6 +1,7 @@
-package com.bioast.addworms.items;
+package com.bioast.addworms.items.misc;
 
 import com.bioast.addworms.AddWorms;
+import com.bioast.addworms.items.ModItem;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.helpers.NBTHelper;
 import com.bioast.addworms.utils.helpers.ParticleHelper;

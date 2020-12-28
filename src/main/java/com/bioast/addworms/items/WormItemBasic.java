@@ -16,6 +16,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class WormItemBasic extends WormItemBase implements IItemWorm {
+
     public WormItemBasic(Properties properties) {
         super(properties);
     }

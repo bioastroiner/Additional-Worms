@@ -9,7 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import static com.bioast.addworms.AddWorms.MODID;
 
-public class InitRegister {
+public final class InitRegister {
 
     public static final DeferredRegister<Item> ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS,MODID);
     public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS,MODID);

@@ -1,4 +1,4 @@
-package com.bioast.addworms.entities;
+package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.mojang.datafixers.util.Pair;
@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -26,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /**
@@ -37,6 +37,8 @@ import java.util.function.Consumer;
  * all worm entities should inherite this class.
  *
  * No worm Entities is allowed onAir blocks
+ *
+ * TODO : we use the same system for storing items and drop of our worm , it should be changed in the future, it also can cause issues in future too
  *
  */
 public abstract class AbstractWormEntity extends Entity {
@@ -69,6 +71,23 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     /**
+     * implement this method in other
+     * worms to get the placing conditions
+     * such as dose this worm disAllows other worms to be placed around it or not. you can also enter
+     * a lamda in the itemclass to tell it what to do
+     * @implNote this method gets some input parameters all {@link Nullable} by default except the BlockPos parms
+     * @return true by default if there isn't any other worms in same spot
+     * ovveride it to change it remember to call the super to check for worms in smae spot!
+     *
+     */
+    public boolean getPlacingCriteria(){
+        AtomicBoolean isInSameSpace = new AtomicBoolean(false);
+        getOtherWormsInArea(1,null,e->{
+            isInSameSpace.set(e.getPosition() == getPosition());});
+        return isInSameSpace.get();
+    }
+
+    /**
      * a safer way than {@link Entity#remove()} to remove the worm entity's instance
      */
     public void kill(){
@@ -93,6 +112,11 @@ public abstract class AbstractWormEntity extends Entity {
         kill();
     }
 
+    /**
+     * use this method to remove entity
+     * without triggiring {@link AbstractWormEntity#onKill()} event
+     * @param keepData
+     */
     @Override
     public void remove(boolean keepData) {
         super.remove(keepData);
@@ -225,8 +249,9 @@ public abstract class AbstractWormEntity extends Entity {
         gatherEntitiesToPoint(Radius,getPosition().up(),c);
     }
 
-    public List<Entity> getOtherWormsInArea(int Radius, Class<? extends AbstractWormEntity> c, @Nullable Consumer<?
+    public List<Entity> getOtherWormsInArea(int Radius, @Nullable Class<? extends AbstractWormEntity> c, @Nullable Consumer<?
             extends Entity> act){
+        if(c==null) c = AbstractWormEntity.class;
         List<Entity> list = getEntitiesAround(Radius,c);
         if(act != null) list.forEach((Consumer<? super Entity>) act);
         return list;

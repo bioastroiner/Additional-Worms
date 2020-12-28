@@ -1,16 +1,5 @@
 package com.bioast.addworms.utils.helpers;
 
-import com.bioast.addworms.init.ModItems;
-import com.bioast.addworms.items.DigestedFood;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-
 public class DigestHelper {
     // okay this method would take an ItemStack witch is a Food and Digest it and make a Diegsted variant of Et so....
 

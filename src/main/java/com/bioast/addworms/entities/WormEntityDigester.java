@@ -1,30 +1,18 @@
 package com.bioast.addworms.entities;
 
 import com.bioast.addworms.init.ModItems;
-import com.bioast.addworms.items.DigestedFood;
+import com.bioast.addworms.items.misc.DigestedFood;
 import com.bioast.addworms.utils.helpers.*;
-import com.bioast.addworms.utils.interfaces.IFoodable;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.list.ExtendedList;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 

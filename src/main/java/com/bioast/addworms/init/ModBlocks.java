@@ -20,7 +20,7 @@ import static net.minecraft.block.Blocks.DIRT;
 import static net.minecraft.block.Blocks.STONE;
 
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ModBlocks {
+public final class ModBlocks {
 
     public static final RegistryObject<Block> DEBUG = BLOCKS.register("debug_block",()->new Block(Block.Properties.from(STONE)));
     public static final RegistryObject<Block> MUDY_DIRT = BLOCKS.register("mudy_dirt",()->new MudyDirt(Block.Properties.from(DIRT)));

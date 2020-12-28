@@ -1,7 +1,7 @@
 package com.bioast.addworms.client.models.food;
 
 import com.bioast.addworms.client.models.DelegateBakedModel;
-import com.bioast.addworms.items.DigestedFood;
+import com.bioast.addworms.items.misc.DigestedFood;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
