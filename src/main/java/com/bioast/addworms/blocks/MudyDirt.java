@@ -8,8 +8,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -33,7 +35,6 @@ public class MudyDirt extends MudyDirtBase {
             if(f > 0.96f){
                 dropList.add(new ItemStack(ModItems.WORM.get(),1));
             }
-            dropList.add(new ItemStack(ModBlocks.MUDY_DIRT_DRIED.get()));
             for (ItemStack stack:dropList) {
                 ItemStack dropStack = stack;
                 worldIn.addEntity(new ItemEntity(worldIn,pos.getX() + 0.5,pos.getY()+0.5,pos.getZ()+0.5,dropStack));

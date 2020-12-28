@@ -5,6 +5,7 @@ import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.ParticleHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,6 @@ public class MudyDirtDried extends MudyDirt {
     }
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        // loosers use loottables
         if(worldIn.isRemote()) return;
         if(!player.isCreative()){
             Random random = new Random();
@@ -42,5 +42,9 @@ public class MudyDirtDried extends MudyDirt {
             dropList.clear();
             ParticleHelper.spawnParticles(worldIn,pos.add(0.5d,0.5d,0.5d),10, ParticleTypes.COMPOSTER);
         }
+    }
+
+    @Override
+    public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
     }
 }

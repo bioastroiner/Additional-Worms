@@ -2,8 +2,6 @@ package com.bioast.addworms.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HoneyBlock;
-import net.minecraft.block.SoulSandBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.SoundEvents;
@@ -18,7 +16,7 @@ import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 
-public abstract class MudyDirtBase extends BlockBase {
+public abstract class MudyDirtBase extends ModBlock {
 
     public MudyDirtBase(Properties properties) {
         super(properties);
@@ -28,7 +26,6 @@ public abstract class MudyDirtBase extends BlockBase {
     public void onEntityWalk(World worldIn, BlockPos pos, Entity entityIn) {
         if(!entityIn.isCrouching()){
             if(entityIn.isBurning())entityIn.extinguish();
-            //entityIn.entityDropItem()
         }
         super.onEntityWalk(worldIn, pos, entityIn);
     }
