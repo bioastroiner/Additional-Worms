@@ -25,7 +25,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 import static com.bioast.addworms.AddWorms.MODID;
-
+/**
+ * TODO: this code is bound to be removed
+ */
 public abstract class WormItemBase extends ModItem {
 
     boolean wormsEnabled = true;

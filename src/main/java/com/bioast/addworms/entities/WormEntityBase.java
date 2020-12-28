@@ -16,6 +16,9 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
+/**
+ * TODO: this code is bound to be removed
+ */
 public abstract class WormEntityBase extends Entity implements IWorm {
 
     public int timer;

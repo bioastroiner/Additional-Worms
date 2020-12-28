@@ -14,7 +14,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-
+/**
+ * TODO: this code is bound to be moved
+ */
 public class WormEntityFast extends WormEntityBase {
     public WormEntityFast(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);

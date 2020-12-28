@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
+/**
+ * TODO: this code is bound to be moved
+ */
 public class WormEntityRed extends WormEntityBase implements IWorm {
     public WormEntityRed(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);

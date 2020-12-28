@@ -19,7 +19,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import org.apache.logging.log4j.Level;
-
+/**
+ * TODO: this code is bound to be moved
+ */
 public class WormEntityBasic extends WormEntityBase implements IWorm {
     public WormEntityBasic(EntityType<?> entityTypeIn, World worldIn) {
         super(entityTypeIn, worldIn);

@@ -16,6 +16,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * TODO: this code is bound to be moved
+ */
 public class WormEntityDigester extends WormEntityBase {
 
     public WormEntityDigester(EntityType<?> entityTypeIn, World worldIn) {

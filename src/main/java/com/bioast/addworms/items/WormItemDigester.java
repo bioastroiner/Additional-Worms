@@ -15,7 +15,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
+/**
+ * TODO: this code is bound to be removed
+ */
 public class WormItemDigester extends WormItemBase implements IItemWorm {
 
     public WormItemDigester(Properties properties) {
