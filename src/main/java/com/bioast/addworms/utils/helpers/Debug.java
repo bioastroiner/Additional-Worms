@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class Debug {
+public final class Debug {
 
     public static List<ITextComponent> cachLog = new ArrayList<>();
     private static int cachMax = 10;

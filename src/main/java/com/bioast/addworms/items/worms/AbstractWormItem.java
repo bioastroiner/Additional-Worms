@@ -25,7 +25,6 @@ public class AbstractWormItem<W extends AbstractWormEntity> extends ModItem {
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-
         BlockPos wormPos = context.getPos().add(0.5,0.5,0.5);
         addWormToWorld(context.getWorld(),context.getPos(),context.getItem(),context.getPlayer(),
                 instantiate(context.getWorld()));

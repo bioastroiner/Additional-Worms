@@ -1,20 +1,14 @@
 package com.bioast.addworms.items.misc;
 
-import com.bioast.addworms.AddWorms;
 import com.bioast.addworms.items.ModItem;
-import com.bioast.addworms.utils.groups.WormsGroup;
 import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.NBTHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTTypes;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -24,8 +18,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-
-import java.util.Random;
 
 import static com.bioast.addworms.AddWorms.MODID;
 

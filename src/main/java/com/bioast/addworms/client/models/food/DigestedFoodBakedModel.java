@@ -18,6 +18,11 @@ import net.minecraftforge.client.model.PerspectiveMapWrapper;
 
 import javax.annotation.Nullable;
 
+/**
+ * this code is being extracted form AE2's pattern
+ * script
+ * @author credits goes to appencha AE2's author.
+ */
 public class DigestedFoodBakedModel extends DelegateBakedModel {
 
     private final CustomOverrideList overrides;
@@ -107,14 +112,14 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
 
             if(shiftHeld && !iep.isSimple(stack)){
                 ResourceLocation itemID;
-                ItemStack output = new ItemStack(iep.getID(stack));
+                ItemStack digested = new ItemStack(iep.getID(stack));
 
-                if (!output.isEmpty()) {
+                if (!digested.isEmpty()) {
                     IBakedModel realModel = Minecraft.getInstance().getItemRenderer().getItemModelMesher()
-                            .getItemModel(output);
+                            .getItemModel(digested);
 
                     // Give the item model a chance to handle the overrides as well
-                    realModel = realModel.getOverrides().getModelWithOverrides(realModel, output, world, entity);
+                    realModel = realModel.getOverrides().getModelWithOverrides(realModel, digested, world, entity);
                     return new ShiftHoldingModelWrapper(getBaseModel(), realModel);
                 }
             }

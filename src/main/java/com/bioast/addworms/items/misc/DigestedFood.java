@@ -41,48 +41,32 @@ import java.util.WeakHashMap;
 
 public class DigestedFood extends ModItem {
 
-
     public DigestedFood(Properties properties){
         super(properties.group(null));
     }
-
-    // rather simple client side caching.
-    private static final Map<ItemStack, ItemStack> SIMPLE_CACHE = new WeakHashMap<>();
 
     private Random rand = new Random();
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getHeldItem(handIn);
-
-        Food food = NBTHelper.readFoodFromNBT((CompoundNBT) itemstack.serializeNBT().get("tag")); // this is a Bad
-        // way to do this
-
+        Food food = NBTHelper.readFoodFromNBT((CompoundNBT) itemstack.serializeNBT().get("tag"));
         if (playerIn.canEat(true)) {
-
             playerIn.setActiveHand(handIn);
-
-            AddWorms.LOGGER.log(Level.DEBUG,itemstack.serializeNBT());
-            AddWorms.LOGGER.log(Level.DEBUG,food.getHealing());
-
             playerIn.getFoodStats().addStats(food.getHealing(), food.getSaturation());
-            //playerIn.addStat(Stats.ITEM_USED.get(itemstack.getItem()));
-
-            worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(),
-                    SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+            worldIn.playSound((PlayerEntity)null, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ(), SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 
             if(!playerIn.isCreative()){
                 itemstack.shrink(1);
                 SoundHelper.playSimpleSound(worldIn,playerIn.getPosition(),SoundEvents.ENTITY_PLAYER_LEVELUP,0.1f);
             }
-
             if(rand.nextFloat() > 0.8f){
                 playerIn.heal(Math.min(new Random(1).nextInt(1),new Random(2).nextInt(1)) * 0.5f);
                 ParticleHelper.spawnParticles(worldIn,playerIn.getPosition().up(),rand.nextInt(1), ParticleTypes.HEART);
                 SoundHelper.playSimpleSound(worldIn,playerIn.getPosition(),SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
                         0.1f);
             }
-
+            playerIn.setActiveHand(handIn);
             return ActionResult.resultConsume(itemstack);
         } else {
             return ActionResult.resultFail(itemstack);
@@ -107,15 +91,21 @@ public class DigestedFood extends ModItem {
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         if(stack.hasTag()){
-            tooltip.add(new StringTextComponent("Hunger: "+stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
-            tooltip.add(new StringTextComponent("From: " + getID(stack)));
-
-            if(stack.getTag().contains(NBTHelper.Tags.TAG_FOOD_HEADER)){
-                stack.setDisplayName(new TranslationTextComponent(super.getTranslationKey(stack)).appendText(" (" + getID(stack) + ")"));
-            }
+            tooltip.add(new StringTextComponent("Hunger: "+stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_HUNGER)));
+            tooltip.add(new StringTextComponent("Saturation: "+stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getFloat(NBTHelper.Tags.TAG_SAT)));
+            tooltip.add(new StringTextComponent("Based on: " + getID(stack)));
         }
     }
 
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return 16;
+    }
+
+    /**
+     * get a potential digested food
+     * to the tag
+     */
     public Item getID(ItemStack stack) {
         return Item.getItemById(stack.getTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER).getInt(NBTHelper.Tags.TAG_FOOD_ID));
     }

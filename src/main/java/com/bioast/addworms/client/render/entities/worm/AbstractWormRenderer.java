@@ -1,6 +1,7 @@
 package com.bioast.addworms.client.render.entities.worm;
 
 import com.bioast.addworms.entities.WormEntityBase;
+import com.bioast.addworms.entities.worm.AbstractWormEntity;
 import com.bioast.addworms.utils.helpers.Debug;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractWormRenderer<T extends WormEntityBase> extends EntityRenderer<T> {
+public abstract class AbstractWormRenderer<T extends AbstractWormEntity> extends EntityRenderer<T> {
 
     protected float degrees;
     protected ItemStack stack = ItemStack.EMPTY;

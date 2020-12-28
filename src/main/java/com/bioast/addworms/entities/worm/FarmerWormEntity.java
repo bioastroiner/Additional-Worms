@@ -18,6 +18,6 @@ import javax.annotation.Nullable;
 public class FarmerWormEntity extends AbstractWormEntity {
 
     public FarmerWormEntity(EntityType<FarmerWormEntity> entityTypeIn,World worldIn) {
-        super(ModEntityTypes.WORM_ENTITY.get(), worldIn,null);
+        super(entityTypeIn, worldIn,null);
     }
 }

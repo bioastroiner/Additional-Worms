@@ -15,6 +15,10 @@ import net.minecraftforge.fml.common.Mod;
 
 import static com.bioast.addworms.AddWorms.MODID;
 
+/**
+ * this class singlehandely handles
+ * that tilling grass or dirt would yield worms or not
+ */
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OnHoeEvent {
     @SubscribeEvent

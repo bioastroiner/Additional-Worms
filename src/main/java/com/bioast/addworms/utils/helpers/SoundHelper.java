@@ -7,7 +7,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SoundHelper {
+public final class SoundHelper {
 
     public static void playSimpleSound(World worldIn, BlockPos pos, SoundEvent soundEvent,float vol){
         worldIn.playSound((PlayerEntity)null, pos.getX(), pos.getY(), pos.getZ(),

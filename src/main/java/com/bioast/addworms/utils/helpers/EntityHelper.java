@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityHelper {
+public final class EntityHelper {
 
     public static boolean dropItem(BlockPos posIn, ItemStack itemStackIn, World worldIn){
         if(itemStackIn == null || posIn.getY() < -10) throw new IllegalArgumentException("drop Item argument was missing!");

@@ -4,6 +4,7 @@ import com.bioast.addworms.client.models.SimpleModelLoader;
 import com.bioast.addworms.client.models.food.DigestedFoodModelLoader;
 import com.bioast.addworms.client.render.entities.worm.*;
 import com.bioast.addworms.entities.WormEntityBasic;
+import com.bioast.addworms.entities.worm.FarmerWormEntity;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +39,7 @@ public class ClientSetup {
     public static void registerRenderers() {
 
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(),
-                renderManager -> new GeneralWormRenderer<WormEntityBasic>(renderManager, ModItems.WORM.get()));
+                renderManager -> new GeneralWormRenderer<FarmerWormEntity>(renderManager, ModItems.WORM.get()));
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_RED.get(),
                 renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));
         RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_FAST.get(),
@@ -83,17 +84,5 @@ public class ClientSetup {
     private static <T extends IModelGeometry<T>> void addBuiltInModel(String id, Supplier<T> modelFactory) {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(MODID, id),
                 new SimpleModelLoader<>(modelFactory));
-    }
-
-
-    public static void onModelBake(ModelBakeEvent event){
-
-//        event.getModelRegistry().put(new ResourceLocation(MODID,"digested_food"),
-//                new DigestedFoodBakedModel(event.getModelLoader()
-//                        .getBakedModel(new ModelResourceLocation(ModItems.DIGESTED_FOOD.get().getRegistryName(), "inventory")
-//                                , SimpleModelTransform.IDENTITY, Material::getSprite)));
-
-//        event.getModelRegistry().put(new ModelResourceLocation(ModItems.DIGESTED_FOOD.get().getRegistryName(), "inventory"),
-//                new DigestedFoodBakedModel(DefaultVertexFormats.ITEM));
     }
 }

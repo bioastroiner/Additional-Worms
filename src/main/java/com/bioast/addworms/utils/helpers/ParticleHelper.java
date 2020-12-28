@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
-public class ParticleHelper {
+public final class ParticleHelper {
     @OnlyIn(Dist.CLIENT)
     public static void spawnParticles(IWorld worldIn, BlockPos posIn, int data, ParticleType particleType) {
         if (data == 0) {

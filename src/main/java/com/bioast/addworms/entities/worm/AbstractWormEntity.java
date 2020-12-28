@@ -1,5 +1,6 @@
 package com.bioast.addworms.entities.worm;
 
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
@@ -65,7 +66,7 @@ public abstract class AbstractWormEntity extends Entity {
         if(!this.world.isRemote){
             this.timer++;
         }
-        if(!world.isAirBlock(getPosition()) || world.isAirBlock(getPosition().down())){
+        if(world.isAirBlock(getPosition()) || !world.isAirBlock(getPosition().up())){
             this.kill();
         }
     }
@@ -92,7 +93,7 @@ public abstract class AbstractWormEntity extends Entity {
      */
     public void kill(){
         onKill();
-        this.remove();
+        super.remove();
     }
 
     /**
