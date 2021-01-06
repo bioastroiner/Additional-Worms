@@ -6,7 +6,7 @@ issueTrackerURL="https://github.com/bioastroiner/Additional-Worms/issues" #optio
     version="${version}"
     displayName="Additional Worms"
 
-    #updateJSONURL="www.google.com" -looks like filling this with nonesense causes client to not load
+    #updateJSONURL="www.google.com"
     displayURL="www.reddit.com/r/feedthememes"
     logoFile="logo.png"
     credits="Credits to Actually Additon 's authors'"
@@ -18,13 +18,13 @@ then it adds more worms
 [[dependencies.addworms]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[35,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.addworms]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15.2]"
+    versionRange="[1.16.4]"
     ordering="NONE"
     side="BOTH"
 
