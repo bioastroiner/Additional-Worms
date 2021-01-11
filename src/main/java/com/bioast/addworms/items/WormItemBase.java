@@ -3,25 +3,18 @@ package com.bioast.addworms.items;
 import com.bioast.addworms.entities.WormEntityBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import static com.bioast.addworms.AddWorms.MODID;
 
 /**
  * TODO: this code is bound to be removed
@@ -32,13 +25,6 @@ public abstract class WormItemBase extends ModItem {
 
     public WormItemBase(Properties properties) {
         super(properties);
-        this.addPropertyOverride(new ResourceLocation(MODID, "worm"), new IItemPropertyGetter() {
-            @Override
-            @OnlyIn(Dist.CLIENT)
-            public float call(ItemStack stack, @Nullable World world, @Nullable LivingEntity entity) {
-                return "worm mail".equalsIgnoreCase(String.valueOf(stack.getDisplayName())) ? 1f : 0f;
-            }
-        });
     }
 
     @Override
@@ -70,7 +56,7 @@ public abstract class WormItemBase extends ModItem {
         List<WormEntityBase> worms = world.getEntitiesWithinAABB(WormEntityBase.class,
                 new AxisAlignedBB(pos.getX() - 1, pos.getY(), pos.getZ() - 1, pos.getX() + 2, pos.getY() + 1,
                         pos.getZ() + 2));
-        return worms == null || worms.isEmpty();
+        return worms.isEmpty();
     }
 
     protected boolean checkForWormsInArea(World world, BlockPos pos, int oddnumberIn) {
