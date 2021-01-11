@@ -13,7 +13,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.bioast.addworms.AddWorms.*;
+import static com.bioast.addworms.AddWorms.MODID;
 
 @Mod(MODID)
 @Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -34,13 +34,14 @@ public class AddWorms
     }
 
     public static final ItemGroup WormsBlockGroup = new ItemGroup(ItemGroup.GROUPS.length,
-            new TranslationTextComponent("tab." + MODID + "blocks").getFormattedText()) {
+            new TranslationTextComponent("tab." + MODID + "blocks").getString()) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModBlocks.MUDY_DIRT.get());
         }
     };
-    public static final ItemGroup WormsItemGroup = new ItemGroup(ItemGroup.GROUPS.length, new TranslationTextComponent("tab." + MODID + "items").getFormattedText()) {
+    public static final ItemGroup WormsItemGroup = new ItemGroup(ItemGroup.GROUPS.length,
+            new TranslationTextComponent("tab." + MODID + "items").getString()) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModItems.WORM.get());

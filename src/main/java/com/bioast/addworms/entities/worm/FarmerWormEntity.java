@@ -1,11 +1,7 @@
 package com.bioast.addworms.entities.worm;
 
-import com.bioast.addworms.entities.WormEntityBasic;
-import com.bioast.addworms.init.ModEntityTypes;
 import net.minecraft.entity.EntityType;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * this is a very basic worm entity that will collect any plantable items
@@ -17,7 +13,7 @@ import javax.annotation.Nullable;
  */
 public class FarmerWormEntity extends AbstractWormEntity {
 
-    public FarmerWormEntity(EntityType<FarmerWormEntity> entityTypeIn,World worldIn) {
-        super(entityTypeIn, worldIn,null);
+    public FarmerWormEntity(EntityType<FarmerWormEntity> entityTypeIn, World worldIn) {
+        super(entityTypeIn, worldIn, null);
     }
 }

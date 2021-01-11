@@ -5,12 +5,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public final class Debug {
@@ -23,38 +25,45 @@ public final class Debug {
      */
     public static void log(ITextComponent text){
         clearChat();
-        Minecraft.getInstance().player.sendMessage(text);
+        Minecraft.getInstance().player.sendMessage(text, UUID.randomUUID());
 
     }
+
     /**
      * @param msg to log into minecraft chat
      *            prints a generic Debug log into minecraft chat for fast Debuggings
      *            logs usually got clear by next log
      *            if you want not, you can use override of this methode with isCached Param
      */
-    public static void log(String msg){ log(new StringTextComponent(msg).applyTextStyle(TextFormatting.AQUA));}
+    public static void log(String msg) {
+        log(new StringTextComponent(msg).setStyle(Style.EMPTY.setFormatting(TextFormatting.AQUA)));
+    }
+
     /**
      * @param msg
      * @param isCached enables the log to be registered to not be cleared at the next calls ( false by default )
      */
-    public static void log(String msg,boolean isCached){
-        if(isCached){
+    public static void log(String msg, boolean isCached) {
+        if (isCached) {
             cachLog.add(new StringTextComponent(msg));
         }
         log(msg);
     }
+
     /**
      * @param msg
-     * @param itemStack
-     *  logs an itemSatck into the chat for fast Debugging
+     * @param itemStack logs an itemSatck into the chat for fast Debugging
      */
-    public static void log(String msg, ItemStack itemStack) {log(msg + " " + itemStack.getItem().getName().getFormattedText());}
+    public static void log(String msg, ItemStack itemStack) {
+        log(msg + " " + itemStack.getItem().getName().getString());
+    }
+
     /**
-     * @param nbt
-     *
-     * logs nbt still incomplete
+     * @param nbt logs nbt still incomplete
      */
-    public static void logNBT(CompoundNBT nbt){log(nbt.getString()); }
+    public static void logNBT(CompoundNBT nbt) {
+        log(nbt.getString());
+    }
     /**
      * clears the logs and any messages in the chat
      * exceptions are cached logs
@@ -96,6 +105,6 @@ public final class Debug {
         }
     }
     public void setCachMax(int cachMax){
-        this.cachMax = cachMax;
+        Debug.cachMax = cachMax;
     }
 }

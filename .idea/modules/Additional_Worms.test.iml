@@ -5,6 +5,7 @@
       <configuration>
         <autoDetectTypes>
           <platformType>FORGE</platformType>
+          <platformType>MIXIN</platformType>
           <platformType>MCP</platformType>
         </autoDetectTypes>
       </configuration>
@@ -12,8 +13,8 @@
   </component>
   <component name="McpModuleSettings">
     <option name="mappingFile" value="F:\Minecraft MDA\Projects\Additional Worms\build\createMcpToSrg\output.tsrg" />
-    <option name="mcpVersion" value="snapshot_20201202-1.15.1" />
-    <option name="minecraftVersion" value="1.15.2" />
+    <option name="mcpVersion" value="snapshot_20201028-1.16.3" />
+    <option name="minecraftVersion" value="1.16.4" />
     <option name="srgType" value="TSRG" />
   </component>
 </module>

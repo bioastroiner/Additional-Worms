@@ -27,12 +27,16 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
 
     private final CustomOverrideList overrides;
 
-    public DigestedFoodBakedModel(IBakedModel baseModel)
-    {
+    public DigestedFoodBakedModel(IBakedModel baseModel) {
         super(baseModel);
         this.overrides = new CustomOverrideList();
     }
 
+
+    @Override
+    public boolean isSideLit() {
+        return false;
+    }
 
     @Override
     public ItemOverrideList getOverrides() {
@@ -83,6 +87,10 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
             return outputModel.func_230044_c_();
         }
 
+        @Override
+        public boolean isSideLit() {
+            return false;
+        }
     }
 
     @Override

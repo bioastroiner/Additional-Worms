@@ -4,9 +4,9 @@ import net.minecraft.item.ItemStack;
 
 public interface IWorm {
 
-    public void tick();
+    void tick();
 
-    public void setDead();
+    void setDead();
 
-    public ItemStack getItemDrop();
+    ItemStack getItemDrop();
 }

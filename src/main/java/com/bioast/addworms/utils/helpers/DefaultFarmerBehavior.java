@@ -11,7 +11,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -39,7 +39,8 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
             return ActionResultType.FAIL;
         } else {
             //int hook = onHoeUse(itemstack, player, world, pos);
-            int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(Vec3d.ZERO, Direction.UP,pos,false)));
+            int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(Vector3d.ZERO,
+                    Direction.UP, pos, false)));
 
             if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
