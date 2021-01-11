@@ -33,8 +33,13 @@ public class DigestedFood extends ModItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> onItemRightClick(
+            World worldIn,
+            PlayerEntity playerIn,
+            Hand handIn
+    ) {
+        ItemStack itemstack =
+                playerIn.getHeldItem(handIn);
         Food food = NBTHelper.readFoodFromNBT((CompoundNBT) itemstack.serializeNBT().get("tag"));
         if (playerIn.canEat(true)) {
             playerIn.setActiveHand(handIn);

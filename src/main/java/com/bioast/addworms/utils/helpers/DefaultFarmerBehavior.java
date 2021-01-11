@@ -1,6 +1,9 @@
 package com.bioast.addworms.utils.helpers;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.GrassBlock;
+import net.minecraft.block.IGrowable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
@@ -26,38 +29,99 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
     private static ItemStack hoe = ItemStack.EMPTY;
 
     private static ItemStack getHoeStack() {
-        if (hoe.isEmpty()) hoe = new ItemStack(Items.DIAMOND_HOE);
+        if (
+                hoe.isEmpty()
+        )
+            hoe =
+                    new ItemStack(
+                            Items.DIAMOND_HOE
+                    );
         return hoe;
     }
 
-    public static ActionResultType useHoeAt(World world, BlockPos pos) {
+    public static ActionResultType useHoeAt(
+            World world,
+            BlockPos pos
+    ) {
 
-        PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
-        ItemStack itemstack = getHoeStack();
+        PlayerEntity player =
+                FakePlayerFactory
+                        .getMinecraft(
+                                (ServerWorld) world
+                        );
+        ItemStack itemstack =
+                getHoeStack();
 
-        if (!player.canPlayerEdit(pos.offset(Direction.UP), Direction.UP, itemstack)) {
+        if (
+                !player
+                        .canPlayerEdit(
+                                pos.offset(
+                                        Direction.UP
+                                ),
+                                Direction.UP,
+                                itemstack
+                        )
+        ) {
             return ActionResultType.FAIL;
         } else {
             //int hook = onHoeUse(itemstack, player, world, pos);
-            int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(Vector3d.ZERO,
-                    Direction.UP, pos, false)));
+            int hook =
+                    onHoeUse(
+                            new ItemUseContext(
+                                    player,
+                                    Hand.MAIN_HAND,
+                                    new BlockRayTraceResult(
+                                            Vector3d.ZERO,
+                                            Direction.UP,
+                                            pos,
+                                            false)
+                            )
+                    );
 
-            if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
+            if (hook != 0)
+                return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
-            BlockState iblockstate = world.getBlockState(pos);
-            Block block = iblockstate.getBlock();
+            Block block =
+                    world
+                            .getBlockState(pos)
+                            .getBlock();
 
-            if (world.isAirBlock(pos.up())) {
-                if (block instanceof GrassBlock || block == Blocks.GRASS_PATH) {
-                    Debug.log("Hey I tilled Grass do you see something?");
-                    world.setBlockState(pos, Blocks.FARMLAND.getDefaultState());
+            if (
+                    world
+                            .isAirBlock(
+                                    pos.up()
+                            )
+            ) {
+                if (
+                        block instanceof GrassBlock ||
+                                block == Blocks.GRASS_PATH
+                ) {
+                    Debug.log(
+                            "Hey I tilled Grass do you see something?"
+                    );
+                    world
+                            .setBlockState(
+                                    pos,
+                                    Blocks.FARMLAND
+                                            .getDefaultState()
+                            );
                     return ActionResultType.SUCCESS;
                 }
-                if(block == DIRT){
-                    world.setBlockState(pos, Blocks.FARMLAND.getDefaultState());
+                if (block == DIRT) {
+                    world
+                            .setBlockState(
+                                    pos,
+                                    Blocks.FARMLAND
+                                            .getDefaultState()
+                            );
                     return ActionResultType.SUCCESS;
-                } else if(block == COARSE_DIRT){
-                    world.setBlockState(pos, DIRT.getDefaultState());
+                } else if (block == COARSE_DIRT) {
+                    world
+                            .setBlockState(
+                                    pos,
+                                    DIRT
+                                            .getDefaultState()
+                            );
                     return ActionResultType.SUCCESS;
                 }
             }
@@ -65,25 +129,79 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
         }
     }
 
-    public static ActionResultType useBonemeal(World world, BlockPos pos){
-        PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
-        ItemStack itemstack = new ItemStack(Items.BONE_MEAL,1000);
+    public static ActionResultType useBonemeal(
+            World world,
+            BlockPos pos
+    ) {
 
-        if(!player.canPlayerEdit(pos.offset(Direction.UP), Direction.UP,itemstack)){
+        PlayerEntity player =
+                FakePlayerFactory
+                        .getMinecraft(
+                                (ServerWorld) world
+                        );
+
+        ItemStack itemstack =
+                new ItemStack(
+                        Items.BONE_MEAL,
+                        1000
+                );
+
+        if (
+                !player.canPlayerEdit(
+                        pos.offset(Direction.UP),
+                        Direction.UP,
+                        itemstack)
+        ) {
             return ActionResultType.FAIL;
         } else {
-            int hook = onItemUseTick(player,itemstack,40);
-            if(hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
+            int hook =
+                    onItemUseTick(
+                            player,
+                            itemstack,
+                            40
+                    );
+            if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
 
-            BlockState plantState = world.getBlockState(pos);
-            Block plantBlock = plantState.getBlock();
+            Block plantBlock =
+                    world
+                            .getBlockState(pos)
+                            .getBlock();
 
-            if(world.isAirBlock(pos.up())){
-                if(world.getBlockState(pos).getBlock() instanceof IGrowable){
-                    Block plant = world.getBlockState(pos).getBlock();
-                    ((IGrowable)plant).grow((ServerWorld)world,world.rand,pos,plant.getDefaultState());
-                    BoneMealItem.applyBonemeal(itemstack,world,pos,player);
-                    BoneMealItem.spawnBonemealParticles(world,pos, 1);
+            if (
+                    world
+                            .isAirBlock(
+                                    pos.up()
+                            )
+            ) {
+                if (
+                        world.
+                                getBlockState(pos)
+                                .getBlock() instanceof IGrowable
+                ) {
+                    Block plant =
+                            world
+                                    .getBlockState(pos)
+                                    .getBlock();
+                    ((IGrowable) plant)
+                            .grow(
+                                    (ServerWorld) world,
+                                    world.rand,
+                                    pos,
+                                    plant.getDefaultState()
+                            );
+                    BoneMealItem
+                            .applyBonemeal(
+                                    itemstack,
+                                    world,
+                                    pos,
+                                    player)
+                    ;
+                    BoneMealItem
+                            .spawnBonemealParticles(
+                                    world,
+                                    pos,
+                                    1
+                            );
                 }
             }
             return ActionResultType.PASS;
@@ -91,12 +209,21 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
     }
 
     @Override
-    public FarmerResult tryPlantSeed(ItemStack seed, World world, BlockPos pos, IFarmer farmer) {
+    public FarmerResult tryPlantSeed(
+            ItemStack seed,
+            World world,
+            BlockPos pos,
+            IFarmer farmer
+    ) {
         return null;
     }
 
     @Override
-    public FarmerResult tryHarvestPlant(World world, BlockPos pos, IFarmer farmer) {
+    public FarmerResult tryHarvestPlant(
+            World world,
+            BlockPos pos,
+            IFarmer farmer
+    ) {
         return null;
     }
 

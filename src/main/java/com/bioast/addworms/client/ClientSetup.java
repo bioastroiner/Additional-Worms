@@ -5,14 +5,11 @@ import com.bioast.addworms.client.models.food.DigestedFoodModelLoader;
 import com.bioast.addworms.client.render.entities.worm.GeneralWormRenderer;
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.items.misc.LauncherStick;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.ItemModelsProperties;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.geometry.IModelGeometry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,7 +17,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 import static com.bioast.addworms.AddWorms.MODID;
@@ -30,50 +26,80 @@ import static com.bioast.addworms.init.ModEntityTypes.*;
 public class ClientSetup {
 
     @SubscribeEvent
-    public static void doClientStuff(final FMLClientSetupEvent event) {
+    public static void doClientStuff(FMLClientSetupEvent event) {
         registerRenderers();
-        registerModelLoaders();
         registerProperties();
     }
 
     private static void registerProperties() {
-        ItemModelsProperties.registerProperty(ModItems.ITEM_LAUNCHER.get(), new ResourceLocation(MODID, "use"),
-                new IItemPropertyGetter() {
-                    @Override
-                    @OnlyIn(Dist.CLIENT)
-                    public float call(ItemStack stack, @Nullable ClientWorld p_call_2_,
-                                      @Nullable LivingEntity p_call_3_) {
-                        if (LauncherStick.isBeingUsed(stack)) {
-                            return 1;
-                        }
-                        return 0;
-                    }
-                });
+        ItemModelsProperties
+                .registerProperty(
+                        ModItems.ITEM_LAUNCHER.get(),
+                        new ResourceLocation(MODID, "use"),
+                        LauncherStick.propertyGetter
+                );
     }
 
     private static void registerRenderers() {
-
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM.get()));
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_RED.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_FAST.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FAST.get()));
-        RenderingRegistry.registerEntityRenderingHandler(WORM_ENTITY_DIGESTER.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_DIGESTER.get()));
+        RenderingRegistry
+                .registerEntityRenderingHandler(
+                        WORM_ENTITY.get(),
+                        renderManager ->
+                                new GeneralWormRenderer<>(
+                                        renderManager,
+                                        ModItems.WORM.get()
+                                )
+                );
+        RenderingRegistry
+                .registerEntityRenderingHandler(
+                        WORM_ENTITY_RED.get(),
+                        renderManager ->
+                                new GeneralWormRenderer(
+                                        renderManager,
+                                        ModItems.WORM_RED.get()
+                                )
+                );
+        RenderingRegistry
+                .registerEntityRenderingHandler(
+                        WORM_ENTITY_FAST.get(),
+                        renderManager ->
+                                new GeneralWormRenderer(
+                                        renderManager,
+                                        ModItems.WORM_FAST.get()
+                                )
+                );
+        RenderingRegistry
+                .registerEntityRenderingHandler(
+                        WORM_ENTITY_DIGESTER.get(),
+                        renderManager ->
+                                new GeneralWormRenderer(
+                                        renderManager,
+                                        ModItems.WORM_DIGESTER.get()
+                                )
+                );
     }
 
-    // In later forge versions, this runs before resource loads, in 1.15 the
-    // ModelRegistryEvent runs concurrently
-    // with resource reloading, which makes these non-deterministic
-    private static void registerModelLoaders() {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(MODID, "digested_food"),
-                DigestedFoodModelLoader.INSTANCE);
+    @SubscribeEvent
+    public static void modelRegisteryEvent(ModelRegistryEvent event) {
+        ModelLoaderRegistry
+                .registerLoader(
+                        new ResourceLocation(
+                                MODID,
+                                "digested_food"
+                        ),
+                        DigestedFoodModelLoader.INSTANCE
+                );
     }
 
     @OnlyIn(Dist.CLIENT)
     private static <T extends IModelGeometry<T>> void addBuiltInModel(String id, Supplier<T> modelFactory) {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(MODID, id),
-                new SimpleModelLoader<>(modelFactory));
+        ModelLoaderRegistry
+                .registerLoader(
+                        new ResourceLocation(
+                                MODID,
+                                id
+                        ),
+                        new SimpleModelLoader<>(modelFactory)
+                );
     }
 }

@@ -22,7 +22,12 @@ public class DigestedFoodModelLoader implements IModelLoader<DigestedFoodModel> 
     @Override
     public DigestedFoodModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
         modelContents.remove("loader"); // Avoid recursion
-        ResourceLocation baseModel = new ResourceLocation(JSONUtils.getString(modelContents, "baseModel"));
+        ResourceLocation baseModel = new ResourceLocation(
+                JSONUtils.getString(
+                        modelContents,
+                        "baseModel"
+                )
+        );
         return new DigestedFoodModel(baseModel);
     }
 

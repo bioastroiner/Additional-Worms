@@ -16,35 +16,57 @@ import org.apache.logging.log4j.Logger;
 import static com.bioast.addworms.AddWorms.MODID;
 
 @Mod(MODID)
-@Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.MOD)
-public class AddWorms
-{
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class AddWorms {
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "addworms";
+    public static final ItemGroup WormsBlockGroup =
+            new ItemGroup(
+                    ItemGroup.GROUPS.length,
+                    new TranslationTextComponent(
+                            "tab." + MODID + "blocks"
+                    ).getString()
+            ) {
+                @Override
+                public ItemStack createIcon() {
+                    return new ItemStack(
+                            ModBlocks.MUDY_DIRT.get()
+                    );
+                }
+            };
+    public static final ItemGroup WormsItemGroup =
+            new ItemGroup(
+                    ItemGroup.GROUPS.length,
+                    new TranslationTextComponent(
+                            "tab." + MODID + "items"
+                    ).getString()
+            ) {
+                @Override
+                public ItemStack createIcon() {
+                    return new ItemStack(
+                            ModItems.WORM.get()
+                    );
+                }
+            };
+
     public static AddWorms instance;
 
     public AddWorms() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        InitRegister.init();
+        FMLJavaModLoadingContext
+                .get()
+                .getModEventBus()
+                .addListener(
+                        this::setup
+                );
+        InitRegister.registerEntries();
         instance = this;
-        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge
+                .EVENT_BUS
+                .register(
+                        this
+                );
     }
 
     private void setup(final FMLCommonSetupEvent event) {
     }
-
-    public static final ItemGroup WormsBlockGroup = new ItemGroup(ItemGroup.GROUPS.length,
-            new TranslationTextComponent("tab." + MODID + "blocks").getString()) {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ModBlocks.MUDY_DIRT.get());
-        }
-    };
-    public static final ItemGroup WormsItemGroup = new ItemGroup(ItemGroup.GROUPS.length,
-            new TranslationTextComponent("tab." + MODID + "items").getString()) {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ModItems.WORM.get());
-        }
-    };
 }

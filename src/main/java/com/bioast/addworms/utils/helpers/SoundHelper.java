@@ -7,8 +7,22 @@ import net.minecraft.world.World;
 
 public final class SoundHelper {
 
-    public static void playSimpleSound(World worldIn, BlockPos pos, SoundEvent soundEvent,float vol){
-        worldIn.playSound(null, pos.getX(), pos.getY(), pos.getZ(),
-                soundEvent, SoundCategory.PLAYERS, vol, worldIn.rand.nextFloat() * 0.1F + 0.9F);
+    public static void playSimpleSound(
+            World worldIn,
+            BlockPos pos,
+            SoundEvent soundEvent,
+            float vol
+    ) {
+        worldIn
+                .playSound(
+                        null,
+                        pos.getX(),
+                        pos.getY(),
+                        pos.getZ(),
+                        soundEvent,
+                        SoundCategory.PLAYERS,
+                        vol,
+                        worldIn.rand.nextFloat() * 0.1F + 0.9F
+                );
     }
 }

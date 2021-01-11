@@ -1,5 +1,6 @@
 modLoader="javafml"
 loaderVersion="[35,)"
+license="MIT"
 issueTrackerURL="https://github.com/bioastroiner/Additional-Worms/issues" #optional
 [[mods]]
     modId="addworms"
