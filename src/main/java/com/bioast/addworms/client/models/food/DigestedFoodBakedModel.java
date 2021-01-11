@@ -6,14 +6,14 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.TransformationMatrix;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.util.math.vector.TransformationMatrix;
 import net.minecraftforge.client.model.PerspectiveMapWrapper;
 
 import javax.annotation.Nullable;
@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 /**
  * this code is being extracted form AE2's pattern
  * script
+ *
  * @author credits goes to appencha AE2's author.
  */
 public class DigestedFoodBakedModel extends DelegateBakedModel {
@@ -41,6 +42,16 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
     @Override
     public ItemOverrideList getOverrides() {
         return this.overrides;
+    }
+
+    @Override
+    public boolean doesHandlePerspectives() {
+        return true;
+    }
+
+    @Override
+    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+        return getBaseModel().handlePerspective(cameraTransformType, mat);
     }
 
     /**
@@ -72,8 +83,9 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
             // No need to re-check for shift being held since this model is only handed out
             // in that case
             if (cameraTransformType == ItemCameraTransforms.TransformType.GUI) {
-                ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> transforms = PerspectiveMapWrapper
-                        .getTransforms(outputModel.getItemCameraTransforms());
+                ImmutableMap<ItemCameraTransforms.TransformType, TransformationMatrix> transforms =
+                        PerspectiveMapWrapper
+                                .getTransforms(outputModel.getItemCameraTransforms());
                 return PerspectiveMapWrapper.handlePerspective(this.outputModel, transforms, cameraTransformType, mat);
             } else {
                 return getBaseModel().handlePerspective(cameraTransformType, mat);
@@ -83,24 +95,9 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
         // This determines diffuse lighting in the UI, and since we want to render
         // the outputModel in the UI, we need to use it's setting here
         @Override
-        public boolean func_230044_c_() {
-            return outputModel.func_230044_c_();
-        }
-
-        @Override
         public boolean isSideLit() {
-            return false;
+            return outputModel.isSideLit();
         }
-    }
-
-    @Override
-    public boolean doesHandlePerspectives() {
-        return true;
-    }
-
-    @Override
-    public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
-        return getBaseModel().handlePerspective(cameraTransformType, mat);
     }
 
     /**
@@ -113,12 +110,12 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
 
         @Nullable
         @Override
-        public IBakedModel getModelWithOverrides(IBakedModel originalModel, ItemStack stack, @Nullable World world,
-                                                 @Nullable LivingEntity entity) {
+        public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world,
+                                            @Nullable LivingEntity livingEntity) {
             boolean shiftHeld = Screen.hasShiftDown();
             DigestedFood iep = (DigestedFood) stack.getItem();
 
-            if(shiftHeld && !iep.isSimple(stack)){
+            if (shiftHeld && !iep.isSimple(stack)) {
                 ResourceLocation itemID;
                 ItemStack digested = new ItemStack(iep.getID(stack));
 
@@ -127,12 +124,12 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
                             .getItemModel(digested);
 
                     // Give the item model a chance to handle the overrides as well
-                    realModel = realModel.getOverrides().getModelWithOverrides(realModel, digested, world, entity);
+                    realModel = realModel.getOverrides().getOverrideModel(realModel, digested, world, livingEntity);
                     return new ShiftHoldingModelWrapper(getBaseModel(), realModel);
                 }
             }
 
-            return getBaseModel().getOverrides().getModelWithOverrides(originalModel, stack, world, entity);
+            return getBaseModel().getOverrides().getOverrideModel(model, stack, world, livingEntity);
         }
     }
 }
