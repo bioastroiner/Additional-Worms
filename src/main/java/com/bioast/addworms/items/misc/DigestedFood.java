@@ -33,68 +33,40 @@ public class DigestedFood extends ModItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(
-            World worldIn,
-            PlayerEntity playerIn,
-            Hand handIn
-    ) {
-        ItemStack itemstack =
-                playerIn.getHeldItem(handIn);
-        Food food =
-                NBTHelper.readFoodFromNBT(
-                        itemstack.getOrCreateTag()
-                );
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        Food food = NBTHelper.readFoodFromNBT(itemstack.getOrCreateTag());
 
         if (playerIn.canEat(true)) {
             playerIn.setActiveHand(handIn);
             assert food != null;
-            playerIn.getFoodStats()
-                    .addStats(
-                            food.getHealing(),
-                            food.getSaturation()
-                    );
+            playerIn.getFoodStats().addStats(
+                    food.getHealing(),
+                    food.getSaturation());
 
-            worldIn.playSound(
-                    null,
+            worldIn.playSound(null,
                     playerIn.getPosX(),
                     playerIn.getPosY(),
                     playerIn.getPosZ(),
                     SoundEvents.ENTITY_PLAYER_BURP,
                     SoundCategory.PLAYERS,
                     0.5F,
-                    worldIn.rand.nextFloat() * 0.1F + 0.9F
-            );
+                    worldIn.rand.nextFloat() * 0.1F + 0.9F);
 
             if (!playerIn.isCreative()) {
                 itemstack.shrink(1);
-                SoundHelper.playSimpleSound(
-                        worldIn,
-                        playerIn.getPosition(),
-                        SoundEvents.ENTITY_PLAYER_LEVELUP,
-                        0.1f
-                );
+                SoundHelper.playSimpleSound(worldIn, playerIn.getPosition()
+                        , SoundEvents.ENTITY_PLAYER_LEVELUP, 0.1f);
             }
             if (rand.nextFloat() > 0.8f) {
-                playerIn.heal(
-                        Math.min(
-                                new Random(1)
-                                        .nextInt(1),
-                                new Random(2)
-                                        .nextInt(1)) * 0.5f
-                );
-                ParticleHelper.spawnParticles(
-                        worldIn,
-                        playerIn.getPosition()
-                                .up(),
+                playerIn.heal(Math.min(new Random(1).nextInt(1),
+                        new Random(2).nextInt(1)) * 0.5f);
+                ParticleHelper.spawnParticles(worldIn, playerIn.getPosition().up(),
                         rand.nextInt(1),
-                        ParticleTypes.HEART
-                );
-                SoundHelper.playSimpleSound(
-                        worldIn,
-                        playerIn.getPosition(),
+                        ParticleTypes.HEART);
+                SoundHelper.playSimpleSound(worldIn, playerIn.getPosition(),
                         SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP,
-                        0.1f
-                );
+                        0.1f);
             }
             playerIn.setActiveHand(handIn);
             return ActionResult.resultConsume(itemstack);
@@ -104,11 +76,7 @@ public class DigestedFood extends ModItem {
     }
 
     @Override
-    public ItemStack onItemUseFinish(
-            ItemStack stack,
-            World worldIn,
-            LivingEntity entityLiving
-    ) {
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         return entityLiving.onFoodEaten(worldIn, stack);
     }
 
@@ -118,45 +86,22 @@ public class DigestedFood extends ModItem {
     }
 
     @Override
-    public void onCreated(
-            ItemStack stack,
-            World worldIn,
-            PlayerEntity playerIn
-    ) {
+    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
         super.onCreated(stack, worldIn, playerIn);
     }
 
     @Override
-    public void addInformation(
-            ItemStack stack,
-            @Nullable World worldIn,
-            List<ITextComponent> tooltip,
-            ITooltipFlag flagIn
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+                               ITooltipFlag flagIn
     ) {
         if (stack.hasTag()) {
-            tooltip.add(
-                    new StringTextComponent(
-                            "Hunger: " + stack.getOrCreateTag()
-                                    .getCompound(
-                                            NBTHelper.Tags.TAG_FOOD_HEADER)
-                                    .getInt(
-                                            NBTHelper.Tags.TAG_HUNGER)
-                    )
-            );
-            tooltip.add(
-                    new StringTextComponent(
-                            "Saturation: " + stack.getOrCreateTag()
-                                    .getCompound(
-                                            NBTHelper.Tags.TAG_FOOD_HEADER)
-                                    .getFloat(
-                                            NBTHelper.Tags.TAG_SAT)
-                    )
-            );
-            tooltip.add(
-                    new StringTextComponent(
-                            "Based on: " + getID(stack)
-                    )
-            );
+            tooltip.add(new StringTextComponent(
+                    "Hunger: " + stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
+                            .getInt(NBTHelper.Tags.TAG_HUNGER)));
+            tooltip.add(new StringTextComponent(
+                    "Saturation: " + stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
+                            .getFloat(NBTHelper.Tags.TAG_SAT)));
+            tooltip.add(new StringTextComponent("Based on: " + getStoredFoood(stack)));
         }
     }
 
@@ -169,34 +114,21 @@ public class DigestedFood extends ModItem {
      * get a potential digested food
      * to the tag
      */
-    public Item getID(ItemStack stack) {
-        return Item.getItemById(
-                stack.getOrCreateTag()
-                        .getCompound(
-                                NBTHelper.Tags.TAG_FOOD_HEADER
-                        )
-                        .getInt(
-                                NBTHelper.Tags.TAG_FOOD_ID
-                        )
-        );
+    public Item getStoredFoood(ItemStack stack) {
+        return Item.getItemById(stack.getOrCreateTag()
+                .getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
+                .getInt(NBTHelper.Tags.TAG_FOOD_ID));
     }
 
     /**
      * @param item the origin Item witch contains the food
      */
     // TODO : the method is unused and useless remove it
-    public void setID(
-            ItemStack stack,
-            Item item
-    ) {
+    public void setStoredFood(ItemStack stack, Item item) {
         stack.getOrCreateTag()
-                .getCompound(
-                        NBTHelper.Tags.TAG_FOOD_HEADER
-                )
-                .putInt(
-                        NBTHelper.Tags.TAG_FOOD_ID,
-                        Item.getIdFromItem(item)
-                );
+                .getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
+                .putInt(NBTHelper.Tags.TAG_FOOD_ID,
+                        Item.getIdFromItem(item));
     }
 
     public boolean isSimple(ItemStack stack) {

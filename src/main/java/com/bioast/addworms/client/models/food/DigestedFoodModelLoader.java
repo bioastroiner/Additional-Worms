@@ -7,10 +7,6 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModelLoader;
 
-/**
- * Provides our custom {@link DigestedFoodBakedModel encoded pattern item
- * model}.
- */
 public class DigestedFoodModelLoader implements IModelLoader<DigestedFoodModel> {
 
     public static final DigestedFoodModelLoader INSTANCE = new DigestedFoodModelLoader();
@@ -22,12 +18,8 @@ public class DigestedFoodModelLoader implements IModelLoader<DigestedFoodModel> 
     @Override
     public DigestedFoodModel read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
         modelContents.remove("loader"); // Avoid recursion
-        ResourceLocation baseModel = new ResourceLocation(
-                JSONUtils.getString(
-                        modelContents,
-                        "baseModel"
-                )
-        );
+        ResourceLocation baseModel = new ResourceLocation(JSONUtils.getString(
+                modelContents, "baseModel"));
         return new DigestedFoodModel(baseModel);
     }
 

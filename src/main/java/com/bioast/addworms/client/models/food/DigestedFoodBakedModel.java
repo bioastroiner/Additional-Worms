@@ -117,7 +117,7 @@ public class DigestedFoodBakedModel extends DelegateBakedModel {
 
             if (shiftHeld && !iep.isSimple(stack)) {
                 ResourceLocation itemID;
-                ItemStack digested = new ItemStack(iep.getID(stack));
+                ItemStack digested = new ItemStack(iep.getStoredFoood(stack));
 
                 if (!digested.isEmpty()) {
                     IBakedModel realModel = Minecraft.getInstance().getItemRenderer().getItemModelMesher()

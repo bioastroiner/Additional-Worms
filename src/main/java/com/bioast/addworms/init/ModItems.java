@@ -9,6 +9,7 @@ import com.bioast.addworms.items.misc.DigestedFood;
 import com.bioast.addworms.items.misc.LauncherStick;
 import com.bioast.addworms.items.worms.GeneralWormItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.RegistryObject;
 
 import static com.bioast.addworms.init.InitRegister.ITEMS;
@@ -20,22 +21,18 @@ public final class ModItems {
     //Misc
     public static final RegistryObject<Item> DIGESTED_FOOD = ITEMS.register(
             "digested_food",
-            () -> new DigestedFood(baseProperty)
-    );
+            () -> new DigestedFood(baseProperty));
     public static final RegistryObject<Item> ITEM_LAUNCHER = ITEMS.register(
             "launcher",
-            () -> new LauncherStick(baseProperty)
-    );
+            () -> new LauncherStick(baseProperty.maxDamage(64)
+                    .group(ItemGroup.TOOLS)));
     private static final Item.Properties wormBaseProperty = baseProperty
             .maxStackSize(16);
     //Worms
     public static final RegistryObject<Item> WORM = ITEMS.register(
             "item_worm",
-            () -> new GeneralWormItem(wormBaseProperty,
-                    world -> new FarmerWormEntity(
-                            ModEntityTypes.WORM_ENTITY.get(),
-                            world)
-            )
+            () -> new GeneralWormItem(wormBaseProperty, world -> new FarmerWormEntity(
+                    ModEntityTypes.WORM_ENTITY.get(), world))
     );
     public static final RegistryObject<Item> WORM_RED = ITEMS.register(
             "item_worm_red",

@@ -1,12 +1,12 @@
 package com.bioast.addworms;
 
-import com.bioast.addworms.init.InitRegister;
 import com.bioast.addworms.init.ModBlocks;
 import com.bioast.addworms.init.ModItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -20,34 +20,22 @@ import static com.bioast.addworms.AddWorms.MODID;
 public class AddWorms {
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String MODID = "addworms";
-    public static final ItemGroup WormsBlockGroup =
-            new ItemGroup(
-                    ItemGroup.GROUPS.length,
-                    new TranslationTextComponent(
-                            "tab." + MODID + "blocks"
-                    ).getString()
-            ) {
-                @Override
-                public ItemStack createIcon() {
-                    return new ItemStack(
-                            ModBlocks.MUDY_DIRT.get()
-                    );
-                }
-            };
-    public static final ItemGroup WormsItemGroup =
-            new ItemGroup(
-                    ItemGroup.GROUPS.length,
-                    new TranslationTextComponent(
-                            "tab." + MODID + "items"
-                    ).getString()
-            ) {
-                @Override
-                public ItemStack createIcon() {
-                    return new ItemStack(
-                            ModItems.WORM.get()
-                    );
-                }
-            };
+
+    public static final ItemGroup WormsBlockGroup = new ItemGroup(ItemGroup.GROUPS.length,
+            new TranslationTextComponent("tab." + MODID + "blocks").getString()) {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(ModBlocks.MUDY_DIRT.get());
+        }
+    };
+
+    public static final ItemGroup WormsItemGroup = new ItemGroup(ItemGroup.GROUPS.length,
+            new TranslationTextComponent("tab." + MODID + "items").getString()) {
+        @Override
+        public ItemStack createIcon() {
+            return new ItemStack(ModItems.WORM.get());
+        }
+    };
 
     public static AddWorms instance;
 
