@@ -52,19 +52,10 @@ public class AddWorms {
     public static AddWorms instance;
 
     public AddWorms() {
-        FMLJavaModLoadingContext
-                .get()
-                .getModEventBus()
-                .addListener(
-                        this::setup
-                );
-        InitRegister.registerEntries();
+        final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        bus.addListener(this::setup);
         instance = this;
-        MinecraftForge
-                .EVENT_BUS
-                .register(
-                        this
-                );
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
