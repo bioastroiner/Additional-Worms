@@ -17,7 +17,7 @@ import static com.bioast.addworms.AddWorms.MODID;
  * also unifies all part of regiseries in the near future
  */
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public final class InitRegister {
+public final class Registration {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(
             ForgeRegistries.ITEMS, MODID);
@@ -28,8 +28,8 @@ public final class InitRegister {
 
     public static void registerEntries() {
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        InitRegister.BLOCKS.register(bus);
-        InitRegister.ITEMS.register(bus);
-        InitRegister.ENTITY_TYPES.register(bus);
+        Registration.BLOCKS.register(bus);
+        Registration.ITEMS.register(bus);
+        Registration.ENTITY_TYPES.register(bus);
     }
 }
