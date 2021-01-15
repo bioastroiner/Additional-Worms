@@ -8,12 +8,10 @@ import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.common.Mod;
 
 import static com.bioast.addworms.AddWorms.MODID;
 import static com.bioast.addworms.init.InitRegister.ENTITY_TYPES;
 
-@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class ModEntityTypes {
     //Worms
     public static final RegistryObject<EntityType<FarmerWormEntity>> WORM_ENTITY = ENTITY_TYPES.register("worm_entity"
