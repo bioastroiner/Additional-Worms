@@ -12,22 +12,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.fml.RegistryObject;
 
-import static com.bioast.addworms.init.InitRegister.ITEMS;
+import static com.bioast.addworms.init.Registration.ITEMS;
 
 public final class ModItems {
     //Fields
-    private static final Item.Properties baseProperty = new Item.Properties()
-            .group(AddWorms.WormsItemGroup);
+    private static final Item.Properties baseProperty = new Item.Properties().group(AddWorms.WormsItemGroup);
     //Misc
     public static final RegistryObject<Item> DIGESTED_FOOD = ITEMS.register(
             "digested_food",
             () -> new DigestedFood(baseProperty));
     public static final RegistryObject<Item> ITEM_LAUNCHER = ITEMS.register(
             "launcher",
-            () -> new LauncherStick(baseProperty.maxDamage(64)
+            () -> new LauncherStick(baseProperty
+                    .maxDamage(64)
                     .group(ItemGroup.TOOLS)));
-    private static final Item.Properties wormBaseProperty = baseProperty
-            .maxStackSize(16);
+    private static final Item.Properties wormBaseProperty = baseProperty.maxStackSize(16);
     //Worms
     public static final RegistryObject<Item> WORM = ITEMS.register(
             "item_worm",

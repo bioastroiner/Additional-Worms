@@ -33,4 +33,7 @@ public final class ModEntityTypes {
             () -> EntityType.Builder.create(WormEntityDigester::new, EntityClassification.MISC)
                     .size(0.1f, 0.1f)
                     .build(new ResourceLocation(MODID, "worm_entity_digester").toString()));
+
+    static void register() {
+    }
 }

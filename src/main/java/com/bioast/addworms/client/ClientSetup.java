@@ -23,7 +23,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void doClientStuff(FMLClientSetupEvent event) {
         registerRenderers();
-        //registerProperties();
+        registerProperties();
     }
 
     private static void registerProperties() {
@@ -37,36 +37,16 @@ public class ClientSetup {
     private static void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY.get(),
-                renderManager ->
-                        new GeneralWormRenderer<>(
-                                renderManager,
-                                ModItems.WORM.get()
-                        )
-        );
+                renderManager -> new GeneralWormRenderer<>(renderManager, ModItems.WORM.get()));
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY_RED.get(),
-                renderManager ->
-                        new GeneralWormRenderer(
-                                renderManager,
-                                ModItems.WORM_RED.get()
-                        )
-        );
+                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY_FAST.get(),
-                renderManager ->
-                        new GeneralWormRenderer(
-                                renderManager,
-                                ModItems.WORM_FAST.get()
-                        )
-        );
+                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FAST.get()));
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY_DIGESTER.get(),
-                renderManager ->
-                        new GeneralWormRenderer(
-                                renderManager,
-                                ModItems.WORM_DIGESTER.get()
-                        )
-        );
+                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_DIGESTER.get()));
     }
 
     @SubscribeEvent

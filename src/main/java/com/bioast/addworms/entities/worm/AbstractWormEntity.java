@@ -262,11 +262,6 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     @Override
-    protected void registerData() {
-
-    }
-
-    @Override
     protected void readAdditional(CompoundNBT compound) {
         this.timer = compound.getInt("Timer");
         ItemStackHelper.loadAllItems(compound, simpleItemStorage);

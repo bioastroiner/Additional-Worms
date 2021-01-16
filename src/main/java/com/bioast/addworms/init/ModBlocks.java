@@ -38,4 +38,6 @@ public final class ModBlocks {
         return reg;
     }
 
+    static void register() {
+    }
 }
