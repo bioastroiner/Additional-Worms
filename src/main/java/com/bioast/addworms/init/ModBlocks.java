@@ -10,8 +10,8 @@ import net.minecraftforge.fml.RegistryObject;
 
 import java.util.function.Supplier;
 
-import static com.bioast.addworms.init.InitRegister.BLOCKS;
-import static com.bioast.addworms.init.InitRegister.ITEMS;
+import static com.bioast.addworms.init.Registration.BLOCKS;
+import static com.bioast.addworms.init.Registration.ITEMS;
 import static net.minecraft.block.Blocks.DIRT;
 
 public final class ModBlocks {

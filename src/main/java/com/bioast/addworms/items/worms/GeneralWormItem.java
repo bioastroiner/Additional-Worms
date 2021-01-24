@@ -14,6 +14,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
