@@ -21,9 +21,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -32,12 +30,12 @@ import java.util.function.Consumer;
  * <p>
  * this class consists of all attributes that is shared by all worm entities
  * and their basic behaviours.
+ * ass well as majority of worms shared code
  * <p>
  * all worm entities should inherite this class.
  * <p>
  * No worm Entities is allowed onAir blocks
  * <p>
- * TODO : we use the same system for storing items and drop of our worm , it should be changed in the future, it also
  * can cause issues in future too
  */
 public abstract class AbstractWormEntity extends Entity {
@@ -51,6 +49,8 @@ public abstract class AbstractWormEntity extends Entity {
      * use this very basic method to save items into memory mainly for make the worm
      * drop its original items as if it was stored in it out
      * it also saves those item into NBT to let the world save it
+     * NOTE: wormItem itself should not be saved in this List
+     * FIXME : use Capability as i see this may not fit our future expectations
      */
     protected NonNullList<ItemStack> simpleItemStorage = NonNullList.create();
 
@@ -70,13 +70,14 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     /**
+     * FIXME remove
      * implement this method in other
      * worms to get the placing conditions
      * such as dose this worm disAllows other worms to be placed around it or not. you can also enter
-     * a lamda in the itemclass to tell it what to do
+     * a lambda in the item class to tell it what to do
      *
      * @return true by default if there isn't any other worms in same spot
-     * ovveride it to change it remember to call the super to check for worms in smae spot!
+     * override it to change it remember to call the super to check for worms in same spot!
      * @implNote this method gets some input parameters all {@link Nullable} by default except the BlockPos parms
      */
     public boolean getPlacingCriteria() {
@@ -103,9 +104,9 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     /**
-     * ovverides the {@link Entity#remove()} with {@link AbstractWormEntity#kill()}
+     * overrides the {@link Entity#remove()} with {@link AbstractWormEntity#kill()}
      * <p>
-     * use {@link Entity#remove(boolean keepData)} instead to skeep it.
+     * use {@link Entity#remove(boolean keepData)} instead to skip it.
      */
     @Override
     public void remove() {
@@ -115,8 +116,6 @@ public abstract class AbstractWormEntity extends Entity {
     /**
      * use this method to remove entity
      * without triggiring {@link AbstractWormEntity#onKill()} event
-     *
-     * @param keepData
      */
     @Override
     public void remove(boolean keepData) {
@@ -137,12 +136,13 @@ public abstract class AbstractWormEntity extends Entity {
         return simpleItemStorage;
     }
 
-    protected void dropItems() {
+    protected void dropItems(Boolean dropWorm) {
+        if (simpleItemStorage == null || simpleItemStorage.isEmpty()) return;
         for (ItemStack item : simpleItemStorage) EntityHelper.dropItem(getPosition(), item, world);
     }
 
     /**
-     * @param Radius half the radius of scquear that appears around
+     * @param Radius half the radius of sqeuar that appears around
      *               and contains the entities in it
      *               r = 1 -> 3 by 3
      *               r = 2 -> 5 by 5
@@ -150,7 +150,7 @@ public abstract class AbstractWormEntity extends Entity {
      * @return all entities that are in this radius
      * <p>
      * be careful not use this method unprepared as it would
-     * return all present entites within that area in the chunk.
+     * return all present entities within that area in the chunk.
      * including all item entities
      */
     public List<Entity> getEntitiesAround(int Radius) {
@@ -184,32 +184,31 @@ public abstract class AbstractWormEntity extends Entity {
      * @return {@link AbstractWormEntity#getTileEntitiesAround(int Radius)#Pair<>(world.getBlockState(pos),world
      * .getTileEntity(pos)}.
      */
-    public List<Pair<BlockState, TileEntity>> getTileEntitiesPairAround(int Radius) {
-        List<Pair<BlockState, TileEntity>> list = new ArrayList<>();
+    public Map<BlockPos, Pair<BlockState, TileEntity>> getTileEntitiesPairAround(int Radius) {
+        Map<BlockPos, Pair<BlockState, TileEntity>> tilemap = new HashMap<>();
         for (int i = 0; i <= Radius; i++) {
             for (int j = 0; j <= Radius; j++) {
                 BlockPos pos = new BlockPos(i, this.getPosY(), j);
                 Pair<BlockState, TileEntity> pair;
                 if (world.getTileEntity(pos) != null) {
-                    list.add(new Pair<>(world.getBlockState(pos), world.getTileEntity(pos)));
+                    tilemap.put(pos, new Pair<>(world.getBlockState(pos), world.getTileEntity(pos)));
                 }
-                continue;
             }
         }
-        return list;
+        return tilemap;
     }
 
-    public List<TileEntity> getTileEntitiesAround(int Radius) {
-        List<TileEntity> te = new ArrayList<>();
-        getTileEntitiesPairAround(Radius).forEach(p -> te.add(p.getSecond()));
-        return te;
+    public Map<BlockPos, TileEntity> getTileEntitiesAround(int Radius) {
+        Map<BlockPos, TileEntity> ret = new HashMap<>();
+        getTileEntitiesPairAround(Radius).forEach((bp, bstep) -> ret.put(bp, bstep.getSecond()));
+        return ret;
     }
 
     /**
-     * @param Radius
+     * @param Radius  n -> 2n+1 x 2n+1
      * @param yOffset gets an y value for height
      *                note that it would act as dimensions
-     *                and not an actuall offset fixed point.
+     *                and not an actually offset fixed point.
      *                only enter positive values (bec negative values would
      *                deSpawn the worm itself)
      * @return list of blockstates excluding AirBlocks
@@ -254,10 +253,10 @@ public abstract class AbstractWormEntity extends Entity {
 
     public List<Entity> getOtherWormsInArea(int Radius, @Nullable Class<? extends AbstractWormEntity> c,
                                             @Nullable Consumer<?
-                                                    extends Entity> act) {
+                                                    extends Entity> consumer) {
         if (c == null) c = AbstractWormEntity.class;
         List<Entity> list = getEntitiesAround(Radius, c);
-        if (act != null) list.forEach((Consumer<? super Entity>) act);
+        if (consumer != null) list.forEach((Consumer<? super Entity>) consumer); //FIXME
         return list;
     }
 
