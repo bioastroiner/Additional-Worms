@@ -25,6 +25,8 @@ based on **ActuallyAddition**'s **Worms**
 - [ ] add Configs
 - [x] get Permission from AA's Devs
 - [x] extract Digestive trend of worms and perDigest your food or fuels
+- [ ] make worms more unique than the act.addition's worms
+- [ ] new textures
 
 ### Worm list
 
@@ -34,7 +36,7 @@ based on **ActuallyAddition**'s **Worms**
 - [x] -Worms that help in gathering of resources
 - [ ] Miner Worm (a worm that mines blocks)
 - [ ] Enhanced Worm (a worm with extended range and abilities) 
-- [ ] Harm Worm (a worm that damages entities within an area)
+- [x] Harm Worm (a worm that damages entities within an area) -now it is done with setting a worm's property to hostile
 - [ ] Regenerating worm
 - [ ] Nesting Worm (a way to make more worms)
 - [ ] Dendritic Worm (tree worm basically)
