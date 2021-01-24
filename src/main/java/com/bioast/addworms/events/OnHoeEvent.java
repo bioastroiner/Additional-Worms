@@ -19,10 +19,11 @@ import static com.bioast.addworms.AddWorms.MODID;
  * this class singlehandely handles
  * that tilling grass or dirt would yield worms or not
  */
-@Mod.EventBusSubscriber(modid = MODID,bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class OnHoeEvent {
+    @SuppressWarnings("Deprecated")
     @SubscribeEvent
-    public void onHoe(UseHoeEvent event){
+    public void onHoe(UseHoeEvent event) {
         //wormsEnabled &&
         if (event.getResult() != Event.Result.DENY) {
             World world = event.getContext().getWorld();
@@ -31,8 +32,9 @@ public class OnHoeEvent {
                 if (world.isAirBlock(pos.up())) {
                     BlockState state = world.getBlockState(pos);
                     if ((state.getBlock() instanceof GrassBlock || state == Blocks.GRASS_BLOCK.getDefaultState() || state == Blocks.DIRT.getDefaultState()) && world.rand.nextFloat() >= 0.20F) {
-                        ItemStack stack = new ItemStack(ModItems.WORM.get(), world.rand.nextInt(2) + 1);
-                        ItemEntity item = new ItemEntity(event.getContext().getWorld(), pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, stack);
+                        ItemStack stack = new ItemStack(ModItems.WORM_FARMER.get(), world.rand.nextInt(2) + 1);
+                        ItemEntity item = new ItemEntity(event.getContext().getWorld(), pos.getX() + 0.5,
+                                pos.getY() + 1, pos.getZ() + 0.5, stack);
                         world.addEntity(item);
                     }
                 }

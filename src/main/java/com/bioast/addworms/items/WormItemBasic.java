@@ -2,7 +2,6 @@ package com.bioast.addworms.items;
 
 import com.bioast.addworms.entities.WormEntityBasic;
 import com.bioast.addworms.init.ModEntityTypes;
-import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.interfaces.IItemWorm;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,17 +24,39 @@ public class WormItemBasic extends WormItemBase implements IItemWorm {
     }
 
     @Override
-    protected boolean placeWorm(PlayerEntity player, BlockPos pos, World world, ItemStack stack) {
-        if (checkForWormsInArea(world,pos)) {
-            Debug.log("",stack);
-            return addWormToWorld(world,pos,stack,player,new WormEntityBasic(ModEntityTypes.WORM_ENTITY.get(),world));
-        }
+    protected boolean placeWorm(
+            PlayerEntity player,
+            BlockPos pos,
+            World world,
+            ItemStack stack
+    ) {
+        if (checkForWormsInArea(world, pos))
+            return
+                    addWormToWorld(
+                            world,
+                            pos,
+                            stack,
+                            player,
+                            new WormEntityBasic(
+                                    ModEntityTypes.WORM_ENTITY_FARMER.get(),
+                                    world
+                            )
+                    );
         return false;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Classic worm nothing Special -- Tills , makes wet , Bonemill effect somewhat"));
+    public void addInformation(
+            ItemStack stack,
+            @Nullable World worldIn,
+            List<ITextComponent> tooltip,
+            ITooltipFlag flagIn
+    ) {
+        tooltip.add(
+                new StringTextComponent(
+                        "Classic worm nothing Special -- Tills , makes wet , Bonemill effect somewhat"
+                )
+        );
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }

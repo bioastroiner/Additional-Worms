@@ -13,9 +13,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.15.2-1.0' // this the version that comes in jar forexample : AdditionalWorms-1.15.2-1.0.jar
-group = 'com.bioast.addworms' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'AdditionalWorms' // this is the name of our .Jar mod file
+version = "${project.mc_version}-${project.mod_version}" // this the version that comes in jar forexample : AdditionalWorms-1.15.2-1.0.jar
+group = "${project.group_maven}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "${project.archivesBaseName}" // this is the name of our .Jar mod file
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -25,7 +25,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20201202-1.15.1'
+    mappings channel: "${project.mappings_channel}", version: "${project.mappings_version}"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -43,7 +43,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                addworms {
                     source sourceSets.main
                 }
             }
@@ -59,7 +59,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                addworms {
                     source sourceSets.main
                 }
             }
@@ -74,10 +74,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'examplemod', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'addworms', '--all', '--output', file('src/generated/resources/')
 
             mods {
-                examplemod {
+                addworms {
                     source sourceSets.main
                 }
             }
@@ -86,50 +86,38 @@ minecraft {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.0'
+    minecraft "net.minecraftforge:forge:${project.mc_version}-${project.fml_version}"
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-    // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+//    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+//    // at runtime, use the full JEI jar
+//    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    // TODO : switch to TOP if needed
+    // TODO : bring dep.s back
+//    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}:api")
+//    // At runtime, use the full Hwyla jar
+//    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}")
 
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}:api")
-    // At runtime, use the full Hwyla jar
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${waila_version}_${mc_version}")
-
-    compileOnly fg.deobf("curse.maven:appleskin:2987251")
-
-    runtimeOnly fg.deobf("curse.maven:appleskin:2987251")
-
-    //deobfCompile "curse.maven:appleskin:2987251"
-
-    //deobfCompile "curse.maven:ctm:2642375"
-
-    //implementation 'com.github.squeek502:appleskin:1.15-forge-SNAPSHOT'
-
-    //implementation fg.deobf('com.github.bernie-g:geckolib:forge-1.15.2-geckolib-2.0.0-beta.7')
-
-    // dependency on the latest commit in the master branch
-    //implementation 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
-
-    //implementation 'com.github.User:Repo:Tag'
+//    compileOnly fg.deobf("curse.maven:appleskin:2987251")
+//
+//    runtimeOnly fg.deobf("curse.maven:appleskin:2987251")
 }
 repositories{
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-
-    maven { url "https://maven.tehnut.info" }
-
-    maven {
-        url = "https://www.cursemaven.com"
-    }
+//    maven {
+//        // location of the maven that hosts JEI files
+//        name = "Progwml6 maven"
+//        url = "https://dvs1.progwml6.com/files/maven/"
+//    }
+//    maven {
+//        // location of a maven mirror for JEI files, as a fallback
+//        name = "ModMaven"
+//        url = "https://modmaven.k-4u.nl"
+//    }
+//
+//    maven { url "https://maven.tehnut.info" }
+//
+//    maven {
+//        url = "https://www.cursemaven.com"
+//    }
 
 }
 
@@ -137,12 +125,12 @@ repositories{
 jar {
     manifest {
         attributes([
-            "Specification-Title": "examplemod",
-            "Specification-Vendor": "examplemodsareus",
+            "Specification-Title": "${project.modid}",
+            "Specification-Vendor": "Bioastroiner",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Vendor" :"Bioastroiner",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
