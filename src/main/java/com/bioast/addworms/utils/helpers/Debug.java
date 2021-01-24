@@ -3,6 +3,7 @@ package com.bioast.addworms.utils.helpers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -10,6 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -21,10 +23,17 @@ public final class Debug {
     private static int cachMax = 10;
 
     /**
-     * @param text prints a generic Debug log into minecraft chat for fast Debuggings
+     * @param text prints a generic Debug log into minecraft chat for fast Debuggings clear the chat afterwards
      */
     public static void log(ITextComponent text) {
         clearChat();
+        logClearless(text);
+    }
+
+    /**
+     * @param text prints a generic Debug log into minecraft chat for fast Debuggings without clearing
+     */
+    public static void logClearless(ITextComponent text) {
         Minecraft.getInstance()
                 .player
                 .sendMessage(
@@ -32,6 +41,10 @@ public final class Debug {
                         UUID.randomUUID()
                 );
 
+    }
+
+    public static void logClearless(String msg) {
+        logClearless(new StringTextComponent(msg));
     }
 
     /**
@@ -81,6 +94,14 @@ public final class Debug {
                         .getName()
                         .getString()
         );
+    }
+
+    public static void log(BlockPos pos, @Nullable String msg) {
+        if (msg == null) msg = "";
+        log(new StringTextComponent(msg + "at:"));
+        logClearless(new StringTextComponent("X:" + pos.getX()));
+        logClearless(new StringTextComponent("Y:" + pos.getY()));
+        logClearless(new StringTextComponent("Z:" + pos.getZ()));
     }
 
     /**
