@@ -1,11 +1,14 @@
 package com.bioast.addworms.entities.worm;
 
+import com.bioast.addworms.items.worms.GeneralWormItem;
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
@@ -17,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -41,10 +45,24 @@ import java.util.function.Consumer;
 public abstract class AbstractWormEntity extends Entity {
 
     /**
-     * simple ticker to determain a worm's age
+     * this supplier simply wraps an ItemStack of
+     * item form of worm into worm entity
+     */
+    protected final NonNullSupplier<ItemStack> wormItemSupplier;
+    /**
+     * worm property witch holds information about our worm's basic artibutes
+     */
+    final IWormProperty wormProperty;
+    /**
+     * simple ticker to determine a worm's age
      * also needs to be saved in server world
      */
     protected int timer = 0;
+    /**
+     * r = 1 -> 3 by 3
+     * r = 2 -> 5 by 5
+     */
+    protected int range;
     /**
      * use this very basic method to save items into memory mainly for make the worm
      * drop its original items as if it was stored in it out
@@ -52,21 +70,57 @@ public abstract class AbstractWormEntity extends Entity {
      * NOTE: wormItem itself should not be saved in this List
      * FIXME : use Capability as i see this may not fit our future expectations
      */
-    protected NonNullList<ItemStack> simpleItemStorage = NonNullList.create();
+    protected NonNullList<ItemStack> simpleItemStorage;
 
-    public AbstractWormEntity(EntityType<?> entityTypeIn, World worldIn, @Nullable NonNullList<ItemStack> dropList) {
+    /**
+     * @param initialItemStorageContents List of items to initially be stored in
+     * @param wormItem                   Item Registry Entry an instance of {@link GeneralWormItem}
+     */
+    public AbstractWormEntity(EntityType<?> entityTypeIn, World worldIn,
+                              @Nullable NonNullList<ItemStack> initialItemStorageContents,
+                              final Item wormItem, final IWormProperty wormProperty) {
         super(entityTypeIn, worldIn);
-        this.setBoundingBox(null);
+        this.setBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D));
+        simpleItemStorage = initialItemStorageContents;
+        if (simpleItemStorage == null) simpleItemStorage = NonNullList.create();
+        this.wormProperty = wormProperty;
+        range = wormProperty.getDefaultBaseRange();
+        wormItemSupplier = () -> new ItemStack(wormItem);
+    }
+
+    /**
+     * @return unwraps item worm
+     */
+    public ItemStack getWormItemStack() {
+        return wormItemSupplier.get();
     }
 
     @Override
     public void tick() {
+        baseWormTick();
+        if (!world.isRemote()) {
+            if (wormProperty.isHostile()) {
+                damageMobsAround(3, 5);
+            }
+        }
+    }
+
+    private void baseWormTick() {
         if (!this.world.isRemote) {
             this.timer++;
         }
         if (world.isAirBlock(getPosition()) || !world.isAirBlock(getPosition().up())) {
+            Debug.log(getPosition(), null);//FIXME
+            Debug.logClearless(world.getBlockState(getPosition()).toString());//FIXME
             this.kill();
         }
+        if (wormProperty.willDie() && wormProperty.getDieTime() == this.timer) {
+            this.kill(true);
+        }
+    }
+
+    public int getRange() {
+        return range;
     }
 
     /**
@@ -91,16 +145,28 @@ public abstract class AbstractWormEntity extends Entity {
     /**
      * a safer way than {@link Entity#remove()} to remove the worm entity's instance
      */
-    public void kill() {
+    public void kill(boolean overrideNotDrop) {
         onKill();
+        if (!overrideNotDrop)
+            dropOnKill();
         super.remove();
+    }
+
+    public void kill() {
+        kill(false);
     }
 
     /**
      * this method is called right before {@link Entity#remove()}
      */
     protected void onKill() {
-        dropItems();
+
+    }
+
+    private void dropOnKill() {
+        dropItems(wormProperty.doesDropWhenRemoved());
+        if (wormProperty.doesDropWhenRemoved())
+            EntityHelper.dropItem(getPosition(), getWormItemStack(), world);
     }
 
     /**
@@ -286,5 +352,10 @@ public abstract class AbstractWormEntity extends Entity {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
         return null;
+    }
+
+    @Override
+    protected void registerData() {
+
     }
 }

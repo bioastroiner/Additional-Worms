@@ -2,6 +2,7 @@ package com.bioast.addworms;
 
 import com.bioast.addworms.init.ModBlocks;
 import com.bioast.addworms.init.ModItems;
+import com.bioast.addworms.init.Registration;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -33,7 +34,7 @@ public class AddWorms {
             new TranslationTextComponent("tab." + MODID + "items").getString()) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModItems.WORM.get());
+            return new ItemStack(ModItems.WORM_FARMER.get());
         }
     };
 

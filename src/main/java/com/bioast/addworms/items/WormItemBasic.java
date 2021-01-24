@@ -38,7 +38,7 @@ public class WormItemBasic extends WormItemBase implements IItemWorm {
                             stack,
                             player,
                             new WormEntityBasic(
-                                    ModEntityTypes.WORM_ENTITY.get(),
+                                    ModEntityTypes.WORM_ENTITY_FARMER.get(),
                                     world
                             )
                     );

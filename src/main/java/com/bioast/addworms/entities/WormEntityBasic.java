@@ -96,7 +96,7 @@ public class WormEntityBasic extends WormEntityBase implements IWorm {
     }
 
     public ItemStack getItemDrop() {
-        return new ItemStack(ModItems.WORM.get(), 1);
+        return new ItemStack(ModItems.WORM_FARMER.get(), 1);
     }
 
     @Override

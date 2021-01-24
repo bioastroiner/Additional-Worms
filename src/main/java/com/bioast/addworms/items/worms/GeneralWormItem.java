@@ -1,15 +1,23 @@
 package com.bioast.addworms.items.worms;
 
 import com.bioast.addworms.entities.worm.AbstractWormEntity;
+import com.bioast.addworms.entities.worm.IWormProperty;
 import com.bioast.addworms.items.ModItem;
+import com.bioast.addworms.utils.helpers.MathHelper;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * almost all worms should use this class
@@ -21,81 +29,52 @@ import java.util.function.Function;
  * bare-bone NBT difference(same class-same type).
  * <p>
  * currently our renderer is bound mainly by the class, tough we can technically use NBT
- * data to change it in realtime, the wormRenderer classes are quite Abstract,
- * // TODO may use Baked models in future
+ * data to change it in realtime, the wormRenderer classes are quite Abstract
  */
 public class GeneralWormItem extends ModItem {
 
-    /**
-     * Function designed when
-     * Item has been registered for the worm
-     * must include the right method to
-     * instantiate an instance of the worm Ent
-     */
-    protected Function<World, ? extends AbstractWormEntity> instFunc;
+    //FIXME: the incantation here is veeery wrong fix it
 
-    public GeneralWormItem(
-            Properties properties,
-            Function<World, ? extends AbstractWormEntity> func
-    ) {
+    public final IWormProperty wormProperty;
+
+    public GeneralWormItem(Item.Properties properties, IWormProperty wormProperty) {
         super(properties);
-        instFunc = func;
+        this.wormProperty = wormProperty;
     }
 
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        BlockPos wormPos = context.getPos()
-                .add(
-                        0.5,
-                        0.5,
-                        0.5
-                );
-        addWormToWorld(
-                context.getWorld(),
-                context.getPos(),
-                context.getItem(),
-                context.getPlayer(),
-                instantiate(context.getWorld())
-        );
+        BlockPos wormPos = context.getPos().add(0.5, 0.5, 0.5);
+        addWormToWorld(context.getWorld(), wormPos, context.getItem(), context.getPlayer(),
+                () -> (AbstractWormEntity) wormProperty.getEntityType().create(context.getWorld()));
         return super.onItemUse(context);
     }
 
     /**
-     * add a wormEntitiy in given pos
+     * adds a wormEntity in given pos
      *
-     * @return false in client always
+     * @return false if {@link IWormProperty#getFloorBlock()} Predicate is false
      */
-    private boolean addWormToWorld(
-            World world,
-            BlockPos pos,
-            ItemStack stack,
-            PlayerEntity player,
-            AbstractWormEntity worm
-    ) {
+    private boolean addWormToWorld(World world, BlockPos pos, ItemStack stack, PlayerEntity player,
+                                   Supplier<AbstractWormEntity> wormS) {
         if (!world.isRemote) {
-            //FIXME
-            //check if our worm can live there, remove it if can't
-            if (!worm.getPlacingCriteria()) {
-                worm.remove(false);
+            //check if our worm can live there
+            if (!wormProperty.getFloorBlock().test(world.getBlockState(pos).getBlock()) ||
+                    !world.isAirBlock(pos.up()) ||
+                    world.getEntitiesWithinAABB(AbstractWormEntity.class, MathHelper.getAxisAlignedBB(1, pos), null).size() > 0) {
                 return false;
             }
-            //add the entity to world(it should be instantated in the method call)
-            worm.setPosition(
-                    pos.getX() + 0.5,
-                    pos.getY() + 0.5,
-                    pos.getZ() + 0.5
-            );
-            worm.setCustomName(
-                    stack.getDisplayName()
-            );
+            //add the entity to world, we use a supplier to prevent it from instantiating too soon
+            AbstractWormEntity worm = wormS.get();
+            worm.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+            worm.setCustomName(stack.getDisplayName());
+
+            //FIXME i bet this is not always true
+            if (stack.getItem() instanceof GeneralWormItem) {
+                Item wormItem = stack.getItem();
+            }
+
             world.addEntity(worm);
-            //set the drop of entity to its item
-            ItemStack dropItemStack =
-                    stack.copy();
-            dropItemStack.setCount(1);
-            worm.addItems(
-                    dropItemStack
-            );
             //use worm in your hand if not creative
             if (!player.isCreative())
                 stack.shrink(1);
@@ -105,11 +84,106 @@ public class GeneralWormItem extends ModItem {
         return false;
     }
 
-    /**
-     * @return calls the Function declared in Item registry to instantiate a desired WormEntity of its kind
-     * at the right moment
-     */
-    protected AbstractWormEntity instantiate(World worldIn) {
-        return instFunc.apply(worldIn);
+//    /**
+//     * @return calls the Function declared in {@link IWormProperty#getEntity()} to instantiate a desired
+//     * WormEntity of its kind
+//     * at the right moment
+//     * FIXME remove this method
+//     */
+//    private AbstractWormEntity instantiate(World worldIn) {
+//        return wormProperty.getEntity().apply(worldIn);
+//    }
+
+    public static class Properties {
+        //private BiFunction<World, Item, ? extends AbstractWormEntity> createWormFunction;
+        RegistryObject<EntityType<Entity>> entityType;
+        private Predicate<Block> floorBlocks;
+        private int dieTime = 1000;
+        private int defaultBaseRange = 1;
+        private boolean canDie = true;
+        private boolean dropWhenRemoved = true;
+        private boolean isHostile = false;
+
+        /**
+         * sets a proper method to spawn a new worm Entity
+         */
+        public Properties setEntity(RegistryObject<EntityType<Entity>> entityTypeIn) {
+            entityType = entityTypeIn;
+            return this;
+        }
+
+        public Properties setFloorBlocks(Predicate<Block> floorBlocks) {
+            this.floorBlocks = floorBlocks;
+            return this;
+        }
+
+        public Properties setDefaultDyingTime(int ticksIn) {
+            dieTime = ticksIn;
+            return this;
+        }
+
+        public Properties canDie(boolean canDie) {
+            this.canDie = canDie;
+            return this;
+        }
+
+        public Properties isHostile(boolean isHostile) {
+            this.isHostile = isHostile;
+            return this;
+        }
+
+        public Properties dropWhenRemoved(boolean dropWhenRemoved) {
+            this.dropWhenRemoved = dropWhenRemoved;
+            return this;
+        }
+
+        public Properties setDefaultBaseRange(int r) {
+            this.defaultBaseRange = r;
+            return this;
+        }
+
+        public IWormProperty finalizeProperty() {
+            return new IWormProperty() {
+                @Override
+                public Predicate<Block> getFloorBlock() {
+                    return floorBlocks;
+                }
+
+                @Override
+                public BiFunction<World, Item, ? extends AbstractWormEntity> getEntity(Item wormItem) {
+                    return null;
+                }
+
+                @Override
+                public EntityType<?> getEntityType() {
+                    return entityType.get();
+                }
+
+                @Override
+                public int getDieTime() {
+                    return dieTime;
+                }
+
+                @Override
+                public int getDefaultBaseRange() {
+                    return defaultBaseRange;
+                }
+
+                @Override
+                public boolean willDie() {
+                    return canDie;
+                }
+
+                @Override
+                public boolean doesDropWhenRemoved() {
+                    return dropWhenRemoved;
+                }
+
+                @Override
+                public boolean isHostile() {
+                    return isHostile;
+                }
+            };
+        }
     }
 }

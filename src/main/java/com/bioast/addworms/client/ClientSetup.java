@@ -36,8 +36,8 @@ public class ClientSetup {
 
     private static void registerRenderers() {
         RenderingRegistry.registerEntityRenderingHandler(
-                WORM_ENTITY.get(),
-                renderManager -> new GeneralWormRenderer<>(renderManager, ModItems.WORM.get()));
+                WORM_ENTITY_FARMER.get(),
+                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FARMER.get()));
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY_RED.get(),
                 renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));

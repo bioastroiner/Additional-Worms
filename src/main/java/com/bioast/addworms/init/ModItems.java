@@ -28,11 +28,16 @@ public final class ModItems {
                     .group(ItemGroup.TOOLS)));
     private static final Item.Properties wormBaseProperty = baseProperty.maxStackSize(16);
     //Worms
-    public static final RegistryObject<Item> WORM = ITEMS.register(
+    public static final RegistryObject<Item> WORM_FARMER = ITEMS.register(
             "item_worm",
-            () -> new GeneralWormItem(wormBaseProperty, world -> new FarmerWormEntity(
-                    ModEntityTypes.WORM_ENTITY.get(), world))
-    );
+            () -> new GeneralWormItem(new Item.Properties().group(AddWorms.WormsItemGroup)
+                    .maxStackSize(16)
+                    , new GeneralWormItem.Properties()
+                    .setFloorBlocks(block -> block instanceof GrassBlock)
+                    .setEntity(ModEntityTypes.WORM_ENTITY_FARMER)
+                    .dropWhenRemoved(true)
+                    .finalizeProperty()));
+    //*************OLD*********
     public static final RegistryObject<Item> WORM_RED = ITEMS.register(
             "item_worm_red",
             () -> new WormItemRed(wormBaseProperty)

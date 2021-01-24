@@ -4,20 +4,23 @@ import com.bioast.addworms.entities.WormEntityDigester;
 import com.bioast.addworms.entities.WormEntityFast;
 import com.bioast.addworms.entities.WormEntityRed;
 import com.bioast.addworms.entities.worm.FarmerWormEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 
 import static com.bioast.addworms.AddWorms.MODID;
-import static com.bioast.addworms.init.InitRegister.ENTITY_TYPES;
+import static com.bioast.addworms.init.Registration.ENTITY_TYPES;
 
 public final class ModEntityTypes {
     //Worms
-    public static final RegistryObject<EntityType<FarmerWormEntity>> WORM_ENTITY = ENTITY_TYPES.register("worm_entity",
-            () -> EntityType.Builder.create(FarmerWormEntity::new, EntityClassification.MISC)
+    public static final RegistryObject<EntityType<Entity>> WORM_ENTITY_FARMER = ENTITY_TYPES.register(
+            "worm_entity_farmer",
+            () -> EntityType.Builder.create((entityType, world) -> new FarmerWormEntity(entityType, world,
+                    ModItems.WORM_FARMER.get()), EntityClassification.MISC)
                     .size(0.1f, 0.1f)
-                    .build(new ResourceLocation(MODID, "worm_entity").toString()));
+                    .build(new ResourceLocation(MODID, "worm_entity_farmer").toString()));
     public static final RegistryObject<EntityType<WormEntityRed>> WORM_ENTITY_RED = ENTITY_TYPES.register(
             "worm_entity_red",
             () -> EntityType.Builder.create(WormEntityRed::new, EntityClassification.MISC)

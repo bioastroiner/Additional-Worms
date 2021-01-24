@@ -32,7 +32,7 @@ public class MudyDirt extends MudyDirtBase {
             Random random = new Random();
             float f = random.nextFloat();
             if (f > 0.96f)
-                dropList.add(new ItemStack(ModItems.WORM.get(), 1));
+                dropList.add(new ItemStack(ModItems.WORM_FARMER.get(), 1));
             for (ItemStack stack : dropList) {
                 ItemStack dropStack = stack;
                 worldIn.addEntity(new ItemEntity(worldIn,
