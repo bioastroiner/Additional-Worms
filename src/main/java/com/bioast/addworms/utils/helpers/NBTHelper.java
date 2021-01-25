@@ -1,6 +1,7 @@
 package com.bioast.addworms.utils.helpers;
 
 import com.bioast.addworms.AddWorms;
+import com.bioast.addworms.entities.worm.ETiers;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,6 +60,17 @@ public final class NBTHelper {
     }
     //*************************************************
 
+    public static void addWormTierToStack(ETiers tiers) {
+
+    }
+
+    public static ETiers readWormTierFromStack(ItemStack itemStackIn) {
+        int lvl =
+                itemStackIn.getOrCreateTag().getInt(Tags.TAG_WORM_LVL);
+        if (lvl == 0) throw new RuntimeException();
+        return ETiers.values()[lvl - 1];
+    }
+
     public static void addDataToItemStack(ItemStack itemStack, String key, Boolean value) {
         CompoundNBT tag = new CompoundNBT();
         tag.putBoolean(key, value);
@@ -69,10 +81,15 @@ public final class NBTHelper {
         //Foods
         public static final String TAG_FOOD_HEADER = "Food";
         public static final String TAG_FOOD_ID = "FoodID";
-        public static final String TAG_HUNGER = "Hunger";
-        public static final String TAG_SAT = "Saturation";
-        public static final String TAG_CAN_EAT_WHEN_FULL = "CanEatWhenFull";
-        public static final String TAG_IS_FAST_EATING = "IsFastEating";
-        public static final String TAG_IS_MEAT = "IsMeat";
+        public static final String TAG_FOOD_HUNGER = "Hunger";
+        public static final String TAG_FOOD_SAT = "Saturation";
+        public static final String TAG_FOOD_CAN_EAT_WHEN_FULL = "CanEatWhenFull";
+        public static final String TAG_FOOD_IS_FAST_EATING = "IsFastEating";
+        public static final String TAG_FOOD_IS_MEAT = "IsMeat";
+        //WormTiers
+        public static final String TAG_WORM_LVL = "Worm_lvl";
+        public static final String TAG_WORM_SPEED = "Worm_Speed";
+        public static final String TAG_WORM_DAMAGE = "Worm_Damage";
+        public static final String TAG_WORM_RANGE = "Worm_Range";
     }
 }

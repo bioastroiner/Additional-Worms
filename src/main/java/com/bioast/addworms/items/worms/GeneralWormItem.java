@@ -1,10 +1,14 @@
 package com.bioast.addworms.items.worms;
 
+import com.bioast.addworms.AddWorms;
 import com.bioast.addworms.entities.worm.AbstractWormEntity;
+import com.bioast.addworms.entities.worm.ETiers;
 import com.bioast.addworms.entities.worm.IWormProperty;
 import com.bioast.addworms.items.ModItem;
 import com.bioast.addworms.utils.helpers.MathHelper;
+import com.bioast.addworms.utils.helpers.NBTHelper;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,9 +17,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.RegistryObject;
 
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -69,6 +77,9 @@ public class GeneralWormItem extends ModItem {
             }
             //add the entity to world, we use a supplier to prevent it from instantiating too soon
             AbstractWormEntity worm = wormS.get();
+            ItemStack wormItemStack = stack.copy();
+            wormItemStack.setCount(1);
+            worm.setWormItemStack(wormItemStack);
             worm.setPosition(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
             worm.setCustomName(stack.getDisplayName());
 
@@ -87,15 +98,39 @@ public class GeneralWormItem extends ModItem {
         return false;
     }
 
-//    /**
-//     * @return calls the Function declared in {@link IWormProperty#getEntity()} to instantiate a desired
-//     * WormEntity of its kind
-//     * at the right moment
-//     * FIXME remove this method
-//     */
-//    private AbstractWormEntity instantiate(World worldIn) {
-//        return wormProperty.getEntity().apply(worldIn);
-//    }
+    @Override
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new TranslationTextComponent(this.getTranslationKey(stack))
+                .append(new TranslationTextComponent("worms.tiers.name." + AddWorms.MODID.toLowerCase() + "." +
+                        NBTHelper.readWormTierFromStack(stack).toString().toLowerCase())
+                );
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip,
+                               ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        //*********************************************************************************
+        //************************    HERE The Tier Stats live    *************************
+        //*********************************************************************************
+        tooltip.add(new TranslationTextComponent(ETiers.TranslationKeyOfStats.KEY_DMG)
+                .append(ITextComponent.getTextComponentOrEmpty(":" +
+                        NBTHelper.readWormTierFromStack(stack).damage))
+        );
+        tooltip.add(new TranslationTextComponent(ETiers.TranslationKeyOfStats.KEY_LEVEL)
+                .append(ITextComponent.getTextComponentOrEmpty(":" +
+                        NBTHelper.readWormTierFromStack(stack).level))
+        );
+        tooltip.add(new TranslationTextComponent(ETiers.TranslationKeyOfStats.KEY_RANGE)
+                .append(ITextComponent.getTextComponentOrEmpty(":" +
+                        NBTHelper.readWormTierFromStack(stack).range))
+        );
+        tooltip.add(new TranslationTextComponent(ETiers.TranslationKeyOfStats.KEY_SPD)
+                .append(ITextComponent.getTextComponentOrEmpty(":" +
+                        NBTHelper.readWormTierFromStack(stack).speed))
+        );
+        //********************************************************************************
+    }
 
     public static class Properties {
         //private BiFunction<World, Item, ? extends AbstractWormEntity> createWormFunction;

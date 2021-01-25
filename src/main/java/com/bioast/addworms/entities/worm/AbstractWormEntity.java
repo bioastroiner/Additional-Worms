@@ -12,6 +12,7 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
@@ -21,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
@@ -46,24 +46,26 @@ import java.util.function.Consumer;
 public abstract class AbstractWormEntity extends Entity {
 
     /**
-     * this supplier simply wraps an ItemStack of
-     * item form of worm into worm entity
-     */
-    protected final NonNullSupplier<ItemStack> wormItemSupplier;
-    /**
-     * worm property witch holds information about our worm's basic artibutes
+     * worm property witch holds information about our worm's basic (and Unchangeable) artibutes
      */
     final IWormProperty wormProperty;
+    /**
+     * r = 1 -> 3 by 3
+     * r = 2 -> 5 by 5
+     */
+    private final int rangeDefault;
+    /**
+     * determines our worm's level
+     * unlike {@link AbstractWormEntity#wormProperty} it holds data related to levels
+     * witch may change
+     * and also writes itself into wormItemStack nbtTag
+     */
+    private final ETiers tier;
     /**
      * simple ticker to determine a worm's age
      * also needs to be saved in server world
      */
     protected int timer = 0;
-    /**
-     * r = 1 -> 3 by 3
-     * r = 2 -> 5 by 5
-     */
-    protected int range;
     /**
      * use this very basic method to save items into memory mainly for make the worm
      * drop its original items as if it was stored in it out
@@ -72,6 +74,8 @@ public abstract class AbstractWormEntity extends Entity {
      * FIXME : use Capability as i see this may not fit our future expectations
      */
     protected NonNullList<ItemStack> simpleItemStorage;
+    private @Nonnull
+    ItemStack wormItemStack;
 
     /**
      * @param initialItemStorageContents List of items to initially be stored in
@@ -85,15 +89,56 @@ public abstract class AbstractWormEntity extends Entity {
         simpleItemStorage = initialItemStorageContents;
         if (simpleItemStorage == null) simpleItemStorage = NonNullList.create();
         this.wormProperty = wormProperty;
-        range = wormProperty.getDefaultBaseRange();
-        wormItemSupplier = () -> new ItemStack(wormItem);
+        rangeDefault = wormProperty.getDefaultBaseRange();
+        wormItemStack = new ItemStack(wormItem);
+        tier = ETiers.Wild;
     }
 
     /**
      * @return unwraps item worm
      */
     public ItemStack getWormItemStack() {
-        return wormItemSupplier.get();
+        return wormItemStack;
+    }
+
+    public void setWormItemStack(ItemStack itemStackIn) {
+        wormItemStack = itemStackIn;
+    }
+
+    public ETiers getTier() {
+        return tier;
+    }
+
+    public int getLevel() {
+        return getTier().level;
+    }
+
+    public int getRange() {
+        if (wormProperty.getDefaultBaseRange() > getTier().range) {
+            return rangeDefault;
+        }
+        return getTier().range;
+    }
+
+    public float getDamage() {
+        return getTier().damage;
+    }
+
+    public float getSpeed() {
+        return getTier().speed;
+    }
+
+    public void saveDataInWormItemStack(String key, INBT nbtIn) {
+        getWormItemStack().getOrCreateTag().put(key, nbtIn);
+    }
+
+    public CompoundNBT getDataInWormItemStack(String key) {
+        return (CompoundNBT)
+                getWormItemStack().getOrCreateTag().get(key);
+    }
+
+    public void saveTiers() {
+        getTier().setTier(wormItemStack);
     }
 
     @Override
@@ -101,7 +146,7 @@ public abstract class AbstractWormEntity extends Entity {
         baseWormTick();
         if (!world.isRemote()) {
             if (wormProperty.isHostile()) {
-                damageMobsAround(3, 5);
+                damageMobsAround(getRange(), getDamage());
             }
         }
     }
@@ -109,6 +154,7 @@ public abstract class AbstractWormEntity extends Entity {
     private void baseWormTick() {
         if (!this.world.isRemote) {
             this.timer++;
+            saveTiers();
         }
         if (world.isAirBlock(getPosition()) || !world.isAirBlock(getPosition().up())) {
             Debug.log(getPosition(), null);//FIXME
@@ -118,10 +164,6 @@ public abstract class AbstractWormEntity extends Entity {
         if (wormProperty.willDie() && wormProperty.getDieTime() == this.timer) {
             this.kill(true);
         }
-    }
-
-    public int getRange() {
-        return range;
     }
 
     /**

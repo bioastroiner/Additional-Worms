@@ -1,0 +1,52 @@
+package com.bioast.addworms.entities.worm;
+
+import com.bioast.addworms.AddWorms;
+import com.bioast.addworms.utils.helpers.NBTHelper;
+import net.minecraft.item.ItemStack;
+
+public enum ETiers {
+    Wild(1, 1, 1.0f, 2.5f),
+    Basic(2, 2, 2.0f, 5f),
+    Enhanced(3, 2, 4.0f, 7.5f),
+    Balanced(4, 3, 10.0f, 12f),
+    Autistic(5, 3, 25.0f, 25f),
+    Heroic(6, 3, 30.0f, 50f),
+    Majestic(7, 3, 45.0f, 80f),
+    Celestial(8, 4, 50f, 80f),
+    Global(9, 5, 100f, 120f),
+    Clay(10, 6, 500f, 500f),
+    Rat(99, 10, 999f, 999f);
+
+    public int level;
+    public int range;
+    public float speed;
+    public float damage;
+
+    ETiers(int level, int range, float speed, float damage) {
+        this.level = level;
+        this.damage = damage;
+        this.range = range;
+        this.speed = speed;
+    }
+
+    String getTranslationKey() {
+        return "worms.tiers." + AddWorms.MODID.toLowerCase() + this.toString().toLowerCase();
+    }
+
+    void setTier(ItemStack itemStackIn) {
+        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_LVL, this.level);
+        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_RANGE, this.range);
+        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_DAMAGE, this.damage);
+        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_SPEED, this.speed);
+    }
+
+    public static class TranslationKeyOfStats {
+        static final String prefix = "worms.tiers.stats." + AddWorms.MODID.toLowerCase() + ".";
+
+        public static final String KEY_LEVEL = prefix + "level";
+        public static final String KEY_RANGE = prefix + "range";
+        public static final String KEY_DMG = prefix + "damage";
+        public static final String KEY_SPD = prefix + "speed";
+
+    }
+}
