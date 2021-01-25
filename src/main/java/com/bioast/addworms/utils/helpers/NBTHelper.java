@@ -28,15 +28,15 @@ public final class NBTHelper {
                     Item.getIdFromItem(foodItem));
         }
         assert foodIn != null;
-        foodTag.putInt(Tags.TAG_HUNGER,
+        foodTag.putInt(Tags.TAG_FOOD_HUNGER,
                 foodIn.getHealing());
-        foodTag.putFloat(Tags.TAG_SAT,
+        foodTag.putFloat(Tags.TAG_FOOD_SAT,
                 foodIn.getSaturation());
-        foodTag.putBoolean(Tags.TAG_CAN_EAT_WHEN_FULL,
+        foodTag.putBoolean(Tags.TAG_FOOD_CAN_EAT_WHEN_FULL,
                 foodIn.canEatWhenFull());
-        foodTag.putBoolean(Tags.TAG_IS_FAST_EATING,
+        foodTag.putBoolean(Tags.TAG_FOOD_IS_FAST_EATING,
                 foodIn.isFastEating());
-        foodTag.putBoolean(Tags.TAG_IS_MEAT,
+        foodTag.putBoolean(Tags.TAG_FOOD_IS_MEAT,
                 foodIn.isMeat());
         tagIn.put(Tags.TAG_FOOD_HEADER, foodTag);
         return foodTag;
@@ -46,8 +46,8 @@ public final class NBTHelper {
         try {
             if (nbt.contains(Tags.TAG_FOOD_HEADER)) {
                 return new Food.Builder()
-                        .hunger(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getInt(Tags.TAG_HUNGER))
-                        .saturation(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getFloat(Tags.TAG_SAT))
+                        .hunger(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getInt(Tags.TAG_FOOD_HUNGER))
+                        .saturation(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getFloat(Tags.TAG_FOOD_SAT))
                         .build();
             }
         } catch (Exception e) {

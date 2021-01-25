@@ -97,10 +97,10 @@ public class DigestedFood extends ModItem {
         if (stack.hasTag()) {
             tooltip.add(new StringTextComponent(
                     "Hunger: " + stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
-                            .getInt(NBTHelper.Tags.TAG_HUNGER)));
+                            .getInt(NBTHelper.Tags.TAG_FOOD_HUNGER)));
             tooltip.add(new StringTextComponent(
                     "Saturation: " + stack.getOrCreateTag().getCompound(NBTHelper.Tags.TAG_FOOD_HEADER)
-                            .getFloat(NBTHelper.Tags.TAG_SAT)));
+                            .getFloat(NBTHelper.Tags.TAG_FOOD_SAT)));
             tooltip.add(new StringTextComponent("Based on: " + getStoredFoood(stack)));
         }
     }

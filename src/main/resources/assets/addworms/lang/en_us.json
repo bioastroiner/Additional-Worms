@@ -1,4 +1,16 @@
 {
-  "tab.addworms.blocks" : "Blocks From Worms",
-  "tab.addworms.items" : "Items From Worms"
+  "tab.addworms.blocks": "Blocks From Worms",
+  "tab.addworms.items": "Items From Worms",
+  "worms.tiers.name.addworms.wild": "Wild Worm",
+  "worms.tiers.name.addworms.basic": "Basic Worm",
+  "worms.tiers.name.addworms.enhanced": "Enhanced Worm",
+  "worms.tiers.name.addworms.balanced": "Balanced Worm",
+  "worms.tiers.name.addworms.autistic": "Autisworm",
+  "worms.tiers.name.addworms.heroic": "Hero Worm",
+  "worms.tiers.name.addworms.Majestic": "Lordic",
+  "worms.tiers.name.addworms.rat": "HaHa Funny OP Worm",
+  "worms.tiers.stats.addworms.level": "Level",
+  "worms.tiers.stats.addworms.range": "Range",
+  "worms.tiers.stats.addworms.damage": "Damage",
+  "worms.tiers.stats.addworms.speed": "Speed"
 }
