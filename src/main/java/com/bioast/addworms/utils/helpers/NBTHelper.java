@@ -7,128 +7,65 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public final class NBTHelper {
+
+    //******************FOOD******************
 
     /**
      * @param foodIn the food that need to be writen
      * @param tagIn  tag to write the food to
      * @return only return the food tag
      */
-    public static CompoundNBT writeFoodToNBT(
-            Food foodIn,
-            CompoundNBT tagIn,
-            @Nullable Item foodItem
-    ) {
-
+    public static CompoundNBT writeFoodToNBT(@Nonnull Food foodIn, CompoundNBT tagIn, @Nullable Item foodItem) {
         CompoundNBT foodTag = new CompoundNBT();
-
         if (foodItem != null) {
-            if (
-                    !(foodItem.getFood() == foodIn)
-            )
+            if (!(foodItem.getFood() == foodIn))
                 foodIn = foodItem.getFood();
-            foodTag
-                    .putInt(
-                            Tags.TAG_FOOD_ID,
-                            Item.getIdFromItem(
-                                    foodItem
-                            )
-                    );
+            foodTag.putInt(Tags.TAG_FOOD_ID,
+                    Item.getIdFromItem(foodItem));
         }
-
-        foodTag
-                .putInt(
-                        Tags.TAG_HUNGER,
-                        foodIn
-                                .getHealing()
-                );
-        foodTag
-                .putFloat(
-                        Tags.TAG_SAT,
-                        foodIn
-                                .getSaturation()
-                );
-        foodTag
-                .putBoolean(
-                        Tags.TAG_CAN_EAT_WHEN_FULL,
-                        foodIn
-                                .canEatWhenFull()
-                );
-        foodTag
-                .putBoolean(
-                        Tags.TAG_IS_FAST_EATING,
-                        foodIn.isFastEating()
-                );
-        foodTag
-                .putBoolean(
-                        Tags.TAG_IS_MEAT,
-                        foodIn.isMeat()
-                );
-
-        tagIn
-                .put(
-                        Tags.TAG_FOOD_HEADER,
-                        foodTag
-                );
+        assert foodIn != null;
+        foodTag.putInt(Tags.TAG_HUNGER,
+                foodIn.getHealing());
+        foodTag.putFloat(Tags.TAG_SAT,
+                foodIn.getSaturation());
+        foodTag.putBoolean(Tags.TAG_CAN_EAT_WHEN_FULL,
+                foodIn.canEatWhenFull());
+        foodTag.putBoolean(Tags.TAG_IS_FAST_EATING,
+                foodIn.isFastEating());
+        foodTag.putBoolean(Tags.TAG_IS_MEAT,
+                foodIn.isMeat());
+        tagIn.put(Tags.TAG_FOOD_HEADER, foodTag);
         return foodTag;
     }
 
     public static Food readFoodFromNBT(CompoundNBT nbt) {
         try {
             if (nbt.contains(Tags.TAG_FOOD_HEADER)) {
-                Food food =
-                        new Food.Builder()
-                                .hunger(
-                                        (
-                                                (CompoundNBT) nbt
-                                                        .get(Tags.TAG_FOOD_HEADER)
-                                        )
-                                                .getInt(Tags.TAG_HUNGER)
-                                )
-                                .saturation(
-                                        (
-                                                (CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)
-                                        )
-                                                .getFloat(Tags.TAG_SAT)
-                                )
-                                .build();
-                return food;
+                return new Food.Builder()
+                        .hunger(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getInt(Tags.TAG_HUNGER))
+                        .saturation(((CompoundNBT) nbt.get(Tags.TAG_FOOD_HEADER)).getFloat(Tags.TAG_SAT))
+                        .build();
             }
         } catch (Exception e) {
-            AddWorms.LOGGER
-                    .log
-                            (
-                                    Level.ERROR,
-                                    String.format
-                                            (
-                                                    "ItemStack at & is not a custome food NBT : ERROR &",
-                                                    nbt,
-                                                    e
-                                            )
-                            );
+            AddWorms.LOGGER.log(Level.ERROR, String.format("ItemStack at & is not a custome food NBT : ERROR &", nbt,
+                    e));
             return null;
         }
         return null;
     }
+    //*************************************************
 
-    public static void addDataToItemStack(
-            ItemStack itemStack,
-            String key,
-            Boolean value
-    ) {
-        CompoundNBT tag =
-                new CompoundNBT();
-        tag
-                .putBoolean(
-                        key,
-                        value
-                );
+    public static void addDataToItemStack(ItemStack itemStack, String key, Boolean value) {
+        CompoundNBT tag = new CompoundNBT();
+        tag.putBoolean(key, value);
         itemStack.setTag(tag);
     }
 
-    public class Tags {
+    public static class Tags {
         //Foods
         public static final String TAG_FOOD_HEADER = "Food";
         public static final String TAG_FOOD_ID = "FoodID";
