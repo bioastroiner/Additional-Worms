@@ -67,7 +67,7 @@ public final class NBTHelper {
     public static ETiers readWormTierFromStack(ItemStack itemStackIn) {
         int lvl =
                 itemStackIn.getOrCreateTag().getInt(Tags.TAG_WORM_LVL);
-        if (lvl == 0) throw new RuntimeException();
+        if (lvl == 0) return null;
         return ETiers.values()[lvl - 1];
     }
 
