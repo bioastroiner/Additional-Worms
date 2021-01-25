@@ -24,7 +24,7 @@ public final class MathHelper {
                 offset.getZ() + radius + 1);
     }
 
-    public static AxisAlignedBB getAxisAlignedBB(int radius, BlockPos center) {
+    public static AxisAlignedBB getBoxAxisAlignedBB(int radius, BlockPos center) {
         return generateGeneric2np1x2np1(radius, center);
     }
 }

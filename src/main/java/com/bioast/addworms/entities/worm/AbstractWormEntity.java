@@ -3,6 +3,7 @@ package com.bioast.addworms.entities.worm;
 import com.bioast.addworms.items.worms.GeneralWormItem;
 import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
+import com.bioast.addworms.utils.helpers.MathHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -232,13 +233,7 @@ public abstract class AbstractWormEntity extends Entity {
     public List<Entity> getEntitiesAround(int Radius, @Nullable Class<? extends Entity> c) {
         Class<? extends Entity> cl = c;
         if (c == null) c = Entity.class;
-        return getEntitiesAround(Radius, cl, new AxisAlignedBB(
-                getPosX() - Radius,
-                getPosY(),
-                getPosZ() - Radius,
-                getPosX() + Radius + 1,
-                getPosY() + 1,
-                getPosZ() + Radius + 1));
+        return getEntitiesAround(Radius, cl, MathHelper.getBoxAxisAlignedBB(Radius, getPosition()));
     }
 
     protected List<Entity> getEntitiesAround(int Radius, Class<? extends Entity> c, AxisAlignedBB aabb) {

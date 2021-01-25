@@ -16,7 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.RegistryObject;
 
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -46,9 +45,11 @@ public class GeneralWormItem extends ModItem {
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
         BlockPos wormPos = context.getPos().add(0.5, 0.5, 0.5);
-        addWormToWorld(context.getWorld(), wormPos, context.getItem(), context.getPlayer(),
-                () -> (AbstractWormEntity) wormProperty.getEntityType().create(context.getWorld()));
-        return super.onItemUse(context);
+        boolean wasSuccess =
+                addWormToWorld(context.getWorld(), wormPos, context.getItem(), context.getPlayer(),
+                        () -> (AbstractWormEntity) wormProperty.getEntityType().create(context.getWorld()));
+        if (wasSuccess) return ActionResultType.SUCCESS;
+        else return ActionResultType.FAIL;
     }
 
     /**
@@ -62,7 +63,8 @@ public class GeneralWormItem extends ModItem {
             //check if our worm can live there
             if (!wormProperty.getFloorBlock().test(world.getBlockState(pos).getBlock()) ||
                     !world.isAirBlock(pos.up()) ||
-                    world.getEntitiesWithinAABB(AbstractWormEntity.class, MathHelper.getAxisAlignedBB(1, pos), null).size() > 0) {
+                    world.getEntitiesWithinAABB(AbstractWormEntity.class, MathHelper.getBoxAxisAlignedBB(1, pos),
+                            null).size() > 0) {
                 return false;
             }
             //add the entity to world, we use a supplier to prevent it from instantiating too soon
@@ -148,11 +150,6 @@ public class GeneralWormItem extends ModItem {
                 @Override
                 public Predicate<Block> getFloorBlock() {
                     return floorBlocks;
-                }
-
-                @Override
-                public BiFunction<World, Item, ? extends AbstractWormEntity> getEntity(Item wormItem) {
-                    return null;
                 }
 
                 @Override
