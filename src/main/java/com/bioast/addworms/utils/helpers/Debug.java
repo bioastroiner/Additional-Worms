@@ -34,13 +34,7 @@ public final class Debug {
      * @param text prints a generic Debug log into minecraft chat for fast Debuggings without clearing
      */
     public static void logClearless(ITextComponent text) {
-        Minecraft.getInstance()
-                .player
-                .sendMessage(
-                        text,
-                        UUID.randomUUID()
-                );
-
+        Minecraft.getInstance().player.sendMessage(text, UUID.randomUUID());
     }
 
     public static void logClearless(String msg) {
@@ -54,29 +48,17 @@ public final class Debug {
      *            if you want not, you can use override of this methode with isCached Param
      */
     public static void log(String msg) {
-        log(
-                new StringTextComponent(msg)
-                        .setStyle(
-                                Style.EMPTY
-                                        .setFormatting(
-                                                TextFormatting.AQUA)
-                        )
-        );
+        log(new StringTextComponent(msg)
+                .setStyle(Style.EMPTY.setFormatting(TextFormatting.AQUA)));
     }
 
     /**
      * @param msg
      * @param isCached enables the log to be registered to not be cleared at the next calls ( false by default )
      */
-    public static void log(
-            String msg,
-            boolean isCached
-    ) {
+    public static void log(String msg, boolean isCached) {
         if (isCached)
-            cachLog
-                    .add(
-                            new StringTextComponent(msg)
-                    );
+            cachLog.add(new StringTextComponent(msg));
         log(msg);
     }
 
@@ -84,16 +66,8 @@ public final class Debug {
      * @param msg
      * @param itemStack logs an itemSatck into the chat for fast Debugging
      */
-    public static void log(
-            String msg,
-            ItemStack itemStack
-    ) {
-        log(msg + " " +
-                itemStack
-                        .getItem()
-                        .getName()
-                        .getString()
-        );
+    public static void log(String msg, ItemStack itemStack) {
+        log(msg + " " + itemStack.getItem().getName().getString());
     }
 
     public static void log(BlockPos pos, @Nullable String msg) {
@@ -133,24 +107,16 @@ public final class Debug {
      * @param withCach       same as above
      * @param keepCachInChat if true logs all of the cach contents and relog it after chat cleanups (true by default)
      */
-    public static void clearChat(
-            boolean withCach,
-            boolean keepCachInChat
-    ) {
+    public static void clearChat(boolean withCach, boolean keepCachInChat) {
         if (withCach)
             cachLog.clear();
 
-        Minecraft.getInstance()
-                .ingameGUI
-                .getChatGUI()
-                .clearChatMessages(false)
-        ;
+        Minecraft.getInstance().ingameGUI.getChatGUI().clearChatMessages(false);
         if (cachLog.size() > cachMax)
             cachLog.clear();
 
-        if (!withCach)
-            if (keepCachInChat)
-                cachLog();
+        if (!withCach && keepCachInChat)
+            cachLog();
     }
 
     /**
@@ -158,13 +124,8 @@ public final class Debug {
      * mainly to be used internally
      */
     public static void cachLog() {
-        for (
-                ITextComponent text :
-                cachLog
-        ) {
-            log(
-                    text.getString()
-            );
+        for (ITextComponent text : cachLog) {
+            log(text.getString());
         }
     }
 

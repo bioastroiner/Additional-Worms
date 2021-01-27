@@ -35,7 +35,8 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
     }
 
     public static ActionResultType useHoeAt(World world, BlockPos pos) {
-        assert world.isRemote;
+        if (world.isRemote())
+            return ActionResultType.FAIL;
         PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
         ItemStack itemstack = getHoeStack();
         if (!player.canPlayerEdit(pos.offset(Direction.UP),
@@ -51,7 +52,7 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
             if (world.isAirBlock(pos.up())) {
                 if (block instanceof GrassBlock ||
                         block == Blocks.GRASS_PATH) {
-                    Debug.log("Hey I tilled Grass do you see something?");//FIXME
+//                    Debug.log("Hey I tilled Grass do you see something?");//FIXME
                     world.setBlockState(pos, Blocks.FARMLAND.getDefaultState());
                     return ActionResultType.SUCCESS;
                 }
