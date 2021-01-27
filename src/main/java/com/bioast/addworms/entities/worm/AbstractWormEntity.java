@@ -5,9 +5,11 @@ import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.helpers.MathHelper;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,15 +22,23 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * @author BioAstroiner
@@ -64,6 +74,7 @@ public abstract class AbstractWormEntity extends Entity {
     /**
      * simple ticker to determine a worm's age
      * also needs to be saved in server world
+     * FIXME uh {@link Entity#ticksExisted} is a thing?!
      */
     protected int timer = 0;
     /**
@@ -144,24 +155,23 @@ public abstract class AbstractWormEntity extends Entity {
     @Override
     public void tick() {
         baseWormTick();
-        if (!world.isRemote()) {
-            if (wormProperty.isHostile()) {
-                damageMobsAround(getRange(), getDamage());
-            }
-        }
     }
 
     private void baseWormTick() {
         if (!this.world.isRemote) {
             this.timer++;
             saveTiers();
+            if (wormProperty.isHostile()) {
+                damageMobsAround(getRange(), getDamage());
+            }
         }
         if (world.isAirBlock(getPosition()) || !world.isAirBlock(getPosition().up())) {
             Debug.log(getPosition(), null);//FIXME
             Debug.logClearless(world.getBlockState(getPosition()).toString());//FIXME
             this.kill();
         }
-        if (wormProperty.willDie() && wormProperty.getDieTime() == this.timer) {
+        if (wormProperty.willDie() && wormProperty.getDieTime() == this.timer && tier.level < 1) {
+            // worm will not die out whatsoever if it  level 2 or moreis
             this.kill(true);
         }
     }
@@ -314,24 +324,44 @@ public abstract class AbstractWormEntity extends Entity {
      *                and not an actually offset fixed point.
      *                only enter positive values (bec negative values would
      *                deSpawn the worm itself)
-     * @return list of blockstates excluding AirBlocks
+     * @return map of blockstates excluding AirBlocks
      */
-    public List<Pair<BlockPos, BlockState>> getBlockStatesAround(int Radius, int yOffset) {
-        List<Pair<BlockPos, BlockState>> bs = new ArrayList<>();
+    public Map<BlockPos, BlockState> getBlockStatesAround(int Radius, @Nonnegative int yOffset,
+                                                          @Nullable Predicate<Block> predicate) {
+        Map<BlockPos, BlockState> map = new HashMap<>();
         for (int i = 0; i <= Radius; i++)
             for (int j = 0; j <= Radius; j++)
                 for (int k = 0; k <= Math.abs(yOffset); k++) {
                     BlockPos pos = new BlockPos(getPosition().getX() + i, getPosition().getY() + k,
                             getPosition().getZ() + j);
-                    if (world.isAirBlock(pos)) {
-                        bs.add(new Pair(pos, world.getBlockState(pos)));
+                    if (!world.isAirBlock(pos)) {
+                        assert predicate != null;
+                        if (predicate.test(world.getBlockState(pos).getBlock())) {
+                            map.put(pos, world.getBlockState(pos));
+                        }
                     }
                 }
-        return bs;
+        return map;
     }
 
-    public void breakBlocksAround(int Radius, int yOffset, boolean withDrops) {
-        getBlockStatesAround(Radius, yOffset).forEach(p -> world.destroyBlock(p.getFirst(), withDrops));
+    /**
+     * @param yOffset  enter yOffset = 0 if you want break blocks as the same level below worm visibility
+     *                 it check to not break block below it to not de spawn the worm
+     *                 y = 1 as if it was beside worm's model
+     * @param toolType break blocks only harvest able with tool
+     *                 enter null to allow all tool breaks
+     */
+    public void breakBlocksAround(int radius, int yOffset, int withHarvestLevel, @Nullable ToolType toolType,
+                                  @Nullable Predicate<Block> predicate) {
+        PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
+        getBlockStatesAround(radius, yOffset, predicate).forEach((p, b) -> {
+            if (b.getBlock().getHarvestLevel(b.getBlockState()) <= withHarvestLevel) {
+                if (toolType == null || b.getBlock().getHarvestTool(b.getBlockState()) == toolType) {
+                    b.getBlock().harvestBlock(world, player, p, b.getBlockState(), //FIXME
+                            world.getTileEntity(p), player.getHeldItem(player.getActiveHand()));
+                }
+            }
+        });
     }
 
     public void damageMobsAround(int Radius, float Damage) {
