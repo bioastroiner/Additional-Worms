@@ -29,15 +29,24 @@ public enum ETiers {
         this.speed = speed;
     }
 
+    public static ETiers getWithLevel(int lvlIn) {
+        if (lvlIn > ETiers.values().length) {
+            switch (lvlIn) {
+                case 99:
+                    return ETiers.valueOf("Rat");
+                default:
+                    return null;
+            }
+        }
+        return ETiers.values()[lvlIn - 1];
+    }
+
     String getTranslationKey() {
         return "worms.tiers." + AddWorms.MODID.toLowerCase() + this.toString().toLowerCase();
     }
 
     void setTier(ItemStack itemStackIn) {
-        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_LVL, this.level);
-        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_RANGE, this.range);
-        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_DAMAGE, this.damage);
-        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_SPEED, this.speed);
+        NBTHelper.addWormTierToStack(itemStackIn, this);
     }
 
     public static class TranslationKeyOfStats {
@@ -47,6 +56,5 @@ public enum ETiers {
         public static final String KEY_RANGE = prefix + "range";
         public static final String KEY_DMG = prefix + "damage";
         public static final String KEY_SPD = prefix + "speed";
-
     }
 }

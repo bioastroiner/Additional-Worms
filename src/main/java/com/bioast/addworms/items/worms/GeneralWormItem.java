@@ -98,6 +98,11 @@ public class GeneralWormItem extends ModItem {
         return false;
     }
 
+    public static ItemStack changeTier(ItemStack stackIn, ETiers tierIn) {
+        NBTHelper.addWormTierToStack(stackIn, tierIn);
+        return stackIn;
+    }
+
     @Override
     public ITextComponent getDisplayName(ItemStack stack) {
         return new TranslationTextComponent(this.getTranslationKey(stack))
@@ -145,7 +150,7 @@ public class GeneralWormItem extends ModItem {
         /**
          * sets a proper method to spawn a new worm Entity
          */
-        public Properties setEntity(RegistryObject<EntityType<Entity>> entityTypeIn) {
+        public Properties setEntityType(RegistryObject<EntityType<Entity>> entityTypeIn) {
             entityType = entityTypeIn;
             return this;
         }

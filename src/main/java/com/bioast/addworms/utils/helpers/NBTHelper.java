@@ -58,19 +58,22 @@ public final class NBTHelper {
         }
         return null;
     }
-    //*************************************************
+    //********************Tiers**************************
 
-    public static void addWormTierToStack(ETiers tiers) {
-
+    public static void addWormTierToStack(ItemStack itemStackIn, ETiers tiers) {
+        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_LVL, tiers.level);
+        itemStackIn.getOrCreateTag().putInt(NBTHelper.Tags.TAG_WORM_RANGE, tiers.range);
+        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_DAMAGE, tiers.damage);
+        itemStackIn.getOrCreateTag().putFloat(NBTHelper.Tags.TAG_WORM_SPEED, tiers.speed);
     }
 
     public static ETiers readWormTierFromStack(ItemStack itemStackIn) {
-        int lvl =
-                itemStackIn.getOrCreateTag().getInt(Tags.TAG_WORM_LVL);
-        if (lvl == 0) return null;
-        return ETiers.values()[lvl - 1];
+        int lvl = itemStackIn.getOrCreateTag()
+                .getInt(Tags.TAG_WORM_LVL);
+        return ETiers.getWithLevel(lvl);
     }
 
+    //*************************************************
     public static void addDataToItemStack(ItemStack itemStack, String key, Boolean value) {
         CompoundNBT tag = new CompoundNBT();
         tag.putBoolean(key, value);

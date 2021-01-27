@@ -1,10 +1,13 @@
 package com.bioast.addworms;
 
+import com.bioast.addworms.entities.worm.ETiers;
 import com.bioast.addworms.init.ModBlocks;
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.init.Registration;
+import com.bioast.addworms.items.worms.GeneralWormItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,9 +35,20 @@ public class AddWorms {
 
     public static final ItemGroup WormsItemGroup = new ItemGroup(ItemGroup.GROUPS.length,
             new TranslationTextComponent("tab." + MODID + "items").getString()) {
+
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ModItems.WORM_FARMER.get());
+        }
+
+        @Override
+        public void fill(NonNullList<ItemStack> items) {
+            //TODO: do this idderation for each Worm that we add later
+            for (ETiers value : ETiers.values()) {
+                ItemStack stack = new ItemStack(ModItems.WORM_FARMER.get());
+                items.add(GeneralWormItem.changeTier(stack, value));
+            }
+            super.fill(items);
         }
     };
 
