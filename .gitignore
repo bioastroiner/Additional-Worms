@@ -10,3 +10,4 @@ run/**
 .project
 .classpath
 .DS_Store
+**/.idea/dictionaries/*.xml
