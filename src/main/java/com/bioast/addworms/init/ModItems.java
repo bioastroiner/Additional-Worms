@@ -7,9 +7,12 @@ import com.bioast.addworms.items.WormItemRed;
 import com.bioast.addworms.items.misc.DigestedFood;
 import com.bioast.addworms.items.misc.LauncherStick;
 import com.bioast.addworms.items.worms.GeneralWormItem;
-import net.minecraft.block.GrassBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.SandBlock;
+import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.fml.RegistryObject;
 
 import static com.bioast.addworms.init.Registration.ITEMS;
@@ -30,8 +33,13 @@ public final class ModItems {
             () -> new GeneralWormItem(new Item.Properties().group(AddWorms.WormsItemGroup)
                     .maxStackSize(16)
                     , new GeneralWormItem.Properties()
-                    .setFloorBlocks(block -> block instanceof GrassBlock)
-                    .setEntity(ModEntityTypes.WORM_ENTITY_FARMER)
+                    .setFloorBlocks(block -> block instanceof SnowyDirtBlock // Patzol,Grass,MushroomSoil,...
+                            || block instanceof SandBlock // RedSand,Sand,...
+                            || block == Blocks.DIRT
+                            || block == Blocks.COARSE_DIRT
+                            || block.isIn(Tags.Blocks.DIRT)
+                            || block.isIn(Tags.Blocks.SAND))
+                    .setEntityType(ModEntityTypes.WORM_ENTITY_FARMER)
                     .dropWhenRemoved(true)
                     .finalizeProperty()));
     //*************OLD*********
