@@ -1,6 +1,7 @@
 package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.items.worms.GeneralWormItem;
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FarmlandBlock;
@@ -34,25 +35,34 @@ public class FarmerWormEntity extends AbstractWormEntity {
     @Override
     public void tick() {
         super.tick();
-        if (timer % (int) (50 / getTier().speed) == 0) {
+        Debug.log(String.valueOf(getLevel()));
+        if (timer % (int) (50 / getSpeed()) == 0 && !world.isRemote) {
             Map<BlockPos, BlockState> mapTillable = getBlockStatesAround(getRange(), 0,
                     block -> block.isIn(Tags.Blocks.DIRT) || block instanceof SnowyDirtBlock);
-            mapTillable.forEach((p, b) -> DefaultFarmerBehavior.useHoeAt(world, p));
+            for (Map.Entry<BlockPos, BlockState> entry : mapTillable.entrySet()) {
+                BlockPos pos = entry.getKey();
+                BlockState blockState = entry.getValue();
+                DefaultFarmerBehavior.useHoeAt(world, pos);
+            }
             Map<BlockPos, BlockState> mapFarmland = getBlockStatesAround(getRange(), 0,
                     block -> block instanceof FarmlandBlock);
-            mapFarmland.forEach((p, b) -> {
-                if (new Random().nextFloat() > 0.7f)
-                    return;
-                if (b.get(BlockStateProperties.MOISTURE_0_7) < 7)
-                    world.setBlockState(p, b.with(BlockStateProperties.MOISTURE_0_7, 7));
-            });
+            for (Map.Entry<BlockPos, BlockState> entry : mapFarmland.entrySet()) {
+                BlockPos pos = entry.getKey();
+                BlockState blockState = entry.getValue();
+                if (new Random().nextFloat() > 0.1f * getSpeed())
+                    continue;
+                if (blockState.get(BlockStateProperties.MOISTURE_0_7) < 7)
+                    world.setBlockState(pos, blockState.with(BlockStateProperties.MOISTURE_0_7, 7));
+            }
             Map<BlockPos, BlockState> mapPlantable = getBlockStatesAround(getRange(), 1,
                     block -> block instanceof IPlantable || block instanceof IGrowable);
-            mapPlantable.forEach((p, b) -> {
+            for (Map.Entry<BlockPos, BlockState> entry : mapPlantable.entrySet()) {
+                BlockPos pos = entry.getKey();
+                BlockState blockState = entry.getValue();
+                if (new Random().nextFloat() > 0.1f * getSpeed()) //Higher Speed lower Chance to skip this part
+                    continue;
                 //Bonemill plants , Grow Cacti sugarCane , ...
-                if (new Random().nextFloat() > 0.5f * getTier().speed) //Higher Speed lower Chance to skip this part
-                    return;
-            });
+            }
         }
     }
 }
