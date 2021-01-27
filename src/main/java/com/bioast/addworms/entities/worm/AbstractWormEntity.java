@@ -4,6 +4,7 @@ import com.bioast.addworms.items.worms.GeneralWormItem;
 import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.helpers.MathHelper;
+import com.bioast.addworms.utils.helpers.NBTHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -70,7 +71,7 @@ public abstract class AbstractWormEntity extends Entity {
      * witch may change
      * and also writes itself into wormItemStack nbtTag
      */
-    private final ETiers tier;
+    private ETiers tier;
     /**
      * simple ticker to determine a worm's age
      * also needs to be saved in server world
@@ -317,29 +318,25 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     /**
-     * @param Radius  n -> 2n+1 x 2n+1
-     * @param yOffset gets an y value for height
-     *                note that it would act as dimensions
-     *                and not an actually offset fixed point.
-     *                only enter positive values (bec negative values would
-     *                deSpawn the worm itself)
+     * @param radius  n -> 2n+1 x 2n+1
+     * @param yOffset gets an y value for height offset
      * @return map of blockstates excluding AirBlocks
      */
-    public Map<BlockPos, BlockState> getBlockStatesAround(int Radius, @Nonnegative int yOffset,
+    public Map<BlockPos, BlockState> getBlockStatesAround(int radius, @Nonnegative int yOffset,
                                                           @Nullable Predicate<Block> predicate) {
         Map<BlockPos, BlockState> map = new HashMap<>();
-        for (int i = 0; i <= Radius; i++)
-            for (int j = 0; j <= Radius; j++)
-                for (int k = 0; k <= Math.abs(yOffset); k++) {
-                    BlockPos pos = new BlockPos(getPosition().getX() + i, getPosition().getY() + k,
-                            getPosition().getZ() + j);
-                    if (!world.isAirBlock(pos)) {
-                        assert predicate != null;
-                        if (predicate.test(world.getBlockState(pos).getBlock())) {
-                            map.put(pos, world.getBlockState(pos));
-                        }
-                    }
-                }
+        int n = radius;
+        int r = 2 * n + 1;
+        for (int x = 0; x < r; x++)
+            for (int z = 0; z < r; z++) {
+                BlockPos pos = new BlockPos(
+                        x + getPosX() - n,
+                        yOffset + getPosY(),
+                        z + getPosZ() - n);
+                assert predicate != null;
+                if (predicate.test(world.getBlockState(pos).getBlock()))
+                    map.put(pos, world.getBlockState(pos));
+            }
         return map;
     }
 
@@ -353,14 +350,15 @@ public abstract class AbstractWormEntity extends Entity {
     public void breakBlocksAround(int radius, int yOffset, int withHarvestLevel, @Nullable ToolType toolType,
                                   @Nullable Predicate<Block> predicate) {
         PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
-        getBlockStatesAround(radius, yOffset, predicate).forEach((p, b) -> {
-            if (b.getBlock().getHarvestLevel(b.getBlockState()) <= withHarvestLevel) {
-                if (toolType == null || b.getBlock().getHarvestTool(b.getBlockState()) == toolType) {
-                    b.getBlock().harvestBlock(world, player, p, b.getBlockState(), //FIXME
-                            world.getTileEntity(p), player.getHeldItem(player.getActiveHand()));
-                }
-            }
-        });
+        getBlockStatesAround(radius, yOffset, predicate)
+                .forEach((p, b) -> {
+                    if (b.getBlock().getHarvestLevel(b.getBlockState()) <= withHarvestLevel) {
+                        if (toolType == null || b.getBlock().getHarvestTool(b.getBlockState()) == toolType) {
+                            b.getBlock().harvestBlock(world, player, p, b.getBlockState(), //FIXME
+                                    world.getTileEntity(p), player.getHeldItem(player.getActiveHand()));
+                        }
+                    }
+                });
     }
 
     public void damageMobsAround(int Radius, float Damage) {
