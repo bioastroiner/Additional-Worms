@@ -27,6 +27,7 @@ public abstract class AbstractWormRenderer<T extends AbstractWormEntity> extends
         fixItemStack(new ItemStack(itemWorm));
     }
 
+    //TODO remove when u removed old worms
     public void fixItemStack(ItemStack itemStack) {
         stack = itemStack;
     }
@@ -52,6 +53,7 @@ public abstract class AbstractWormRenderer<T extends AbstractWormEntity> extends
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(degrees++ / 10));
 
         overrideRender(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        stack = entityIn.getWormItemStack();
         renderItem(stack, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 
         matrixStackIn.pop();
