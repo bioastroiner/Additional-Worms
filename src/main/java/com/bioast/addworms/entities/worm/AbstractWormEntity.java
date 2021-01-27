@@ -117,6 +117,8 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     public ETiers getTier() {
+        assert getWormItemStack() != null && tier.level > 1;
+        tier = NBTHelper.readWormTierFromStack(getWormItemStack());
         return tier;
     }
 
@@ -125,10 +127,7 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     public int getRange() {
-        if (wormProperty.getDefaultBaseRange() > getTier().range) {
-            return rangeDefault;
-        }
-        return getTier().range;
+        return Math.max(rangeDefault, getTier().range);
     }
 
     public float getDamage() {
