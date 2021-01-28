@@ -81,6 +81,14 @@ public final class NBTHelper {
         itemStack.setTag(tag);
     }
 
+    public static void saveSingularItemStack(ItemStack itemStack, CompoundNBT nbt) {
+        itemStack.write(nbt);
+    }
+
+    public static ItemStack loadSingularItemStack(CompoundNBT nbt) {
+        return ItemStack.read(nbt);
+    }
+
     public static class Tags {
         //Foods
         public static final String TAG_FOOD_HEADER = "Food";
