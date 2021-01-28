@@ -8,6 +8,7 @@ import com.bioast.addworms.items.misc.DigestedFood;
 import com.bioast.addworms.items.misc.LauncherStick;
 import com.bioast.addworms.items.worms.GeneralWormItem;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FarmlandBlock;
 import net.minecraft.block.SandBlock;
 import net.minecraft.block.SnowyDirtBlock;
 import net.minecraft.item.Item;
@@ -35,10 +36,12 @@ public final class ModItems {
                     , new GeneralWormItem.Properties()
                     .setFloorBlocks(block -> block instanceof SnowyDirtBlock // Patzol,Grass,MushroomSoil,...
                             || block instanceof SandBlock // RedSand,Sand,...
+                            || block instanceof FarmlandBlock
                             || block == Blocks.DIRT
                             || block == Blocks.COARSE_DIRT
                             || block.isIn(Tags.Blocks.DIRT)
-                            || block.isIn(Tags.Blocks.SAND))
+                            || block.isIn(Tags.Blocks.SAND)
+                            || block.isIn(Tags.Blocks.GRAVEL))
                     .setEntityType(ModEntityTypes.WORM_ENTITY_FARMER)
                     .dropWhenRemoved(true)
                     .finalizeProperty()));
