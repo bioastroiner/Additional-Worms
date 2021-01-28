@@ -1,7 +1,6 @@
 package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.items.worms.GeneralWormItem;
-import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.helpers.MathHelper;
 import com.bioast.addworms.utils.helpers.NBTHelper;
@@ -165,9 +164,7 @@ public abstract class AbstractWormEntity extends Entity {
                 damageMobsAround(getRange(), getDamage());
             }
         }
-        if (world.isAirBlock(getPosition()) || !world.isAirBlock(getPosition().up())) {
-            Debug.log(getPosition(), null);//FIXME
-            Debug.logClearless(world.getBlockState(getPosition()).toString());//FIXME
+        if (world.isAirBlock(getPosition()) || world.isTopSolid(getPosition().up(), this)) {//Fixme
             this.kill();
         }
         if (wormProperty.willDie() && wormProperty.getDieTime() == this.timer && tier.level < 1) {

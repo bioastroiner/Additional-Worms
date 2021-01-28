@@ -1,12 +1,8 @@
 package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.items.worms.GeneralWormItem;
-import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.SnowyDirtBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -35,34 +31,54 @@ public class FarmerWormEntity extends AbstractWormEntity {
     @Override
     public void tick() {
         super.tick();
-        Debug.log(String.valueOf(getLevel()));
-        if (timer % (int) (50 / getSpeed()) == 0 && !world.isRemote) {
-            Map<BlockPos, BlockState> mapTillable = getBlockStatesAround(getRange(), 0,
-                    block -> block.isIn(Tags.Blocks.DIRT) || block instanceof SnowyDirtBlock);
-            for (Map.Entry<BlockPos, BlockState> entry : mapTillable.entrySet()) {
-                BlockPos pos = entry.getKey();
-                BlockState blockState = entry.getValue();
-                DefaultFarmerBehavior.useHoeAt(world, pos);
+        int speedMagnitude = (int) (100 / getSpeed()); // lower speed Higher magnitude
+        if (speedMagnitude < 1) speedMagnitude = 1;
+        if (timer % speedMagnitude == 0 && !world.isRemote) {
+            tillGround();
+            makeFarmlandWet();
+            growPlants();
+        }
+    }
+
+    private void growPlants() {
+        Map<BlockPos, BlockState> mapPlantable = getBlockStatesAround(getRange(), 1,
+                block -> block instanceof IPlantable || block instanceof IGrowable);
+        for (Map.Entry<BlockPos, BlockState> entry : mapPlantable.entrySet()) {
+            BlockPos pos = entry.getKey();
+            BlockState blockStateTop = entry.getValue();
+            if (new Random().nextFloat() > 0.1f * getSpeed()) //Higher Speed lower Chance to skip this part
+                continue;
+            for (int i = 0; i <= Math.floor(getSpeed()); i++) {
+                DefaultFarmerBehavior.useBonemeal(world, pos);//FIXME dosen't do anything irrrrr
             }
-            Map<BlockPos, BlockState> mapFarmland = getBlockStatesAround(getRange(), 0,
-                    block -> block instanceof FarmlandBlock);
-            for (Map.Entry<BlockPos, BlockState> entry : mapFarmland.entrySet()) {
-                BlockPos pos = entry.getKey();
-                BlockState blockState = entry.getValue();
-                if (new Random().nextFloat() > 0.1f * getSpeed())
-                    continue;
-                if (blockState.get(BlockStateProperties.MOISTURE_0_7) < 7)
-                    world.setBlockState(pos, blockState.with(BlockStateProperties.MOISTURE_0_7, 7));
+            //Bonemill plants , Grow Cacti sugarCane , ...
+        }
+    }
+
+    private void makeFarmlandWet() {
+        Map<BlockPos, BlockState> mapFarmland = getBlockStatesAround(getRange(), 0,
+                block -> block instanceof FarmlandBlock);
+        for (Map.Entry<BlockPos, BlockState> entry : mapFarmland.entrySet()) {
+            BlockPos pos = entry.getKey();
+            BlockState blockState = entry.getValue();
+            if (new Random().nextFloat() > 0.1f * getSpeed())
+                continue;
+            if (blockState.get(BlockStateProperties.MOISTURE_0_7) < 7)
+                world.setBlockState(pos, blockState.with(BlockStateProperties.MOISTURE_0_7, 7));
+        }
+    }
+
+    private void tillGround() {
+        Map<BlockPos, BlockState> mapTillable = getBlockStatesAround(getRange(), 0,
+                block -> block.isIn(Tags.Blocks.DIRT) || block instanceof SnowyDirtBlock);
+        for (Map.Entry<BlockPos, BlockState> entry : mapTillable.entrySet()) {
+            BlockPos pos = entry.getKey();
+            BlockState blockState = entry.getValue();
+            BlockState blockStateTop = world.getBlockState(pos.up());
+            if (!(blockState.getBlock() instanceof FarmlandBlock) && blockStateTop.getBlock() instanceof BushBlock) {
+                DefaultFarmerBehavior.breakBlock(world, pos.up());
             }
-            Map<BlockPos, BlockState> mapPlantable = getBlockStatesAround(getRange(), 1,
-                    block -> block instanceof IPlantable || block instanceof IGrowable);
-            for (Map.Entry<BlockPos, BlockState> entry : mapPlantable.entrySet()) {
-                BlockPos pos = entry.getKey();
-                BlockState blockState = entry.getValue();
-                if (new Random().nextFloat() > 0.1f * getSpeed()) //Higher Speed lower Chance to skip this part
-                    continue;
-                //Bonemill plants , Grow Cacti sugarCane , ...
-            }
+            DefaultFarmerBehavior.useHoeAt(world, pos);
         }
     }
 }

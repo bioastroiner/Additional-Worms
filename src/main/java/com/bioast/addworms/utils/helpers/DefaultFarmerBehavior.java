@@ -24,16 +24,17 @@ import static net.minecraft.block.Blocks.DIRT;
 import static net.minecraftforge.event.ForgeEventFactory.onHoeUse;
 import static net.minecraftforge.event.ForgeEventFactory.onItemUseTick;
 
-public final class DefaultFarmerBehavior implements IFarmerBehavior {
+public final class DefaultFarmerBehavior {
 
     private static ItemStack hoe = ItemStack.EMPTY;
 
     private static ItemStack getHoeStack() {
         if (hoe.isEmpty())
-            hoe = new ItemStack(Items.DIAMOND_HOE);
+            hoe = new ItemStack(Items.NETHERITE_HOE);
         return hoe;
     }
 
+    //TODO on 1.17 :(
     public static ActionResultType useHoeAt(World world, BlockPos pos) {
         if (world.isRemote())
             return ActionResultType.FAIL;
@@ -43,8 +44,7 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
                 Direction.UP, itemstack)) {
             return ActionResultType.FAIL;
         } else {
-            //int hook = onHoeUse(itemstack, player, world, pos);
-            int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND,
+            int hook = onHoeUse(new ItemUseContext(player, Hand.MAIN_HAND, // 1 if Hoe is used and do stuff, 0 if not
                     new BlockRayTraceResult(Vector3d.ZERO, Direction.UP, pos, false)));
             if (hook != 0)
                 return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
@@ -70,11 +70,11 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
 
     public static ActionResultType useBonemeal(World world, BlockPos pos) {
         PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
-        ItemStack itemstack = new ItemStack(Items.BONE_MEAL, 64);
+        ItemStack itemstack = new ItemStack(Items.BONE_MEAL, 1000);
         if (!player.canPlayerEdit(pos.offset(Direction.UP), Direction.UP, itemstack)) {
             return ActionResultType.FAIL;
         } else {
-            int hook = onItemUseTick(player, itemstack, 10);
+            int hook = onItemUseTick(player, itemstack, 40);
             if (hook != 0) return hook > 0 ? ActionResultType.SUCCESS : ActionResultType.FAIL;
             Block plantBlock = world.getBlockState(pos).getBlock();
             if (world.isAirBlock(pos.up())) {
@@ -90,19 +90,8 @@ public final class DefaultFarmerBehavior implements IFarmerBehavior {
         }
     }
 
-    @Override
-    public FarmerResult tryPlantSeed(ItemStack seed, World world, BlockPos pos,
-                                     IFarmer farmer) {
-        return null;
-    }
-
-    @Override
-    public FarmerResult tryHarvestPlant(World world, BlockPos pos, IFarmer farmer) {
-        return null;
-    }
-
-    @Override
-    public int getPriority() {
-        return 0;
+    //TODO move
+    public static void breakBlock(World world, BlockPos pos) {
+        world.destroyBlock(pos, true);
     }
 }
