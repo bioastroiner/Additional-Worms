@@ -12,7 +12,7 @@ based on **ActuallyAddition**'s **Worms**
 
 ### Permission from AA's Devs
 
-* Yes
+* Yes textures would in near future completely change and since our mod is no longer an addon to Actually Addition it is better to change the name as well as leisense in the near future but an unknown date.
 
 ## TODOs
 
@@ -20,16 +20,14 @@ based on **ActuallyAddition**'s **Worms**
 
 - [x] bringing back old worms
 - [x] make a ground work for adding additional worms
-- [x] add red worm (test worm)
 - [x] Digester Worm  (Digest Foods to better one more eadable foods)
 - [ ] add Configs
 - [x] get Permission from AA's Devs
 - [x] extract Digestive trend of worms and perDigest your food or fuels
-- [ ] make worms more unique than the act.addition's worms
+- [x] make worms more unique than the act.addition's worms
 - [ ] new textures
 
 ### Worm list
-
 
 - [x] Growth Accelator Worm
 - [ ] Flower Generator Worm (Botanic Worm)
