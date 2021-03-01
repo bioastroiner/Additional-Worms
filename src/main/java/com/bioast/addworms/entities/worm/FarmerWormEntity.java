@@ -1,6 +1,7 @@
 package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.items.worms.GeneralWormItem;
+import com.bioast.addworms.utils.helpers.Debug;
 import com.bioast.addworms.utils.helpers.DefaultFarmerBehavior;
 import net.minecraft.block.*;
 import net.minecraft.entity.EntityType;
@@ -46,10 +47,12 @@ public class FarmerWormEntity extends AbstractWormEntity {
         for (Map.Entry<BlockPos, BlockState> entry : mapPlantable.entrySet()) {
             BlockPos pos = entry.getKey();
             BlockState blockStateTop = entry.getValue();
-            if (new Random().nextFloat() > 0.1f * getSpeed()) //Higher Speed lower Chance to skip this part
-                continue;
+//            if (new Random().nextFloat() > 0.1f * getSpeed()) //Higher Speed lower Chance to skip this part
+//                continue;
             for (int i = 0; i <= Math.floor(getSpeed()); i++) {
-                DefaultFarmerBehavior.useBonemeal(world, pos);//FIXME dosen't do anything irrrrr
+                //FIXME speed = 30 is instant growth
+                DefaultFarmerBehavior.tickGrowPlant(world, pos, 1);
+                Debug.logClearless("beep");
             }
             //Bonemill plants , Grow Cacti sugarCane , ...
         }

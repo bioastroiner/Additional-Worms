@@ -1,9 +1,6 @@
 package com.bioast.addworms.utils.helpers;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.GrassBlock;
-import net.minecraft.block.IGrowable;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
@@ -18,6 +15,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+
+import java.util.Random;
 
 import static net.minecraft.block.Blocks.COARSE_DIRT;
 import static net.minecraft.block.Blocks.DIRT;
@@ -34,7 +33,6 @@ public final class DefaultFarmerBehavior {
         return hoe;
     }
 
-    //TODO on 1.17 :(
     public static ActionResultType useHoeAt(World world, BlockPos pos) {
         if (world.isRemote())
             return ActionResultType.FAIL;
@@ -88,6 +86,15 @@ public final class DefaultFarmerBehavior {
             }
             return ActionResultType.PASS;
         }
+    }
+
+    public static ActionResultType tickGrowPlant(World world, BlockPos pos, int coolDown) {
+        BlockState state = world.getBlockState(pos);
+        Random random = new Random();
+        state.randomTick((ServerWorld) world, pos, random);
+        world.notifyBlockUpdate(pos, state, state, 3);
+        BoneMealItem.spawnBonemealParticles(world, pos, 1);
+        return ActionResultType.SUCCESS;
     }
 
     //TODO move
