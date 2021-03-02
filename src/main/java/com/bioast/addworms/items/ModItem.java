@@ -14,6 +14,7 @@ import java.util.List;
  * existence of this class
  * can be described as a way to address all our items as an unified example
  * also for future
+ * //TODO remove
  */
 public class ModItem extends Item {
 

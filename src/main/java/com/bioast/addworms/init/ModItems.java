@@ -1,9 +1,6 @@
 package com.bioast.addworms.init;
 
 import com.bioast.addworms.AddWorms;
-import com.bioast.addworms.items.WormItemDigester;
-import com.bioast.addworms.items.WormItemFast;
-import com.bioast.addworms.items.WormItemRed;
 import com.bioast.addworms.items.misc.DigestedFood;
 import com.bioast.addworms.items.misc.LauncherStick;
 import com.bioast.addworms.items.worms.GeneralWormItem;
@@ -31,7 +28,7 @@ public final class ModItems {
     //Worms
     public static final RegistryObject<Item> WORM_FARMER = ITEMS.register(
             "item_worm",
-            () -> new GeneralWormItem(new Item.Properties().group(AddWorms.WormsItemGroup)
+            () -> new GeneralWormItem(new Item.Properties()
                     .maxStackSize(16)
                     , new GeneralWormItem.Properties()
                     .setFloorBlocks(block -> block instanceof SnowyDirtBlock // Patzol,Grass,MushroomSoil,...
@@ -45,22 +42,32 @@ public final class ModItems {
                     .setEntityType(ModEntityTypes.WORM_ENTITY_FARMER)
                     .dropWhenRemoved(true)
                     .finalizeProperty()));
+    public static final RegistryObject<Item> WORM_MINER = ITEMS.register(
+            "item_worm_miner",
+            () -> new GeneralWormItem(new Item.Properties()
+                    .maxStackSize(16)
+                    , new GeneralWormItem.Properties()
+                    .setFloorBlocks(block -> block.isIn(Tags.Blocks.STONE)
+                            || block.isIn(Tags.Blocks.ORES))
+                    .setEntityType(ModEntityTypes.WORM_ENTITY_MINER)
+                    .dropWhenRemoved(true)
+                    .finalizeProperty()));
     //*************OLD*********
-    public static final RegistryObject<Item> WORM_RED = ITEMS.register(
-            "item_worm_red",
-            () -> new WormItemRed(new Item.Properties().group(AddWorms.WormsItemGroup)
-                    .maxStackSize(16))
-    );
-    public static final RegistryObject<Item> WORM_FAST = ITEMS.register(
-            "item_worm_fast",
-            () -> new WormItemFast(new Item.Properties().group(AddWorms.WormsItemGroup)
-                    .maxStackSize(16))
-    );
-    public static final RegistryObject<Item> WORM_DIGESTER = ITEMS.register(
-            "item_worm_digester",
-            () -> new WormItemDigester(new Item.Properties().group(AddWorms.WormsItemGroup)
-                    .maxStackSize(16))
-    );
+//    public static final RegistryObject<Item> WORM_RED = ITEMS.register(
+//            "item_worm_red",
+//            () -> new WormItemRed(new Item.Properties()
+//                    .maxStackSize(16))
+//    );
+//    public static final RegistryObject<Item> WORM_FAST = ITEMS.register(
+//            "item_worm_fast",
+//            () -> new WormItemFast(new Item.Properties()
+//                    .maxStackSize(16))
+//    );
+//    public static final RegistryObject<Item> WORM_DIGESTER = ITEMS.register(
+//            "item_worm_digester",
+//            () -> new WormItemDigester(new Item.Properties()
+//                    .maxStackSize(16))
+//    );
 
     static void register() {
     }

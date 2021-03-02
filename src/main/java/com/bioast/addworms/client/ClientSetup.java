@@ -15,7 +15,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static com.bioast.addworms.AddWorms.MODID;
-import static com.bioast.addworms.init.ModEntityTypes.*;
+import static com.bioast.addworms.init.ModEntityTypes.WORM_ENTITY_FARMER;
+import static com.bioast.addworms.init.ModEntityTypes.WORM_ENTITY_MINER;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetup {
@@ -38,6 +39,9 @@ public class ClientSetup {
         RenderingRegistry.registerEntityRenderingHandler(
                 WORM_ENTITY_FARMER.get(),
                 renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FARMER.get()));
+        RenderingRegistry.registerEntityRenderingHandler(
+                WORM_ENTITY_MINER.get(),
+                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FARMER.get()));
 
         //TODO
 //        RenderingRegistry.registerEntityRenderingHandler(
@@ -45,15 +49,15 @@ public class ClientSetup {
 //                renderManager -> new GeneralWormRenderer(renderManager));
 
         //****OLD****
-        RenderingRegistry.registerEntityRenderingHandler(
-                WORM_ENTITY_RED.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));
-        RenderingRegistry.registerEntityRenderingHandler(
-                WORM_ENTITY_FAST.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FAST.get()));
-        RenderingRegistry.registerEntityRenderingHandler(
-                WORM_ENTITY_DIGESTER.get(),
-                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_DIGESTER.get()));
+//        RenderingRegistry.registerEntityRenderingHandler(
+//                WORM_ENTITY_RED.get(),
+//                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_RED.get()));
+//        RenderingRegistry.registerEntityRenderingHandler(
+//                WORM_ENTITY_FAST.get(),
+//                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_FAST.get()));
+//        RenderingRegistry.registerEntityRenderingHandler(
+//                WORM_ENTITY_DIGESTER.get(),
+//                renderManager -> new GeneralWormRenderer(renderManager, ModItems.WORM_DIGESTER.get()));
     }
 
     @SubscribeEvent

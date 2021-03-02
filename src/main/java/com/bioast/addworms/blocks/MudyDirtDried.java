@@ -1,6 +1,5 @@
 package com.bioast.addworms.blocks;
 
-import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.utils.helpers.ParticleHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,10 +26,10 @@ public class MudyDirtDried extends MudyDirt {
             Random random = new Random();
             float f1 = random.nextFloat();
             float f2 = random.nextFloat();
-            if (f1 > 0.99f)
-                dropList.add(new ItemStack(ModItems.WORM_FAST.get()));
-            if (f2 > 0.99f)
-                dropList.add(new ItemStack(ModItems.WORM_RED.get()));
+//            if (f1 > 0.99f)
+//                dropList.add(new ItemStack(ModItems.WORM_FAST.get()));
+//            if (f2 > 0.99f)
+//                dropList.add(new ItemStack(ModItems.WORM_RED.get()));
             dropList.add(new ItemStack(Blocks.DIRT));
             for (ItemStack stack : dropList) {
                 ItemStack dropStack = stack;

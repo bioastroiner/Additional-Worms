@@ -24,6 +24,7 @@ import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -50,6 +51,11 @@ public class GeneralWormItem extends ModItem {
         this.wormProperty = wormProperty;
     }
 
+    public static ItemStack changeTier(ItemStack stackIn, ETiers tierIn) {
+        NBTHelper.addWormTierToStack(stackIn, tierIn);
+        return stackIn;
+    }
+
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
         BlockPos wormPos = context.getPos().add(0.5, 0.5, 0.5);
@@ -72,6 +78,7 @@ public class GeneralWormItem extends ModItem {
             if (!wormProperty.getFloorBlock().test(world.getBlockState(pos).getBlock()) ||
                     !world.isAirBlock(pos.up()) ||
                     world.getEntitiesWithinAABB(AbstractWormEntity.class, MathHelper.getBoxAxisAlignedBB(1, pos),
+                            //this prevent worms to be right next to eachother
                             null).size() > 0) {
                 return false;
             }
@@ -96,11 +103,6 @@ public class GeneralWormItem extends ModItem {
         }
         //do nothing on client
         return false;
-    }
-
-    public static ItemStack changeTier(ItemStack stackIn, ETiers tierIn) {
-        NBTHelper.addWormTierToStack(stackIn, tierIn);
-        return stackIn;
     }
 
     @Override
@@ -140,7 +142,7 @@ public class GeneralWormItem extends ModItem {
     public static class Properties {
         //private BiFunction<World, Item, ? extends AbstractWormEntity> createWormFunction;
         RegistryObject<EntityType<Entity>> entityType;
-        private Predicate<Block> floorBlocks;
+        private Predicate<Block> floorBlocks = Objects::nonNull;
         private int dieTime = 1000;
         private int defaultBaseRange = 1;
         private boolean canDie = true;

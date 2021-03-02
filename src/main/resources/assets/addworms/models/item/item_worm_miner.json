@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "addworms:items/item_worm",
+    "layer1": "addworms:items/worm_specials/st_miner"
+  }
+}

@@ -48,6 +48,10 @@ public class AddWorms {
                 ItemStack stack = new ItemStack(ModItems.WORM_FARMER.get());
                 items.add(GeneralWormItem.changeTier(stack, value));
             }
+            for (ETiers value : ETiers.values()) {
+                ItemStack stack = new ItemStack(ModItems.WORM_MINER.get());
+                items.add(GeneralWormItem.changeTier(stack, value));
+            }
             super.fill(items);
         }
     };

@@ -30,7 +30,7 @@ public class WormEntityDigester extends WormEntityBase {
 
     @Override
     public ItemStack getItemDrop() {
-        return new ItemStack(ModItems.WORM_DIGESTER.get());
+        return new ItemStack(ModItems.WORM_FARMER.get());
     }
 
     @Override

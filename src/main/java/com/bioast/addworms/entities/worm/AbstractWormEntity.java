@@ -7,6 +7,8 @@ import com.bioast.addworms.utils.helpers.NBTHelper;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,7 +31,6 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -96,7 +97,7 @@ public abstract class AbstractWormEntity extends Entity {
                               @Nullable NonNullList<ItemStack> initialItemStorageContents,
                               final Item wormItem, final IWormProperty wormProperty) {
         super(entityTypeIn, worldIn);
-        this.setBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D));
+        this.setBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D));
         simpleItemStorage = initialItemStorageContents;
         if (simpleItemStorage == null) simpleItemStorage = NonNullList.create();
         this.wormProperty = wormProperty;
@@ -315,26 +316,40 @@ public abstract class AbstractWormEntity extends Entity {
     }
 
     /**
-     * @param radius  n -> 2n+1 x 2n+1
-     * @param yOffset gets an y value for height offset
-     * @return map of blockstates excluding AirBlocks
+     * @param radius      n -> 2n+1 x 2n+1
+     * @param yOffsetFrom gets an y value for height offset from and to
+     * @return map of blockStates excluding AirBlocks
      */
-    public Map<BlockPos, BlockState> getBlockStatesAround(int radius, @Nonnegative int yOffset,
+    public Map<BlockPos, BlockState> getBlockStatesAround(int radius,
+                                                          int yOffsetFrom, int yOffsetTo,
                                                           @Nullable Predicate<Block> predicate) {
         Map<BlockPos, BlockState> map = new HashMap<>();
         int n = radius;
         int r = 2 * n + 1;
         for (int x = 0; x < r; x++)
-            for (int z = 0; z < r; z++) {
-                BlockPos pos = new BlockPos(
-                        x + getPosX() - n,
-                        yOffset + getPosY(),
-                        z + getPosZ() - n);
-                assert predicate != null;
-                if (predicate.test(world.getBlockState(pos).getBlock()))
-                    map.put(pos, world.getBlockState(pos));
-            }
+            for (int z = 0; z < r; z++)
+                for (int yO = yOffsetFrom; yO <= yOffsetTo; yO++) { //FIXME it dosen't work with different yOffsetTo
+                    BlockPos pos = new BlockPos(
+                            x + getPosX() - n,
+                            yO + getPosY(),
+                            z + getPosZ() - n);
+                    if (predicate == null || predicate.test(world.getBlockState(pos).getBlock()))
+                        map.put(pos, world.getBlockState(pos));
+                }
         return map;
+    }
+
+    /**
+     * @return
+     */
+    public BlockPos[] getBlockStatesAroundInArray(int radius,
+                                                  int yOffsetFrom, int yOffsetTo,
+                                                  @Nullable Predicate<Block> predicate) {
+
+        Map<BlockPos, BlockState> map = getBlockStatesAround(radius, yOffsetFrom, yOffsetTo, predicate);
+        BlockPos[] pos = new BlockPos[map.size()];
+        map.keySet().toArray(new BlockPos[0]);
+        return pos;
     }
 
     /**
@@ -346,19 +361,24 @@ public abstract class AbstractWormEntity extends Entity {
      */
     public void breakBlocksAround(int radius, int yOffset, int withHarvestLevel, @Nullable ToolType toolType,
                                   @Nullable Predicate<Block> predicate) {
+        if (world.isRemote) return;
         PlayerEntity player = FakePlayerFactory.getMinecraft((ServerWorld) world);
-        getBlockStatesAround(radius, yOffset, predicate)
+        getBlockStatesAround(radius, yOffset, yOffset, predicate)
                 .forEach((p, b) -> {
                     if (b.getBlock().getHarvestLevel(b.getBlockState()) <= withHarvestLevel) {
                         if (toolType == null || b.getBlock().getHarvestTool(b.getBlockState()) == toolType) {
                             b.getBlock().harvestBlock(world, player, p, b.getBlockState(), //FIXME
                                     world.getTileEntity(p), player.getHeldItem(player.getActiveHand()));
+                            world.setBlockState(p, Blocks.AIR.getDefaultState());
+                            b.addDestroyEffects(world, p, Minecraft.getInstance().particles); // FIXME client server
+                            // communication
                         }
                     }
                 });
     }
 
     public void damageMobsAround(int Radius, float Damage) {
+        if (world.isRemote) return;
         getEntitiesAround(Radius).forEach(e -> {
             if (EntityHelper.isEntityKillable(e)) {
                 e.attackEntityFrom(DamageSource.GENERIC,

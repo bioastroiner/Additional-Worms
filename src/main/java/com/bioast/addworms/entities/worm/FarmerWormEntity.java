@@ -42,7 +42,7 @@ public class FarmerWormEntity extends AbstractWormEntity {
     }
 
     private void growPlants() {
-        Map<BlockPos, BlockState> mapPlantable = getBlockStatesAround(getRange(), 1,
+        Map<BlockPos, BlockState> mapPlantable = getBlockStatesAround(getRange(), 1, 1,
                 block -> block instanceof IPlantable || block instanceof IGrowable);
         for (Map.Entry<BlockPos, BlockState> entry : mapPlantable.entrySet()) {
             BlockPos pos = entry.getKey();
@@ -58,7 +58,7 @@ public class FarmerWormEntity extends AbstractWormEntity {
     }
 
     private void makeFarmlandWet() {
-        Map<BlockPos, BlockState> mapFarmland = getBlockStatesAround(getRange(), 0,
+        Map<BlockPos, BlockState> mapFarmland = getBlockStatesAround(getRange(), 0, 0,
                 block -> block instanceof FarmlandBlock);
         for (Map.Entry<BlockPos, BlockState> entry : mapFarmland.entrySet()) {
             BlockPos pos = entry.getKey();
@@ -71,7 +71,7 @@ public class FarmerWormEntity extends AbstractWormEntity {
     }
 
     private void tillGround() {
-        Map<BlockPos, BlockState> mapTillable = getBlockStatesAround(getRange(), 0,
+        Map<BlockPos, BlockState> mapTillable = getBlockStatesAround(getRange(), 0, 0,
                 block -> block.isIn(Tags.Blocks.DIRT) || block instanceof SnowyDirtBlock);
         for (Map.Entry<BlockPos, BlockState> entry : mapTillable.entrySet()) {
             BlockPos pos = entry.getKey();

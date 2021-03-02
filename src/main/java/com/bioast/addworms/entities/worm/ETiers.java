@@ -15,11 +15,11 @@ public enum ETiers {
     Celestial(8, 4, 5f, 80f),
     Global(9, 5, 6f, 120f),
     Clay(10, 6, 7f, 500f),
-    Rat(99, 10, 10f, 999f);
+    Rat(99, 10, 10f, 999f); // this one is joke obviously
 
     public int level;
     public int range;
-    public float speed;
+    public float speed; // anything from 1 to 20 out of ticks
     public float damage;
 
     ETiers(int level, int range, float speed, float damage) {
