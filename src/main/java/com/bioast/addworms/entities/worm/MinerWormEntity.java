@@ -79,7 +79,7 @@ public class MinerWormEntity extends AbstractWormEntity {
                 .findAny()
                 .ifPresent(b -> currentPos = b.toImmutable());
         if (!world.isRemote) {
-            if (world.isAirBlock(currentPos))
+            if (!world.isAirBlock(currentPos))
                 world.destroyBlock(currentPos, !doseVoid);//TODO add fortune support later
         }
     }
