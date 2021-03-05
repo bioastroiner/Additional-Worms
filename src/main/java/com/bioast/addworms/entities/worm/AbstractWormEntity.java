@@ -4,6 +4,7 @@ import com.bioast.addworms.items.worms.GeneralWormItem;
 import com.bioast.addworms.utils.helpers.EntityHelper;
 import com.bioast.addworms.utils.helpers.MathHelper;
 import com.bioast.addworms.utils.helpers.NBTHelper;
+import com.bioast.addworms.utils.interfaces.IWormProperty;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

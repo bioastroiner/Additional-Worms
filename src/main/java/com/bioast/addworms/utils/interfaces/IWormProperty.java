@@ -1,4 +1,4 @@
-package com.bioast.addworms.entities.worm;
+package com.bioast.addworms.utils.interfaces;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
