@@ -103,5 +103,11 @@ public final class NBTHelper {
         public static final String TAG_WORM_SPEED = "Worm_Speed";
         public static final String TAG_WORM_DAMAGE = "Worm_Damage";
         public static final String TAG_WORM_RANGE = "Worm_Range";
+        //MinerUpgrades
+        public static final String TAG_MINER_HEADER = "miner_category";
+        public static final String TAG_MINER_VOID = "void_upg";
+        public static final String TAG_MINER_SPEED = "speed_upg";
+        public static final String TAG_MINER_HEIGHT = "height_upg";
+        public static final String TAG_MINER_SILK = "silk_upg";
     }
 }
