@@ -2,7 +2,7 @@ package com.bioast.addworms.utils.helpers;
 
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-
+//TODO remove this
 public final class MathHelper {
 
     public static final AxisAlignedBB GENERIC_3X3 = new AxisAlignedBB(

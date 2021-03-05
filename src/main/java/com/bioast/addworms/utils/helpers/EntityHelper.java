@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//TODO reformat this code
 public final class EntityHelper {
 
     public static boolean dropItem(
