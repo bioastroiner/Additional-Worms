@@ -1,51 +1,43 @@
 package com.bioast.addworms.entities.worm;
 
 import com.bioast.addworms.items.worms.GeneralWormItem;
+import com.bioast.addworms.utils.helpers.NBTHelper;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class MinerWormEntity extends AbstractWormEntity {
 
-    int ver = 1;
     BlockPos currentPos;
-    int rate = 20;
+    //Miner Upgrades START
     boolean doseVoid = false;
+    boolean silk_upg = false;
+    int speed_upg;
+    int height_upg;
+    Map<String, ItemStack> up_map = new HashMap<>();
+    //Miner Upgrades END
 
     public MinerWormEntity(EntityType<?> entityType, World worldIn, Item wormItem) {
         super(entityType, worldIn, null, wormItem, ((GeneralWormItem) wormItem).wormProperty);
     }
 
     @Override
-    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
-        boolean inr = false;
-        if (player.getHeldItem(hand).getItem() == Items.GLOWSTONE) {
-            inr = true;
-        }
-        if (player.getHeldItem(hand).getItem() == Items.REDSTONE) {
-            inr = true;
-        }
-        if (player.getHeldItem(hand).getItem() == Items.OBSIDIAN) {
-            addItems(new ItemStack(Items.OBSIDIAN));
-            inr = true;
-        }
-        if (player.getHeldItem(hand).getItem() == Items.PISTON) {
-            addItems(new ItemStack(Items.PISTON));
-            inr = true;
-        }
-        if (inr) {
-            if (!player.isCreative())
-                player.getHeldItem(hand).shrink(1);
-            return ActionResultType.SUCCESS;
-        } else {
-            return ActionResultType.PASS;
+    public void onAddedToWorld() {
+        super.onAddedToWorld();
+        if (getWormItemStack().getOrCreateTag().contains(NBTHelper.Tags.TAG_MINER_HEADER)) {
+            CompoundNBT compound =
+                    getDataInWormItemStack(NBTHelper.Tags.TAG_MINER_HEADER);
+            doseVoid = compound.getBoolean(NBTHelper.Tags.TAG_MINER_VOID);
+            silk_upg = compound.getBoolean(NBTHelper.Tags.TAG_MINER_SILK);
+            speed_upg = compound.getInt(NBTHelper.Tags.TAG_MINER_SPEED);
+            height_upg = compound.getInt(NBTHelper.Tags.TAG_MINER_HEIGHT);
         }
     }
 
@@ -53,7 +45,9 @@ public class MinerWormEntity extends AbstractWormEntity {
     public void tick() {
         super.tick();
         if (timer % getMiningRate() == 0) {
-            mine();
+            for (int i = 0; i < new Random().nextInt(Math.min(getMiningRate(), 5)); i++) {
+                mine();
+            }
         }
     }
 
@@ -69,32 +63,50 @@ public class MinerWormEntity extends AbstractWormEntity {
     }
 
     private int getVerRange() {
-        ItemStack piss = new ItemStack(Items.PISTON, 0);
-        simpleItemStorage.forEach(i -> {
-            if (i.getItem() == Items.PISTON) {
-                piss.grow(i.getCount());
-            }
-        });
-        return -piss.getCount();
-        // applying pistone increaces heaigh
-        // applying obsidian will make it void worm
-        // they all still start at the worm's itself heigh (change)
+        return -height_upg;
     }
 
     private void mine() {
         int size = getMiningRange();
         BlockPos.getAllInBox(
                 new BlockPos(getPosition().getX() - size, getPosition().getY(), getPosition().getZ() - size),
-                new BlockPos(getPosition().getX() + size, getPosition().getY() - getVerRange(), getPosition().getZ() + size))
+                new BlockPos(getPosition().getX() + size, getPosition().getY() - getVerRange(),
+                        getPosition().getZ() + size))
                 .filter(b -> !world.isAirBlock(b))
                 .filter(b -> world.getBlockState(b).isSolid())
                 .filter(b -> world.getBlockState(b).getBlockHardness(world, b) > 0)
                 .filter(b -> !getPosition().equals(b.toImmutable()))
                 .findAny()
                 .ifPresent(b -> currentPos = b.toImmutable());
-        //ParticleHelper.spawnParticles(world, getPosition(), 15, ParticleTypes.DUST);
         if (!world.isRemote) {
-            world.destroyBlock(currentPos, !doseVoid);
+            if (world.isAirBlock(currentPos))
+                world.destroyBlock(currentPos, !doseVoid);//TODO add fortune support later
         }
+    }
+
+    @Override
+    protected void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        loadMinerUpgrades(compound);
+    }
+
+    @Override
+    protected void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        saveMinerUpgrades(compound);
+    }
+
+    private void saveMinerUpgrades(CompoundNBT compound) {
+        compound.putBoolean(NBTHelper.Tags.TAG_MINER_VOID, doseVoid);
+        compound.putBoolean(NBTHelper.Tags.TAG_MINER_SILK, silk_upg);
+        compound.putInt(NBTHelper.Tags.TAG_MINER_SPEED, speed_upg);
+        compound.putInt(NBTHelper.Tags.TAG_MINER_HEIGHT, height_upg);
+    }
+
+    private void loadMinerUpgrades(CompoundNBT compound) {
+        doseVoid = compound.getBoolean(NBTHelper.Tags.TAG_MINER_VOID);
+        silk_upg = compound.getBoolean(NBTHelper.Tags.TAG_MINER_SILK);
+        speed_upg = compound.getInt(NBTHelper.Tags.TAG_MINER_SPEED);
+        height_upg = compound.getInt(NBTHelper.Tags.TAG_MINER_HEIGHT);
     }
 }

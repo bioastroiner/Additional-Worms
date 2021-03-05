@@ -23,7 +23,7 @@ public final class ModEntityTypes {
             "worm_entity_miner",
             () -> EntityType.Builder.create((entityType, world) -> new MinerWormEntity(entityType, world,
                     ModItems.WORM_MINER.get()), EntityClassification.MISC)
-                    .size(0.1f, 0.1f)
+                    .size(1f, 1f)
                     .build(new ResourceLocation(MODID, "worm_entity_miner").toString()));
 //    public static final RegistryObject<EntityType<WormEntityRed>> WORM_ENTITY_RED = ENTITY_TYPES.register(
 //            "worm_entity_red",

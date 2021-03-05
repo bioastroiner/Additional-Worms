@@ -33,10 +33,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -97,7 +94,7 @@ public abstract class AbstractWormEntity extends Entity {
                               @Nullable NonNullList<ItemStack> initialItemStorageContents,
                               final Item wormItem, final IWormProperty wormProperty) {
         super(entityTypeIn, worldIn);
-        this.setBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D));
+        this.setBoundingBox(new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 2.0D, 1.0D));
         simpleItemStorage = initialItemStorageContents;
         if (simpleItemStorage == null) simpleItemStorage = NonNullList.create();
         this.wormProperty = wormProperty;
@@ -243,7 +240,7 @@ public abstract class AbstractWormEntity extends Entity {
      * @param items use this method to save Items in the wormEntity {@link AbstractWormEntity#simpleItemStorage}.
      */
     public void addItems(@Nonnull ItemStack... items) {
-        for (ItemStack item : items) simpleItemStorage.add(item);
+        simpleItemStorage.addAll(Arrays.asList(items));
     }
 
     /**
