@@ -58,6 +58,11 @@ public class MinerWormEntity extends AbstractWormEntity {
         return rate;
     }
 
+    @Override
+    public float getSpeed() {
+        return super.getSpeed() + speed_upg;
+    }
+
     private int getMiningRange() {
         return getRange();
     }

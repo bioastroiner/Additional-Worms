@@ -1,4 +1,4 @@
-package com.bioast.addworms.plugin.JEI;
+package com.bioast.addworms.integeration.JEI;
 
 import com.bioast.addworms.init.ModItems;
 import com.bioast.addworms.recipes.UpgradingRecipe;
