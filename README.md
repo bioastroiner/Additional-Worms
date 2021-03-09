@@ -32,8 +32,8 @@ based on **ActuallyAddition**'s **Worms**
 - [x] Growth Accelator Worm
 - [ ] Flower Generator Worm (Botanic Worm)
 - [x] -Worms that help in gathering of resources
-- [ ] Miner Worm (a worm that mines blocks)
-- [ ] Enhanced Worm (a worm with extended range and abilities) 
+- [x] Miner Worm (a worm that mines blocks)
+- [x] Enhanced Worm (a worm with extended range and abilities) 
 - [x] Harm Worm (a worm that damages entities within an area) -now it is done with setting a worm's property to hostile
 - [ ] Regenerating worm
 - [ ] Nesting Worm (a way to make more worms)
