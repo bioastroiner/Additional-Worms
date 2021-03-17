@@ -7,6 +7,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -27,6 +31,32 @@ public class MinerWormEntity extends AbstractWormEntity {
     public MinerWormEntity(EntityType<?> entityType, World worldIn, Item wormItem) {
         super(entityType, worldIn, null, wormItem, ((GeneralWormItem) wormItem).wormProperty);
     }
+
+    // start region STATIC
+
+    public static CompoundNBT getMinerUpgradesInStack(ItemStack itemstack) {
+        if (itemstack.hasTag())
+            return itemstack.getTag().getCompound(NBTHelper.Tags.TAG_MINER_HEADER);
+        return null;
+    }
+
+    public static ITextComponent FormatOutUpgrades(ItemStack itemstack) {
+        CompoundNBT compound = getMinerUpgradesInStack(itemstack);
+        if (compound != null) {
+            String ret =
+                    "Current Levels: " +
+                            "\n --void :" + compound.getBoolean(NBTHelper.Tags.TAG_MINER_VOID) +
+                            "\n --silk :" + compound.getBoolean(NBTHelper.Tags.TAG_MINER_SILK) +
+                            "\n --speed:" + compound.getInt(NBTHelper.Tags.TAG_MINER_SPEED) +
+                            "\n --height:" + compound.getInt(NBTHelper.Tags.TAG_MINER_HEIGHT) +
+                            "\n [WIP]" +
+                            "\n --- --- ---";
+            return new StringTextComponent(ret).setStyle(Style.EMPTY.setFormatting(TextFormatting.RED));
+        }
+        return StringTextComponent.EMPTY;
+    }
+
+    // end region STATIC
 
     @Override
     public void onAddedToWorld() {

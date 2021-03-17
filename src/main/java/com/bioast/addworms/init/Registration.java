@@ -1,6 +1,7 @@
 package com.bioast.addworms.init;
 
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,12 +22,15 @@ public class Registration {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPES =
             DeferredRegister.create(ForgeRegistries.ENTITIES, MODID);
+    public static final DeferredRegister<Enchantment> ENCHANTMENT =
+            DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, MODID);
 
     public static void registerEntries() {
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         Registration.BLOCKS.register(bus);
         Registration.ITEMS.register(bus);
+        Registration.ENCHANTMENT.register(bus);
         Registration.ENTITY_TYPES.register(bus);
 
         ModBlocks.register();
